@@ -1,11 +1,9 @@
-source 'https://rubygems.org'
+source 'https://ruby.taobao.org'
 
 gem 'rake'
 gem 'sinatra'
 gem 'sinatra-contrib'
-gem 'pg', '~> 0.18.4'
 gem 'activerecord', '~> 4.2', '>= 4.2.5'
-gem 'puma', '~> 2.15.0'
 gem 'sinatra-jsonp'
 gem 'sinatra-cross_origin', '~> 0.3.1'
 

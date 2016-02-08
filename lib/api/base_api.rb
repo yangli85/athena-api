@@ -28,6 +28,7 @@ class BaseAPI < Sinatra::Application
   not_found do
     'Sorry, wrong api calls!'
   end
+
 end
 
 

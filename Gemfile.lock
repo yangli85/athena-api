@@ -1,5 +1,5 @@
 GEM
-  remote: https://rubygems.org/
+  remote: https://ruby.taobao.org/
   specs:
     activemodel (4.2.5.1)
       activesupport (= 4.2.5.1)
@@ -24,8 +24,6 @@ GEM
     json (1.8.3)
     minitest (5.8.4)
     multi_json (1.11.2)
-    pg (0.18.4)
-    puma (2.15.3)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
@@ -76,8 +74,6 @@ DEPENDENCIES
   activerecord (~> 4.2, >= 4.2.5)
   database_cleaner
   dotenv
-  pg (~> 0.18.4)
-  puma (~> 2.15.0)
   rack-test
   rake
   rspec
