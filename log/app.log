@@ -265,3 +265,33 @@ E, [2016-02-08T17:03:48.287240 #7568] ERROR -- : SMS sent failed.. NoMethodError
 /Users/yangli/.rvm/gems/ruby-2.2.0@athena-api/gems/puma-2.15.3/lib/puma/thread_pool.rb:106:in `block in spawn_thread'
 I, [2016-02-08T17:07:07.369133 #7621]  INFO -- : Will send validate code to 18611979882.
 I, [2016-02-08T17:07:07.369203 #7621]  INFO -- : Validate code for 18611979882 was sent.
+I, [2016-02-09T00:30:14.698107 #2766]  INFO -- : Will send validate code to .
+I, [2016-02-09T00:30:14.698170 #2766]  INFO -- : Validate code for  was sent.
+I, [2016-02-09T00:30:20.991221 #2766]  INFO -- : Will send validate code to .
+I, [2016-02-09T00:30:20.991276 #2766]  INFO -- : Validate code for  was sent.
+I, [2016-02-09T00:32:48.239316 #2766]  INFO -- : Will send validate code to .
+I, [2016-02-09T00:32:48.239373 #2766]  INFO -- : Validate code for  was sent.
+I, [2016-02-09T00:32:56.083250 #2803]  INFO -- : Will send validate code to .
+I, [2016-02-09T00:32:56.083311 #2803]  INFO -- : Validate code for  was sent.
+I, [2016-02-09T00:33:08.311660 #2803]  INFO -- : Will send validate code to .
+I, [2016-02-09T00:33:08.311707 #2803]  INFO -- : Validate code for  was sent.
+I, [2016-02-09T00:58:22.206655 #2803]  INFO -- : Will send validate code to .
+I, [2016-02-09T00:58:22.206721 #2803]  INFO -- : Validate code for  was sent.
+I, [2016-02-09T01:02:55.912259 #2803]  INFO -- : Will send validate code to .
+I, [2016-02-09T01:02:55.912310 #2803]  INFO -- : Validate code for  was sent.
+I, [2016-02-09T01:04:25.718863 #2803]  INFO -- : Will send validate code to .
+I, [2016-02-09T01:04:25.718910 #2803]  INFO -- : Validate code for  was sent.
+I, [2016-02-11T15:13:36.421700 #2854]  INFO -- : Will send validate code to .
+I, [2016-02-11T15:13:36.421758 #2854]  INFO -- : Validate code for  was sent.
+I, [2016-02-11T15:37:32.524600 #3140]  INFO -- : Will send validate code to .
+I, [2016-02-11T15:37:32.524649 #3140]  INFO -- : Validate code for  was sent.
+I, [2016-02-11T15:39:16.486561 #3156]  INFO -- : Will send validate code to .
+I, [2016-02-11T15:39:16.486613 #3156]  INFO -- : Validate code for  was sent.
+I, [2016-02-11T15:39:16.515024 #3156]  INFO -- : Will send validate code to .
+I, [2016-02-11T15:39:16.515060 #3156]  INFO -- : Validate code for  was sent.
+I, [2016-02-11T15:39:49.725769 #3156]  INFO -- : Will send validate code to .
+I, [2016-02-11T15:39:49.725813 #3156]  INFO -- : Validate code for  was sent.
+I, [2016-02-11T15:40:37.588249 #3165]  INFO -- : Will send validate code to .
+I, [2016-02-11T15:40:37.588298 #3165]  INFO -- : Validate code for  was sent.
+I, [2016-02-11T15:40:37.889360 #3165]  INFO -- : Will send validate code to .
+I, [2016-02-11T15:40:37.889413 #3165]  INFO -- : Validate code for  was sent.
