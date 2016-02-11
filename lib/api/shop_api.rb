@@ -1,3 +1,4 @@
+#encoding:utf-8
 require 'api/base_api'
 
 class ShopAPI < BaseAPI

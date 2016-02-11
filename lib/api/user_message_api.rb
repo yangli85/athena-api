@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'api/base_api'
 
 class UserMessageAPI < BaseAPI
