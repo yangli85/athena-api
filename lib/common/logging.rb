@@ -27,7 +27,7 @@ module Common
     end
 
     def self.create_log_file
-      FileUtils.mkdir_p('log')
+      FileUtils.mkdir_p('logs')
       FileUtils.touch(full_log_file_path)
     end
 
@@ -38,7 +38,7 @@ module Common
     end
 
     def self.full_log_file_path
-      "log/#{log_file_name}"
+      "logs/#{log_file_name}"
     end
   end
 end

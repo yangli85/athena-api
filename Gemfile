@@ -1,6 +1,7 @@
 source 'https://ruby.taobao.org'
 
 gem 'rake'
+gem 'unicorn'
 gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'activerecord', '~> 4.2', '>= 4.2.5'
