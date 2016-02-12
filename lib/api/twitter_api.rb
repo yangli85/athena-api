@@ -109,8 +109,8 @@ class TwitterAPI
       }
       return_response callback, result
     end
-
-    app.get 'twitters' do
+    
+    app.get '/twitters' do
       order_by = params['order_by']
       pages_size = params['page_size']
       current_page = params['current_page']
