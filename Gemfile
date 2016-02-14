@@ -7,6 +7,7 @@ gem 'sinatra-contrib'
 gem 'activerecord', '~> 4.2', '>= 4.2.5'
 gem 'sinatra-jsonp'
 gem 'sinatra-cross_origin', '~> 0.3.1'
+gem 'pandora',:source => 'http://localhost:8808'
 
 group :test do
   gem 'sqlite3'
