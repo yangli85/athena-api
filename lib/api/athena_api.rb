@@ -8,8 +8,10 @@ require 'api/user_api'
 require 'api/user_message_api'
 require 'api/user_profile_api'
 require 'api/authenticate_api'
+require 'api/sms_api'
 
 class AthenaAPI < BaseAPI
+  SmsAPI.registered(self)
   AdvertisementAPI.registered(self)
   AuthenticateAPI.registered(self)
   DesignerAPI.registered(self)

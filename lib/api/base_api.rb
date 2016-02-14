@@ -19,6 +19,7 @@ class BaseAPI < Sinatra::Application
   configure :production do
     enable :sessions
     set :session_secret, '*&(^B234'
+    set :session
   end
 
   get '/' do
