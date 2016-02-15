@@ -16,18 +16,16 @@ class BaseAPI < Sinatra::Application
     logger = Common::Logging.logger
   end
 
-  configure :production do
-    enable :sessions
-    set :session_secret, '*&(^B234'
-    set :session
-  end
-
   get '/' do
     'Athena api is alive!'
   end
 
   not_found do
     'Sorry, wrong api calls!'
+  end
+
+  error do
+    'Sorry there was a nasty error'
   end
 
 end

@@ -4,9 +4,7 @@ class AuthenticateAPI
   def self.registered(app)
     app.get '/login' do
       callback = params.delete('callback') # jsonp
-      phone_numer = params['phone_number']
-      code = params['code']
-      result = UserController.new.login phone_numer, code
+      result = UserController.call(:login, [params['phone_number'], params['code']])
       return_response callback, result
     end
   end
