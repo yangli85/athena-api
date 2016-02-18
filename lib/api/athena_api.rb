@@ -12,7 +12,7 @@ require 'api/sms_api'
 
 class AthenaAPI < BaseAPI
   SmsAPI.registered(self)
-  AdvertisementAPI.registered(self)
+  AdAPI.registered(self)
   AuthenticateAPI.registered(self)
   DesignerAPI.registered(self)
   ShopAPI.registered(self)

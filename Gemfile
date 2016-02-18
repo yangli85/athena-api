@@ -7,7 +7,8 @@ gem 'sinatra-contrib'
 gem 'activerecord', '~> 4.2', '>= 4.2.5'
 gem 'sinatra-jsonp'
 gem 'sinatra-cross_origin', '~> 0.3.1'
-gem 'pandora','~> 1.0.2',:source => 'http://localhost:8808'
+gem 'pandora', :source => 'http://localhost:8808'
+gem 'factory_girl'
 
 group :test do
   gem 'rack-test'
