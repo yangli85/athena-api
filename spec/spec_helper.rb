@@ -21,10 +21,12 @@ require 'factories/vita_image'
 require 'factories/message'
 require 'factories/favorite_image'
 require 'factories/favorite_designer'
+require 'pandora/models/base'
+require 'fakefs/spec_helpers'
 
 RSpec.configure do |config|
+  config.include FakeFS::SpecHelpers, fakefs: true
   config.include FactoryGirl::Syntax::Methods
-
   config.before :each do
     cleaner = DatabaseCleaner[:active_record, {:model => Pandora::Models::Base}]
     cleaner.strategy = :truncation

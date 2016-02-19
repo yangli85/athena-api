@@ -66,4 +66,22 @@ class DesignerController < BaseController
     vitae = @designer_service.get_designer_vitae designer_id, page_size, current_page
     success.merge({data: vitae.map(&:attributes)})
   end
+
+  def search_designers page_size, current_page, query
+    designers= @designer_service.search_designers page_size, current_page, query
+    data = designers.map do |designer|
+      designer.attributes.merge({
+                                    shop: designer.shop && designer.shop.attributes,
+                                    stars: designer.totally_stars
+                                })
+    end
+    success.merge({data: data})
+  end
+
+  def get_designer_rank designer_id, order_by
+    rank = @designer_service.get_designer_rank designer_id, order_by
+    success.merge({data:{
+        rank: rank
+    }})
+  end
 end

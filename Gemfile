@@ -9,8 +9,11 @@ gem 'sinatra-jsonp'
 gem 'sinatra-cross_origin', '~> 0.3.1'
 gem 'pandora', :source => 'http://localhost:8808'
 gem 'factory_girl'
+gem 'uuid'
+gem 'rmagick'
 
 group :test do
+  gem 'fakefs', :require => "fakefs/safe"
   gem 'rack-test'
   gem 'database_cleaner'
   gem 'rspec'

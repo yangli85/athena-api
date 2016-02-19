@@ -25,27 +25,6 @@ class TwitterAPI
       result = TwitterController.call(:search_twitter_by_id, [params['twitter_id']])
       return_response callback, result
     end
-
-    app.post '/add_twitter' do
-      authoer_id = params['author_id']
-      designer_id = params['designer_id']
-      context = params['context']
-      stars = params['stars']
-      latitude = params['latitude']
-      longtitude = params['longtitude']
-      images = params['images']
-      twitter_id = 1
-      images.each do |image|
-        File.open("images/1.jpg", "rb") do |file|
-          file.write(image.read)
-        end
-      end
-      callback = params.delete('callback') # jsonp
-      result = {
-          result: 'success'
-      }
-      return_response callback, result
-    end
   end
 end
 

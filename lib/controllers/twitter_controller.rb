@@ -25,5 +25,4 @@ class TwitterController < BaseController
     twitter = @twitter_service.search_twitter_by_id twitter_id
     success.merge({data: twitter && twitter.attributes})
   end
-
 end

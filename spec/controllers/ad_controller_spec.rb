@@ -21,14 +21,22 @@ describe AdController do
                                                              data:
                                                                  [
                                                                      {
-                                                                         image: "images/1.jpg",
-                                                                         event: "search_designer",
-                                                                         args: "{:designer_id=>1}"
+                                                                         :image =>
+                                                                             {
+                                                                                 :id => 1,
+                                                                                 :url => "images/1.jpg"
+                                                                             },
+                                                                         :event => "search_designer",
+                                                                         :args => "{:designer_id=>1}"
                                                                      },
                                                                      {
-                                                                         image: "images/2.jpg",
-                                                                         event: "search_designer",
-                                                                         args: "{:designer_id=>2}"
+                                                                         :image =>
+                                                                             {
+                                                                                 :id => 2,
+                                                                                 :url => "images/2.jpg"
+                                                                             },
+                                                                         :event => "search_designer",
+                                                                         :args => "{:designer_id=>2}"
                                                                      }
                                                                  ]
                                                          }

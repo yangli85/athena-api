@@ -10,7 +10,7 @@ class AdController < BaseController
     ad_images = @ad_service.get_ad_images category
     data = ad_images.map do |ad_image|
       {
-          image: ad_image.image.url,
+          image: ad_image.image && ad_image.image.attributes,
           event: ad_image.event,
           args: ad_image.args
       }

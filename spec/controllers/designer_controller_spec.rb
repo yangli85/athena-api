@@ -216,8 +216,8 @@ describe DesignerController do
           :data =>
               [
                   {
-                      :s_image => "images/1.jpg",
-                      :image => "images/1.jpg",
+                      :s_image => {:id => 1, :url => "images/1.jpg"},
+                      :image => {:id => 1, :url => "images/1.jpg"},
                       :likes => 10,
                       :designer =>
                           {
@@ -230,8 +230,8 @@ describe DesignerController do
                       :rank => 1
                   },
                   {
-                      :s_image => "images/1.jpg",
-                      :image => "images/1.jpg",
+                      :s_image => {:id => 2, :url => "images/1.jpg"},
+                      :image => {:id => 2, :url => "images/1.jpg"},
                       :likes => 10,
                       :designer =>
                           {
@@ -275,12 +275,12 @@ describe DesignerController do
                   :images =>
                       [
                           {
-                              :s_image => "images/1.jpg",
-                              :image => "images/1.jpg"
+                              :s_image => {:id => 1, :url => "images/1.jpg"},
+                              :image => {:id => 1, :url => "images/1.jpg"},
                           },
                           {
-                              :s_image => "images/1.jpg",
-                              :image => "images/1.jpg"
+                              :s_image => {:id => 2, :url => "images/1.jpg"},
+                              :image => {:id => 2, :url => "images/1.jpg"},
                           }
                       ],
                   :created_at => "8小时前"
@@ -291,8 +291,8 @@ describe DesignerController do
                   :images =>
                       [
                           {
-                              :s_image => "images/1.jpg",
-                              :image => "images/1.jpg"
+                              :s_image => {:id => 3, :url => "images/1.jpg"},
+                              :image => {:id => 3, :url => "images/1.jpg"},
                           }
                       ],
                   :created_at => "8小时前"
@@ -309,6 +309,66 @@ describe DesignerController do
     it "should return desiger's vita in correct json format" do
 
       expect(subject.get_designer_vitae 1, 2, 1).to eq fake_result
+    end
+  end
+
+  describe "#search_designers" do
+    let(:fake_result) {
+      {
+          :status => "SUCCESS",
+          :data =>
+              [
+                  {
+                      :id => 1,
+                      :user_id => 1,
+                      :name => "user1",
+                      :avatar => nil,
+                      :shop =>
+                          {
+                              :id => 1,
+                              :name => "test1",
+                              :address => "address1",
+                              :latitude => "34.2620",
+                              :longtitude => "108.9430"
+                          },
+                      :stars => 5
+                  }
+              ]
+      }
+    }
+
+    it "should return matched designers" do
+      expect(subject.search_designers(10, 1, 'user1')[:data].count).to eq 7
+      expect(subject.search_designers(10, 1, '13800000001')[:data].count).to eq 1
+      expect(subject.search_designers(10, 1, '138')[:data].count).to eq 7
+    end
+
+    it "should return matched designers in correct json format" do
+      expect(subject.search_designers(10, 1, '13800000001')).to eq fake_result
+    end
+  end
+
+  describe "#get_designer_rank" do
+    let(:fake_result) {
+      {
+          :status => "SUCCESS",
+          :data => {
+              :rank => 1
+          }
+      }
+    }
+    before do
+      new_user = create(:user, {phone_number: '13888888888'})
+      create(:designer, {user: new_user, totally_stars: 100, is_vip: false})
+    end
+
+    it "should return designer rank in all current vip users" do
+      expect(subject.get_designer_rank(7, "totally_stars")[:data][:rank]).to eq 1
+      expect(subject.get_designer_rank(6, "totally_stars")[:data][:rank]).to eq 2
+    end
+
+    it "should return designer rank in correct json format" do
+      expect(subject.get_designer_rank(7, "totally_stars")).to eq fake_result
     end
   end
 end

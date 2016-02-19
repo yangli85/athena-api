@@ -18,6 +18,19 @@ class UserAPI
       return_response callback, result
     end
 
+    app.post '/upload_image' do
+      callback = params.delete('callback') # jsonp
+      result = UserController.call(:upload_image, [params['image_base64'])
+      return_response callback, result
+    end
+
+    app.post '/publish_twitter' do
+      callback = params.delete('callback') # jsonp
+      args = [params['author_id'],params['designer_id'],params['content'],params['image_paths'],params['stars'],params['latitude'],params['longtitude']]
+      result = UserController.call(:publish_new_twitter, args)
+      return_response callback, result
+    end
+
     app.get '/designer_info' do
       user_id = params['user_id']
       callback = params.delete('callback') # jsonp

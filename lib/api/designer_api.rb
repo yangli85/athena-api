@@ -29,47 +29,20 @@ class DesignerAPI
 
     app.get '/designer_vitae' do
       callback = params.delete('callback') # jsonp
-      result = result = DesignerController.call(:get_designer_vitae, [params['designer_id'], params['page_size'], params['current_page']])
+      result = DesignerController.call(:get_designer_vitae, [params['designer_id'], params['page_size'], params['current_page']])
       return_response callback, result
     end
 
-    app.get '/search_designer' do
-      page_size = params['page_size']
-      current_page = params['current_page']
-      order_by = params['order_by']
-      query =params['query']
+    app.get '/search_designers' do
       callback = params.delete('callback') # jsonp
-      result = [
-          {
-              id: 10,
-              avatar: 'images/avatar/2.jpg',
-              designer_name: 'Tommy',
-              shop_name: '希客造型(绿地世纪城店)',
-              distance: 0.5,
-              stars: 50,
-              latitude: '34.27422',
-              longtitude: '108.94311'
-          },
-          {
-              id: 17,
-              avatar: 'images/avatar/5.jpg',
-              designer_name: 'Tommy',
-              shop_name: '希客造型(绿地世纪城店)',
-              distance: 0.5,
-              stars: 50,
-              latitude: '34.27422',
-              longtitude: '108.94311'
-          }
-      ]
+      result = DesignerController.call(:search_designers, [params['page_size'], params['current_page'], params['query']])
       return_response callback, result
     end
 
-    app.get '/my_rank' do
+    app.get '/designer_rank' do
       id = params['id']
       callback = params.delete('callback') # jsonp
-      result = {
-          rank: 100
-      }
+      result = DesignerController.call(:get_designer_rank, [params['designer_id']]
       return_response callback, result
     end
   end

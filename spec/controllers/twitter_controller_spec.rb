@@ -25,8 +25,8 @@ describe TwitterController do
           status: 'SUCCESS',
           data: [
               {
-                  :s_image => "images/1.jpg",
-                  :image => "images/1.jpg",
+                  :s_image => {:id => 5, :url => "images/1.jpg"},
+                  :image => {:id => 5, :url => "images/1.jpg"},
                   :likes => 6,
                   :designer => {
                       :id => 1,
@@ -38,8 +38,8 @@ describe TwitterController do
                   :rank => 3
               },
               {
-                  :s_image => "images/1.jpg",
-                  :image => "images/1.jpg",
+                  :s_image => {:id => 4, :url => "images/1.jpg"},
+                  :image => {:id => 4, :url => "images/1.jpg"},
                   :likes => 5,
                   :designer =>
                       {
@@ -52,8 +52,8 @@ describe TwitterController do
                   :rank => 2
               },
               {
-                  :s_image => "images/1.jpg",
-                  :image => "images/1.jpg",
+                  :s_image => {:id => 3, :url => "images/1.jpg"},
+                  :image => {:id => 3, :url => "images/1.jpg"},
                   :likes => 4,
                   :designer => {
                       :id => 1,
@@ -65,8 +65,8 @@ describe TwitterController do
                   :rank => 1
               },
               {
-                  :s_image => "images/1.jpg",
-                  :image => "images/1.jpg",
+                  :s_image => {:id => 2, :url => "images/1.jpg"},
+                  :image => {:id => 2, :url => "images/1.jpg"},
                   :likes => 3,
                   :designer => {
                       :id => 1,
@@ -110,20 +110,20 @@ describe TwitterController do
               :image_count => 3,
               :images => [
                   {
-                      :s_image => "images/1.jpg",
-                      :image => "images/1.jpg",
+                      :s_image => {:id => 3, :url => "images/1.jpg"},
+                      :image => {:id => 3, :url => "images/1.jpg"},
                       :likes => 4,
                       :rank => 1
                   },
                   {
-                      :s_image => "images/1.jpg",
-                      :image => "images/1.jpg",
+                      :s_image => {:id => 4, :url => "images/1.jpg"},
+                      :image => {:id => 4, :url => "images/1.jpg"},
                       :likes => 5,
                       :rank => 2
                   },
                   {
-                      :s_image => "images/1.jpg",
-                      :image => "images/1.jpg",
+                      :s_image => {:id => 5, :url => "images/1.jpg"},
+                      :image => {:id => 5, :url => "images/1.jpg"},
                       :likes => 6,
                       :rank => 3
                   }
@@ -138,7 +138,7 @@ describe TwitterController do
     end
 
     it "should return empty if the twitter not exist" do
-      expect(subject.get_twitter_images 100).to eq fake_result.merge({data:nil})
+      expect(subject.get_twitter_images 100).to eq fake_result.merge({data: nil})
     end
   end
 
@@ -169,8 +169,8 @@ describe TwitterController do
                       :images =>
                           [
                               {
-                                  :s_image => "images/1.jpg",
-                                  :image => "images/1.jpg",
+                                  :s_image => {:id => 2, :url => "images/1.jpg"},
+                                  :image => {:id => 2, :url => "images/1.jpg"},
                                   :likes => 3,
                                   :rank => 1
                               }
@@ -197,20 +197,20 @@ describe TwitterController do
                       :image_count => 3,
                       :images => [
                           {
-                              :s_image => "images/1.jpg",
-                              :image => "images/1.jpg",
+                              :s_image => {:id => 3, :url => "images/1.jpg"},
+                              :image => {:id => 3, :url => "images/1.jpg"},
                               :likes => 4,
                               :rank => 1
                           },
                           {
-                              :s_image => "images/1.jpg",
-                              :image => "images/1.jpg",
+                              :s_image => {:id => 4, :url => "images/1.jpg"},
+                              :image => {:id => 4, :url => "images/1.jpg"},
                               :likes => 5,
                               :rank => 2
                           },
                           {
-                              :s_image => "images/1.jpg",
-                              :image => "images/1.jpg",
+                              :s_image => {:id => 5, :url => "images/1.jpg"},
+                              :image => {:id => 5, :url => "images/1.jpg"},
                               :likes => 6,
                               :rank => 3
                           }
@@ -250,8 +250,8 @@ describe TwitterController do
                   :image_count => 1,
                   :images => [
                       {
-                          :s_image => "images/1.jpg",
-                          :image => "images/1.jpg",
+                          :s_image => {:id => 2, :url => "images/1.jpg"},
+                          :image => {:id => 2, :url => "images/1.jpg"},
                           :likes => 3,
                           :rank => 1
                       }
@@ -265,7 +265,7 @@ describe TwitterController do
     end
 
     it "should return nil" do
-      expect(subject.search_twitter_by_id 100).to eq (fake_result.merge({data:nil}))
+      expect(subject.search_twitter_by_id 100).to eq (fake_result.merge({data: nil}))
     end
   end
 end
