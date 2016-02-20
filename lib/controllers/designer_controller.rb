@@ -1,13 +1,20 @@
 #encoding:utf-8
 require 'pandora/services/designer_service'
 require 'pandora/services/shop_service'
+require 'pandora/services/user_service'
 require 'controllers/base_controller'
 require 'common/error'
+require 'common/image_helper'
+require 'common/controller_helper'
 
 class DesignerController < BaseController
+  include Common::ControllerHelper
+
   def initialize
     @shop_service = Pandora::Services::ShopService.new
     @designer_service = Pandora::Services::DesignerService.new
+    @user_service = Pandora::Services::UserService.new
+    @shop_service = Pandora::Services::ShopService.new
   end
 
   def get_vicinal_designers longtitude, latitude, page_size, current_page, range, order_by
@@ -55,7 +62,7 @@ class DesignerController < BaseController
   end
 
   def get_designer_works designer_id, page_size, current_page
-    twitters = @designer_service.get_designer_twitters designer_id, page_size, current_page, 'created_at'
+    twitters = @designer_service.get_designer_twitters designer_id, page_size, current_page
     data = twitters.map do |twitter|
       twitter.twitter_images.order("likes desc").first.attributes
     end
@@ -80,8 +87,81 @@ class DesignerController < BaseController
 
   def get_designer_rank designer_id, order_by
     rank = @designer_service.get_designer_rank designer_id, order_by
-    success.merge({data:{
+    success.merge({data: {
         rank: rank
     }})
+  end
+
+  def get_designer_details designer_id
+    begin
+      designer = @designer_service.get_designer designer_id
+      user = designer.user
+      new_message_count = @user_service.get_new_messages_count user.id
+      data = designer.attributes.merge({
+                                           vitality: designer.user.vitality,
+                                           gender: designer.user.gender,
+                                           new_message: new_message_count,
+                                           balance: user.account && user.acount.balance,
+                                           twitters: designer.twitters.count,
+                                           phone_number: user.phone_number,
+                                           shop: designer.shop && designer.shop.attributes,
+                                           vitae_count: designer.vitae.count
+                                       })
+      success.merge({data: data})
+    rescue => e
+      raise Common::Error.new("设计师不存在.")
+    end
+  end
+
+  def get_designer_twitters designer_id, page_size, current_page
+    twitters = @designer_service.get_designer_twitters designer_id, page_size, current_page
+    success.merge({data: twitters.map(&:attributes)})
+  end
+
+  def delete_twitter designer_id, twitter_id
+    @designer_service.delete_twitter designer_id, twitter_id
+    success.merge({message: "动态删除成功"})
+  end
+
+  def designer_latest_customers designer_id
+    customers = @designer_service.get_customers designer_id
+    data = customers.map do |customer|
+      customer.attributes.merge({phone_number: customer.phone_number})
+    end
+    success.merge({data: data})
+  end
+
+  def update_new_shop name, address, latitude, longtitude, designer_id
+    shop = @shop_service.create_shop name, address, latitude, longtitude
+    @designer_service.update_shop designer_id, shop.id
+    success.merge({message: "修改店铺成功"})
+  end
+
+  def update_shop designer_id, shop_id
+    @designer_service.update_shop designer_id, shop_id
+    success.merge({message: "修改店铺成功"})
+  end
+
+  def search_shops name
+    shops = @shop_service.search_shops name
+    success.merge({data: shops.map(&:attributes)})
+  end
+
+  def create_vita desc, image_paths, designer_id
+    image_paths = rebuild_images image_paths
+    begin
+      @designer_service.create_vita designer_id, image_paths, desc, vita_image_folder
+      success.merge({message: "添加成功"})
+    ensure
+      image_paths.each do |path|
+        File.delete(path[:image_path]) if File.exist? path[:image_path]
+        File.delete(path[:s_image_path]) if File.exist? path[:s_image_path]
+      end
+    end
+  end
+
+  def delete_vitae vita_ids
+    @designer_service.delete_designer_vitae vita_ids
+    success.merge({message: "删除成功"})
   end
 end

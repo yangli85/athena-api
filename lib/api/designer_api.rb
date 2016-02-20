@@ -21,6 +21,12 @@ class DesignerAPI
       return_response callback, result
     end
 
+    app.get 'designer_details' do
+      callback = params.delete('callback') # jsonp
+      result = DesignerController.call(:get_designer_details, [params['designer_id']])
+      return_response callback, result
+    end
+
     app.get 'designer_works' do
       callback = params.delete('callback')
       result = DesignerController.call(:get_designer_works, [params['designer_id'], params['page_size'], params['current_page']])
@@ -43,6 +49,58 @@ class DesignerAPI
       id = params['id']
       callback = params.delete('callback') # jsonp
       result = DesignerController.call(:get_designer_rank, [params['designer_id']]
+      return_response callback, result
+    end
+
+    app.get '/designer_twitters' do
+      callback = params.delete('callback')
+      result = DesignerController.call(:get_designer_twitters, [params['designer_id'], params['page_size'], params['current_page']])
+      return_response callback, result
+    end
+
+    app.get '/designer_delete_twitter' do
+      callback = params.delete('callback')
+      result = DesignerController.call(:delete_twitter, [params['designer_id'], params['twitter_id']])
+      return_response callback, result
+    end
+
+    app.get '/designer_latest_customers' do
+      callback = params.delete('callback')
+      result = DesignerController.call(:designer_latest_customers, [params['designer_id']])
+      return_response callback, result
+    end
+
+    app.post '/update_new_shop' do
+      callback = params.delete('callback')
+      args = [params['name'], params['address'], params['latitude'], params['longtitude'], params['designer_id']]
+      result = DesignerController.call(:update_new_shop, args)
+      return_response callback, result
+    end
+
+    app.post '/update_shop' do
+      callback = params.delete('callback')
+      result = DesignerController.call(:update_shop, [params['designer_id'], params['shop_id']])
+      return_response callback, result
+    end
+
+    app.get '/search_shops' do
+      callback = params.delete('callback')
+      result = DesignerController.call(:search_shops, [params['name']])
+      return_response callback, result
+    end
+
+    app.post '/add_vita' do
+      image_paths = params['image_paths'].split(",")
+      callback = params.delete('callback')
+      args = [params['desc'], image_paths, params['designer_id']]
+      result = DesignerController.call(:create_vita, args])
+      return_response callback, result
+    end
+
+    app.post '/del_vitae' do
+      vita_ids = params['vita_ids'].split(',')
+      callback = params.delete('callback')
+      result = DesignerController.call(:delete_vita, [vita_ids])
       return_response callback, result
     end
   end

@@ -12,6 +12,6 @@ class SmsController < BaseController
     sms = "欢迎您登录美丽秀,你的短信验证码是:#{code}"
     @sms_service.send sms, phone_number
     @sms_service.update_code phone_number, code
-    success
+    success.merge({message: '短信发送成功'})
   end
 end

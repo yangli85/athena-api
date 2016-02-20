@@ -12,7 +12,8 @@ describe SmsController do
     it "should send sms and return correct result" do
       expect(SmsController.new.send_sms_code fake_phone_number).to eq (
                                                                           {
-                                                                              :status => "SUCCESS"
+                                                                              :status => "SUCCESS",
+                                                                              :message=>"短信发送成功"
                                                                           }
                                                                       )
     end

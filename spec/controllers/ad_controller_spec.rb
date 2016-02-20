@@ -18,23 +18,24 @@ describe AdController do
       expect(subject.get_ad_images fake_category).to eq(
                                                          {
                                                              status: 'SUCCESS',
+                                                             message: "操作成功",
                                                              data:
                                                                  [
                                                                      {
-                                                                         :image =>
-                                                                             {
-                                                                                 :id => 1,
-                                                                                 :url => "images/1.jpg"
-                                                                             },
+                                                                         :image=>{
+                                                                             :id=>1,
+                                                                             :url=>"images/1.jpg",
+                                                                             :s_url=>nil
+                                                                         },
                                                                          :event => "search_designer",
                                                                          :args => "{:designer_id=>1}"
                                                                      },
                                                                      {
-                                                                         :image =>
-                                                                             {
-                                                                                 :id => 2,
-                                                                                 :url => "images/2.jpg"
-                                                                             },
+                                                                         :image=>{
+                                                                             :id=>2,
+                                                                             :url=>"images/2.jpg",
+                                                                             :s_url=>nil
+                                                                         },
                                                                          :event => "search_designer",
                                                                          :args => "{:designer_id=>2}"
                                                                      }
@@ -47,6 +48,7 @@ describe AdController do
       expect(subject.get_ad_images 'wrong category').to eq (
                                                                {
                                                                    status: 'SUCCESS',
+                                                                   message: "操作成功",
                                                                    data: []
                                                                }
                                                            )

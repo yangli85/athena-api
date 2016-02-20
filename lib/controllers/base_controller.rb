@@ -34,7 +34,8 @@ class BaseController
 
   def success
     {
-        status: SUCCESS
+        status: SUCCESS,
+        message: "操作成功"
     }
   end
 

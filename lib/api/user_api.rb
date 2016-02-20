@@ -1,20 +1,9 @@
 # encoding: UTF-8
 class UserAPI
   def self.registered(app)
-    app.get '/consumer_info' do
-      user_id = params['user_id']
+    app.get '/consumer_details' do
       callback = params.delete('callback') # jsonp
-      result ={
-          id: user_id,
-          avatar: 'images/avatar/1.png',
-          name: 'Tracy',
-          score: 290,
-          sex: 'male',
-          new_message: 4,
-          stars: 5,
-          twitters: 34,
-          phone_number: 18512334124
-      }
+      result = UserController.call(:get_user_details, [params['user_id'])
       return_response callback, result
     end
 
@@ -26,135 +15,47 @@ class UserAPI
 
     app.post '/publish_twitter' do
       callback = params.delete('callback') # jsonp
-      args = [params['author_id'],params['designer_id'],params['content'],params['image_paths'],params['stars'],params['latitude'],params['longtitude']]
+      image_paths = params['image_paths'].split(",")
+      args = [params['author_id'], params['designer_id'], params['content'], image_paths, params['stars'], params['latitude'], params['longtitude']]
       result = UserController.call(:publish_new_twitter, args)
       return_response callback, result
     end
 
-    app.get '/designer_info' do
-      user_id = params['user_id']
+    app.post '/add_favorite_image' do
       callback = params.delete('callback') # jsonp
-      result = {
-          id: user_id,
-          avatar: 'images/avatar/1.png',
-          name: 'Tracy',
-          score: 290,
-          sex: 'male',
-          new_message: 4,
-          stars: 5,
-          twitters: 34,
-          phone_number: 18512334124,
-          shop_id: 12,
-          shop_name: '希克造型(绿地世纪城店)',
-          about_me: '这是我的工作室'
-      }
+      result = UserController.call(:add_favorite_image, [params['user_id'], params['image_id']])
       return_response callback, result
     end
 
-    app.get '/designer_shop' do
-      user_id = params['user_id']
+    app.post '/del_favorite_images' do
+      ids = params["ids"].split(',')
       callback = params.delete('callback') # jsonp
-      result = {
-          id: user_id,
-          shop_id: 1,
-          name: '希克造型',
-          address: '丈八六路',
-          latitude: 103.124,
-          longtitude: 108.212,
-      }
-      return_response callback, result
-    end
-
-    app.post '/add_image_to_favorites' do
-      user_id = params['user_id']
-      image_id = params['id']
-      callback = params.delete('callback') # jsonp
-      result = {
-          result: 'success'
-      }
-      return_response callback, result
-    end
-
-    app.post '/del_image_from_favorites' do
-      user_id = params['user_id']
-      image_id = params['id']
-      callback = params.delete('callback') # jsonp
-      result = {
-          result: 'success'
-      }
+      result = UserController.call(:del_favorite_images, [ids]])
       return_response callback, result
     end
 
     app.get 'favorite_images' do
-      use_id = params['user_id']
-      image_id = params['image_id']
       callback = params.delete('callback') # jsonp
-      result =[
-          {
-              twitter_id: 12,
-              images_id: 2,
-              s_image: 'images/twitter/1.png',
-              image: 'images/twitter/1.png',
-              designer_id: 1,
-              designer_avatar: 'images/avatar/1.jpg'
-          },
-          {
-              twitter_id: 12,
-              images_id: 4,
-              s_image: 'images/twitter/2.png',
-              image: 'images/twitter/2.png',
-              designer_id: 1,
-              designer_avatar: 'images/avatar/2.jpg'
-          }
-      ]
+      result = UserController.call(:favorite_images, [params['user_id']])
       return_response callback, result
     end
 
-    app.post 'add_designer_to_favorites' do
-      user_id = params['user_id']
-      designer_id = params['designer_id']
+    app.post '/add_favorite_designer' do
       callback = params.delete('callback') # jsonp
-      result = {
-          result: 'success'
-      }
+      result = UserController.call(:add_favorite_designer, [params['user_id'], params['designer_id']])
       return_response callback, result
     end
 
-    app.post 'del_designer_to_favorites' do
-      user_id = params['user_id']
-      designer_id = params['designer_id']
+    app.post '/del_favorite_designers' do
+      ids = params["ids"].split(',')
       callback = params.delete('callback') # jsonp
-      result = {
-          result: 'success'
-      }
+      result = UserController.call(:del_favorite_designers, [ids]])
       return_response callback, result
     end
 
     app.get 'favorite_designers' do
-      user_id = params['user_id']
       callback = params.delete('callback') # jsonp
-      result =[
-          {
-              id: 10,
-              avatar: 'images/avatar/1.jpg',
-              designer_name: 'Tommy',
-              shop_name: '希客造型(绿地世纪城店)',
-              distance: 0.5,
-              stars: 50,
-              latitude: '34.27422',
-              longtitude: '108.94311'
-          },
-          {
-              id: 17,
-              avatar: 'images/avatar/2.jpg',
-              designer_name: 'Tommy',
-              shop_name: '希客造型(绿地世纪城店)',
-              distance: 0.5,
-              stars: 50,
-              latitude: '34.27422',
-              longtitude: '108.94311'
-          }
-      ]
+      result = UserController.call(:favorite_designers, [params['user_id']])
       return_response callback, result
     end
 
@@ -168,316 +69,69 @@ class UserAPI
       return_response callback, result
     end
 
-    app.get '/my_twitter' do
-      user_id = params['user_id']
-      pages_size = params['page_size']
-      current_page = params['current_page']
+    app.get '/user_twitters' do
       callback = params.delete('callback')
-      result = result = [
-          {
-              id: 12,
-              consumer_name: 'Casey',
-              consumer_avatar: 'imgaes/avatar/2.png',
-              content: '感谢Tommy老师给我设计的新发型,感觉自己年轻了,有木有!',
-              likes: 21,
-              designer_id: 12,
-              designer_avatar: 'images/avatar/4.png',
-              created_at: '2015-12-12 12:12:12',
-              images:
-                  [
-                      {
-                          s_image: 'images/twitter/11.jpg',
-                          image: 'images/twitter/11.jpg',
-                          likes: 12,
-                          added: false,
-                          order: 1
-                      },
-                      {
-                          s_image: 'images/twitter/12.jpg',
-                          image: 'images/twitter/12.jpg',
-                          likes: 22,
-                          added: false,
-                          order: 2
-                      }
-                  ]
-          },
-          {
-              id: 13,
-              consumer_name: 'Casey',
-              consumer_avatar: 'imgaes/avatar/3.png',
-              content: '感谢Tommy老师给我设计的新发型,感觉自己年轻了,有木有!',
-              likes: 21,
-              designer_id: 12,
-              designer_avatar: 'images/avatar/5.png',
-              created_at: '2015-12-12 12:12:12',
-              images:
-                  [
-                      {
-                          s_image: 'images/twitter/13.jpg',
-                          image: 'images/twitter/13.jpg',
-                          likes: 12,
-                          added: false,
-                          order: 1
-                      },
-                      {
-                          s_image: 'images/twitter/14.jpg',
-                          image: 'images/twitter/14.jpg',
-                          likes: 2,
-                          added: false,
-                          order: 2
-                      }
-                  ]
-          },
-          {
-              id: 13,
-              consumer_name: 'Casey',
-              consumer_avatar: 'imgaes/avatar/3.png',
-              content: '感谢Tommy老师给我设计的新发型,感觉自己年轻了,有木有!',
-              likes: 21,
-              designer_id: 12,
-              designer_avatar: 'images/avatar/5.png',
-              created_at: '2015-12-12 12:12:12',
-              images:
-                  [
-                      {
-                          s_image: 'images/twitter/13.jpg',
-                          image: 'images/twitter/13.jpg',
-                          likes: 12,
-                          added: false,
-                          order: 1
-                      },
-                      {
-                          s_image: 'images/twitter/14.jpg',
-                          image: 'images/twitter/14.jpg',
-                          likes: 2,
-                          added: false,
-                          order: 2
-                      }
-                  ]
-          },
-          {
-              id: 13,
-              consumer_name: 'Casey',
-              consumer_avatar: 'imgaes/avatar/3.png',
-              content: '感谢Tommy老师给我设计的新发型,感觉自己年轻了,有木有!',
-              likes: 21,
-              designer_id: 12,
-              designer_avatar: 'images/avatar/5.png',
-              created_at: '2015-12-12 12:12:12',
-              images:
-                  [
-                      {
-                          s_image: 'images/twitter/13.jpg',
-                          image: 'images/twitter/13.jpg',
-                          likes: 12,
-                          added: false,
-                          order: 1
-                      },
-                      {
-                          s_image: 'images/twitter/14.jpg',
-                          image: 'images/twitter/14.jpg',
-                          likes: 2,
-                          added: false,
-                          order: 2
-                      }
-                  ]
-          },
-          {
-              id: 13,
-              consumer_name: 'Casey',
-              consumer_avatar: 'imgaes/avatar/3.png',
-              content: '感谢Tommy老师给我设计的新发型,感觉自己年轻了,有木有!',
-              likes: 21,
-              designer_id: 12,
-              designer_avatar: 'images/avatar/5.png',
-              created_at: '2015-12-12 12:12:12',
-              images:
-                  [
-                      {
-                          s_image: 'images/twitter/13.jpg',
-                          image: 'images/twitter/13.jpg',
-                          likes: 12,
-                          added: false,
-                          order: 1
-                      },
-                      {
-                          s_image: 'images/twitter/14.jpg',
-                          image: 'images/twitter/14.jpg',
-                          likes: 2,
-                          added: false,
-                          order: 2
-                      }
-                  ]
-          }
-      ]
+      result = UserController.call(:get_user_twitters, [params['user_id'], params['page_size'], params['current_page']])
       return_response callback, result
     end
 
-    app.get 'designer_twitters' do
-      designer_id = params['designer_id']
-      pages_size = params['page_size']
-      current_page = params['current_page']
+    app.get '/user_delete_twitter' do
       callback = params.delete('callback')
-      result = result = [
-          {
-              id: 12,
-              consumer_name: 'Casey',
-              consumer_avatar: 'imgaes/avatar/2.png',
-              content: '感谢Tommy老师给我设计的新发型,感觉自己年轻了,有木有!',
-              likes: 21,
-              designer_id: designer_id,
-              designer_avatar: 'images/avatar/4.png',
-              created_at: '2015-12-12 12:12:12',
-              images:
-                  [
-                      {
-                          s_image: 'images/twitter/11.jpg',
-                          image: 'images/twitter/11.jpg',
-                          likes: 12,
-                          added: false,
-                          order: 1
-                      },
-                      {
-                          s_image: 'images/twitter/12.jpg',
-                          image: 'images/twitter/12.jpg',
-                          likes: 22,
-                          added: false,
-                          order: 2
-                      }
-                  ]
-          },
-          {
-              id: 13,
-              consumer_name: 'Casey',
-              consumer_avatar: 'imgaes/avatar/3.png',
-              content: '感谢Tommy老师给我设计的新发型,感觉自己年轻了,有木有!',
-              likes: 21,
-              designer_id: designer_id,
-              designer_avatar: 'images/avatar/5.png',
-              created_at: '2015-12-12 12:12:12',
-              images:
-                  [
-                      {
-                          s_image: 'images/twitter/13.jpg',
-                          image: 'images/twitter/13.jpg',
-                          likes: 12,
-                          added: false,
-                          order: 1
-                      },
-                      {
-                          s_image: 'images/twitter/14.jpg',
-                          image: 'images/twitter/14.jpg',
-                          likes: 2,
-                          added: false,
-                          order: 2
-                      }
-                  ]
-          },
-          {
-              id: 13,
-              consumer_name: 'Casey',
-              consumer_avatar: 'imgaes/avatar/3.png',
-              content: '感谢Tommy老师给我设计的新发型,感觉自己年轻了,有木有!',
-              likes: 21,
-              designer_id: designer_id,
-              designer_avatar: 'images/avatar/5.png',
-              created_at: '2015-12-12 12:12:12',
-              images:
-                  [
-                      {
-                          s_image: 'images/twitter/13.jpg',
-                          image: 'images/twitter/13.jpg',
-                          likes: 12,
-                          added: false,
-                          order: 1
-                      },
-                      {
-                          s_image: 'images/twitter/14.jpg',
-                          image: 'images/twitter/14.jpg',
-                          likes: 2,
-                          added: false,
-                          order: 2
-                      }
-                  ]
-          },
-          {
-              id: 13,
-              consumer_name: 'Casey',
-              consumer_avatar: 'imgaes/avatar/3.png',
-              content: '感谢Tommy老师给我设计的新发型,感觉自己年轻了,有木有!',
-              likes: 21,
-              designer_id: designer_id,
-              designer_avatar: 'images/avatar/5.png',
-              created_at: '2015-12-12 12:12:12',
-              images:
-                  [
-                      {
-                          s_image: 'images/twitter/13.jpg',
-                          image: 'images/twitter/13.jpg',
-                          likes: 12,
-                          added: false,
-                          order: 1
-                      },
-                      {
-                          s_image: 'images/twitter/14.jpg',
-                          image: 'images/twitter/14.jpg',
-                          likes: 2,
-                          added: false,
-                          order: 2
-                      }
-                  ]
-          },
-          {
-              id: 13,
-              consumer_name: 'Casey',
-              consumer_avatar: 'imgaes/avatar/3.png',
-              content: '感谢Tommy老师给我设计的新发型,感觉自己年轻了,有木有!',
-              likes: 21,
-              designer_id: designer_id,
-              designer_avatar: 'images/avatar/5.png',
-              created_at: '2015-12-12 12:12:12',
-              images:
-                  [
-                      {
-                          s_image: 'images/twitter/13.jpg',
-                          image: 'images/twitter/13.jpg',
-                          likes: 12,
-                          added: false,
-                          order: 1
-                      },
-                      {
-                          s_image: 'images/twitter/14.jpg',
-                          image: 'images/twitter/14.jpg',
-                          likes: 2,
-                          added: false,
-                          order: 2
-                      }
-                  ]
-          }
-      ]
+      result = UserController.call(:delete_twitter, [params['user_id'], params['twitter_id']])
       return_response callback, result
     end
 
-    app.get 'my_customers' do
-      designer_id = params['designer_id']
-      page_size = params['page_size']
-      current_page = params['current_page']
-      order_by = params['order_by']
+    app.get '/account' do
       callback = params.delete('callback')
-      result = [
-          {
-              user_id: 1,
-              name: 'Jack',
-              phone: '18611921242',
-              avatar: 'images/avatar/1.jpg'
-          },
-          {
-              user_id: 1,
-              name: 'Jack',
-              phone: '18611921242',
-              avatar: 'images/avatar/2.jpg'
-          }
-      ]
+      result = UserController.call(:get_account, [params['user_id']])
+      return_response callback, result
+    end
+
+    app.get '/account_logs' do
+      callback = params.delete('callback')
+      result = UserController.call(:get_account_logs, [params['user_id'], params['page_size'], params['current_page']])
+      return_response callback, result
+    end
+
+    app.post '/recharge' do
+      callback = params.delete('callback')
+      result = UserController.call(:recharge, [params['user_id'], params['balance'], params['channel']])
+      return_response callback, result
+    end
+
+    app.post '/donate_stars' do
+      callback = params.delete('callback')
+      result = UserController.call(:donate_stars, [params['user_id'], params['to_user_id'], params['balance']])
+      return_response callback, result
+    end
+
+    app.get '/messages' do
+      callback = params.delete('callback')
+      result = UserController.call(:messages, [params['user_id']])
+      return_response callback, result
+    end
+
+    app.post '/del_message' do
+      callback = params.delete('callback')
+      result = UserController.call(:delete_message, [params['message_id']])
+      return_response callback, result
+    end
+
+    app.post '/modify_avatar' do
+      callback = params.delete('callback')
+      result = UserController.call(:modify_avatar, [params['user_id'],params['image_path']])
+      return_response callback, result
+    end
+
+    app.post '/modify_name' do
+      callback = params.delete('callback')
+      result = UserController.call(:modify_name, [params['user_id'],params['new_name']])
+      return_response callback, result
+    end
+
+    app.post '/modify_gender' do
+      callback = params.delete('callback')
+      result = UserController.call(:modify_gender, [params['user_id'],params['new_gender']])
       return_response callback, result
     end
 

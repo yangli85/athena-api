@@ -30,25 +30,26 @@ describe DesignerController do
     designer6 = create(:designer, {user: user6, shop: shop4, totally_stars: 10})
     designer7 = create(:designer, {user: user7, shop: shop5, totally_stars: 11})
 
-    image1 = create(:image)
-    image2 = create(:image)
-    image3 = create(:image)
-    image4 = create(:image)
+    s_image= create(:image)
+    image1 = create(:image, s_image: s_image)
+    image2 = create(:image, s_image: s_image)
+    image3 = create(:image, s_image: s_image)
+    image4 = create(:image, s_image: s_image)
 
     twitter1 = create(:twitter, {id: 10, author: user1, designer: designer1})
     twitter2 = create(:twitter, {id: 11, author: user2, designer: designer1})
     twitter3 = create(:twitter, {author: user3, designer: designer1})
 
-    twitter_image1 = create(:twitter_image, {image: image1, s_image: image1, twitter: twitter1, likes: 10})
-    twitter_image2 = create(:twitter_image, {image: image2, s_image: image2, twitter: twitter2, likes: 10})
-    twitter_image3 = create(:twitter_image, {image: image3, s_image: image3, twitter: twitter3, likes: 4, rank: 1})
-    twitter_image4 = create(:twitter_image, {image: image4, s_image: image4, twitter: twitter3, likes: 8, rank: 2})
+    twitter_image1 = create(:twitter_image, {image: image1, twitter: twitter1, likes: 10})
+    twitter_image2 = create(:twitter_image, {image: image2, twitter: twitter2, likes: 10})
+    twitter_image3 = create(:twitter_image, {image: image3, twitter: twitter3, likes: 4, rank: 1})
+    twitter_image4 = create(:twitter_image, {image: image4, twitter: twitter3, likes: 8, rank: 2})
 
     vita1 = create(:vita, designer: designer1)
     vita2 = create(:vita, designer: designer1)
-    vita1_image1 = create(:vita_image, {vita: vita1, image: image1, s_image: image1})
-    vita1_image2 = create(:vita_image, {vita: vita1, image: image2, s_image: image2})
-    vita2_image1 = create(:vita_image, {vita: vita2, image: image3, s_image: image3})
+    vita1_image1 = create(:vita_image, {vita: vita1, image: image1})
+    vita1_image2 = create(:vita_image, {vita: vita1, image: image2})
+    vita2_image1 = create(:vita_image, {vita: vita2, image: image3})
   end
   describe "#get_vicinal_designers" do
     context 'vicinal' do
@@ -81,6 +82,7 @@ describe DesignerController do
       let(:fake_result) {
         {
             :status => "SUCCESS",
+            :message => "操作成功",
             :data => [
                 {
                     :id => 2,
@@ -127,6 +129,7 @@ describe DesignerController do
     let(:fake_result) {
       {
           :status => "SUCCESS",
+          :message => "操作成功",
           :data => [
               {
                   :id => 7,
@@ -183,6 +186,7 @@ describe DesignerController do
     let(:fake_result) {
       {
           :status => "SUCCESS",
+          :message => "操作成功",
           :data =>
               {
                   :id => 1,
@@ -213,11 +217,15 @@ describe DesignerController do
     let(:fake_result) {
       {
           :status => "SUCCESS",
+          :message => "操作成功",
           :data =>
               [
                   {
-                      :s_image => {:id => 1, :url => "images/1.jpg"},
-                      :image => {:id => 1, :url => "images/1.jpg"},
+                      :image => {
+                          :id => 2,
+                          :url => "images/1.jpg",
+                          :s_url => nil
+                      },
                       :likes => 10,
                       :designer =>
                           {
@@ -230,8 +238,11 @@ describe DesignerController do
                       :rank => 1
                   },
                   {
-                      :s_image => {:id => 2, :url => "images/1.jpg"},
-                      :image => {:id => 2, :url => "images/1.jpg"},
+                      :image => {
+                          :id => 3,
+                          :url => "images/1.jpg",
+                          :s_url => nil
+                      },
                       :likes => 10,
                       :designer =>
                           {
@@ -268,33 +279,35 @@ describe DesignerController do
     let(:fake_result) {
       {
           :status => "SUCCESS",
+          :message => "操作成功",
           :data => [
               {
                   :id => 1,
                   :desc => "this is a test vita",
-                  :images =>
-                      [
-                          {
-                              :s_image => {:id => 1, :url => "images/1.jpg"},
-                              :image => {:id => 1, :url => "images/1.jpg"},
-                          },
-                          {
-                              :s_image => {:id => 2, :url => "images/1.jpg"},
-                              :image => {:id => 2, :url => "images/1.jpg"},
-                          }
-                      ],
+                  :images => [
+                      {
+                          :id => 2,
+                          :url => "images/1.jpg",
+                          :s_url => nil
+                      },
+                      {
+                          :id => 3,
+                          :url => "images/1.jpg",
+                          :s_url => nil
+                      }
+                  ],
                   :created_at => "8小时前"
               },
               {
                   :id => 2,
                   :desc => "this is a test vita",
-                  :images =>
-                      [
-                          {
-                              :s_image => {:id => 3, :url => "images/1.jpg"},
-                              :image => {:id => 3, :url => "images/1.jpg"},
-                          }
-                      ],
+                  :images => [
+                      {
+                          :id => 4,
+                          :url => "images/1.jpg",
+                          :s_url => nil
+                      }
+                  ],
                   :created_at => "8小时前"
               }
           ]
@@ -316,6 +329,7 @@ describe DesignerController do
     let(:fake_result) {
       {
           :status => "SUCCESS",
+          :message => "操作成功",
           :data =>
               [
                   {
@@ -352,6 +366,7 @@ describe DesignerController do
     let(:fake_result) {
       {
           :status => "SUCCESS",
+          :message => "操作成功",
           :data => {
               :rank => 1
           }
@@ -369,6 +384,294 @@ describe DesignerController do
 
     it "should return designer rank in correct json format" do
       expect(subject.get_designer_rank(7, "totally_stars")).to eq fake_result
+    end
+  end
+
+  describe "#get_designer_details" do
+    let(:fake_result) {
+      {
+          :status => "SUCCESS",
+          :message => "操作成功",
+          :data =>
+              {
+                  :id => 1,
+                  :user_id => 1,
+                  :name => "user1",
+                  :avatar => nil,
+                  :vitality => 100,
+                  :gender => "unknow",
+                  :new_message => 0,
+                  :balance => nil,
+                  :twitters => 3,
+                  :phone_number => "13800000001",
+                  :shop =>
+                      {
+                          :id => 1,
+                          :name => "test1",
+                          :address => "address1",
+                          :latitude => "34.2620",
+                          :longtitude => "108.9430"
+                      },
+                  :vitae_count => 2
+              }
+      }
+    }
+    it "should return designer's details in correct json format" do
+      expect(subject.get_designer_details 1).to eq (fake_result)
+    end
+
+    it "should raise common error if designer not exist" do
+      expect { subject.get_designer_details 100 }.to raise_error Common::Error, "设计师不存在."
+    end
+  end
+
+  describe "designer twitter" do
+    let(:user) { create(:user) }
+    let(:author) { create(:user, phone_number: '13812345678') }
+    let(:designer) { create(:designer, user: user) }
+    let(:s_image) { create(:image) }
+    let(:image) { create(:image, s_image: s_image) }
+    let(:fake_result) {
+      {
+          :status => "SUCCESS",
+          :message => "操作成功",
+          :data =>
+              [
+                  {
+                      :id => 13,
+                      :author =>
+                          {
+                              :id => 8,
+                              :name => "user1",
+                              :avatar => nil
+                          },
+                      :content => "this is a test twitter",
+                      :likes => 20,
+                      :designer =>
+                          {
+                              :id => 8,
+                              :user_id => 9,
+                              :name => "user1",
+                              :avatar => nil
+                          },
+                      :image_count => 1,
+                      :images => [
+                          {
+                              :image =>
+                                  {
+                                      :id => 7,
+                                      :url => "images/1.jpg",
+                                      :s_url => "images/1.jpg"
+                                  },
+                              :likes => 20,
+                              :rank => 1
+                          }
+                      ],
+                      :created_at => "1小时前"
+                  }
+              ]
+      }
+    }
+
+    before do
+      allow_any_instance_of(Pandora::Models::Twitter).to receive(:relative_time).and_return("1小时前")
+      twitter = create(:twitter, author: author, designer: designer)
+      create(:twitter_image, {twitter: twitter, image: image})
+    end
+
+    describe "#get_designer_twitters" do
+      it "should return designer's twitters" do
+        expect(subject.get_designer_twitters(designer.id, 1, 1)[:data].count).to eq 1
+      end
+
+      it "should return designer's twitters in correct json format" do
+        expect(subject.get_designer_twitters(designer.id, 1, 1)).to eq fake_result
+      end
+    end
+
+    describe "#delete_twitter" do
+      it "should return delete user's twitters" do
+        subject.delete_twitter(designer.id, designer.twitters.first.id)
+        expect(Pandora::Models::Designer.find(designer.id).twitters.active.count).to eq 0
+      end
+    end
+
+    describe "#designer_latest_customers" do
+      let(:fake_result) {
+        {
+            :status => "SUCCESS",
+            :message => "操作成功",
+            :data =>
+                [
+                    {
+                        :id => 8,
+                        :name => "user1",
+                        :avatar => nil,
+                        :phone_number => "13812345678"
+                    }
+                ]
+        }
+      }
+
+      before do
+        create(:twitter, author: author, designer: designer)
+      end
+
+      it "should return designer's latest customers in correct json format" do
+        expect(subject.designer_latest_customers designer.id).to eq fake_result
+      end
+    end
+  end
+
+  describe "designer shop" do
+    let(:user) { create(:user) }
+    let(:designer) { create(:designer, user: user) }
+    let(:fake_name) { "new shop" }
+    let(:fake_address) { "ZhuQue Street No1" }
+    let(:fake_lat) { "108.124" }
+    let(:fake_lon) { "108.124" }
+
+    describe "#update_new_shop" do
+      it "should create a new shop and update designer'shop" do
+        subject.update_new_shop fake_name, fake_address, fake_lat, fake_lon, designer.id
+        expect(Pandora::Models::Designer.find(designer.id).shop.attributes).to eq (
+                                                                                      {
+                                                                                          :id => 6,
+                                                                                          :name => fake_name,
+                                                                                          :address => fake_address,
+                                                                                          :latitude => fake_lat,
+                                                                                          :longtitude => fake_lon
+                                                                                      }
+                                                                                  )
+      end
+    end
+
+    describe "#update_shop" do
+      it "should update designer's shop" do
+        subject.update_shop designer.id, 5
+        expect(Pandora::Models::Designer.find(designer.id).shop.id).to eq 5
+      end
+    end
+
+    describe "#search_shops" do
+      let(:fake_result) {
+        {
+            :status => "SUCCESS",
+            :message => "操作成功",
+            :data =>
+                [
+                    {
+                        :id => 1,
+                        :name => "test1",
+                        :address => "address1",
+                        :latitude => "34.2620",
+                        :longtitude => "108.9430"
+                    }
+                ]
+        }
+      }
+
+      it "should matched shops" do
+        expect(subject.search_shops('test')[:data].count).to eq 5
+        expect(subject.search_shops('test1')[:data].count).to eq 1
+        expect(subject.search_shops('nononono')[:data].count).to eq 0
+      end
+
+      it "should return shops in correct json format" do
+        expect(subject.search_shops 'test1').to eq fake_result
+      end
+    end
+  end
+
+  describe "#create_vita" do
+    let(:user) { create(:user) }
+    let(:designer) { create(:designer, user: user) }
+    let(:fake_images_folder) { "temp_images" }
+    let(:fake_temp_images_folder) { "spec/temp_images" }
+    let(:fake_temp_image_paths) { ["#{fake_temp_images_folder}/icon.jpg", "#{fake_temp_images_folder}/icon.png"] }
+    let(:fake_image_paths) { ["spec/fixtures/icon.jpg", "spec/fixtures/icon.png"] }
+    let(:fake_desc) { "this is a test vita" }
+
+    before do
+      FileUtils.mkdir_p(fake_temp_images_folder) unless Dir.exists?(fake_temp_images_folder)
+      fake_image_paths.each do |path|
+        FileUtils.cp(path, "#{fake_temp_images_folder}/#{File.basename(path)}")
+      end
+      allow(ENV).to receive(:[]).with('IMGAES_FOLDER').and_return fake_images_folder
+    end
+
+    after do
+      FileUtils.rm_rf(fake_temp_images_folder)
+      FileUtils.rm_rf(fake_images_folder)
+    end
+
+    it "should create a new vita" do
+      subject.create_vita fake_desc, fake_temp_image_paths, designer.id
+      expect(Pandora::Models::Designer.find(designer.id).vitae.count).to eq 1
+    end
+
+    it "should generate small image for upload images" do
+      allow_any_instance_of(Pandora::Services::DesignerService).to receive(:create_vita)
+      allow(File).to receive(:delete)
+      subject.create_vita fake_desc, fake_temp_image_paths, designer.id
+      fake_temp_image_paths.each do |path|
+        expect(File.exist?(Common::ImageHelper.new.generate_s_image_path path)).to eq true
+      end
+    end
+
+    it "should move image from temp folder to vita folder" do
+      subject.create_vita fake_desc, fake_temp_image_paths, designer.id
+      expect(Dir["#{fake_temp_images_folder}/*"].length).to eq 0
+      expect(Dir["#{fake_images_folder}/vita/*"].length).to eq 4
+    end
+
+    it "should delete temp file if raise error when create twitter" do
+      allow_any_instance_of(Pandora::Services::DesignerService).to receive(:create_vita).and_raise StandardError
+      expect { subject.create_vita fake_desc, fake_temp_image_paths, designer.id }.to raise_error StandardError
+      expect(Dir["#{fake_temp_images_folder}/*"].length).to eq 0
+    end
+
+    it "should create a new vita" do
+      subject.create_vita fake_desc, fake_temp_image_paths, designer.id
+      vita = Pandora::Models::Designer.find(designer.id).vitae.first
+      expect(vita.images.map(&:s_image).map(&:url)).to eq (["temp_images/vita/s_icon.jpg", "temp_images/vita/s_icon.png"])
+      expect(vita.images.map(&:url)).to eq (["temp_images/vita/icon.jpg", "temp_images/vita/icon.png"])
+      expect(vita.designer).to eq designer
+      expect(vita.desc).to eq fake_desc
+    end
+  end
+
+  describe "#delete_vita" do
+    let(:user) { create(:user, phone_number: '13800001111') }
+    let(:designer) { create(:designer, user: user) }
+
+    before do
+      s_image1 = create(:image)
+      s_image2 = create(:image)
+      s_image3 = create(:image)
+      s_image4 = create(:image)
+      image1 = create(:image, s_image: s_image1)
+      image2 = create(:image, s_image: s_image2)
+      image3 = create(:image, s_image: s_image3)
+      image4 = create(:image, s_image: s_image4)
+      vita1 = create(:vita, designer: designer)
+      vita2 = create(:vita, designer: designer)
+      vita3 = create(:vita, designer: designer)
+      vita4 = create(:vita, designer: designer)
+      create(:vita_image, {image: image1, vita: vita1})
+      create(:vita_image, {image: image2, vita: vita2})
+      create(:vita_image, {image: image3, vita: vita3})
+      create(:vita_image, {image: image4, vita: vita4})
+    end
+
+    it "should delete single vita" do
+      subject.delete_vitae designer.vitae.first.id
+      expect(Pandora::Models::Designer.find(designer.id).vitae.count).to eq 3
+    end
+
+    it "should delete muiltiple vitae" do
+      subject.delete_vitae designer.vitae.map(&:id)
+      expect(Pandora::Models::Designer.find(designer.id).vitae.count).to eq 0
     end
   end
 end
