@@ -7,14 +7,14 @@ describe TwitterController do
     avatar = create(:image)
     user = create(:user, avatar: avatar)
     designer = create(:designer, user: user)
-    s_image1 = create(:image)
-    s_image2 = create(:image)
-    s_image3 = create(:image)
-    s_image4 = create(:image)
-    image1 = create(:image, s_image: s_image1)
-    image2 = create(:image, s_image: s_image2)
-    image3 = create(:image, s_image: s_image3)
-    image4 = create(:image, s_image: s_image4)
+    image1 = create(:image)
+    image2 = create(:image)
+    image3 = create(:image)
+    image4 = create(:image)
+    s_image1 = create(:image, original_image: image1)
+    s_image2 = create(:image, original_image: image2)
+    s_image3 = create(:image, original_image: image3)
+    s_image4 = create(:image, original_image: image4)
     twitter1 = create(:twitter, {author: user, designer: designer})
     twitter2 = create(:twitter, {author: user, designer: designer, image_count: 3})
     create(:twitter_image, {twitter: twitter1, image: image1, likes: 3})
@@ -31,7 +31,7 @@ describe TwitterController do
           data: [
               {
                   :image => {
-                      :id => 9,
+                      :id => 5,
                       :url => "images/1.jpg",
                       :s_url => "images/1.jpg"
                   },
@@ -51,7 +51,7 @@ describe TwitterController do
               },
               {
                   :image => {
-                      :id => 8,
+                      :id => 4,
                       :url => "images/1.jpg",
                       :s_url => "images/1.jpg"
                   },
@@ -72,7 +72,7 @@ describe TwitterController do
               },
               {
                   :image => {
-                      :id => 7,
+                      :id => 3,
                       :url => "images/1.jpg",
                       :s_url => "images/1.jpg"
                   },
@@ -92,7 +92,7 @@ describe TwitterController do
               },
               {
                   :image => {
-                      :id => 6,
+                      :id => 2,
                       :url => "images/1.jpg",
                       :s_url => "images/1.jpg"
                   },
@@ -153,7 +153,7 @@ describe TwitterController do
               :images => [
                   {
                       :image => {
-                          :id => 7,
+                          :id => 3,
                           :url => "images/1.jpg",
                           :s_url => "images/1.jpg"
                       },
@@ -162,7 +162,7 @@ describe TwitterController do
                   },
                   {
                       :image => {
-                          :id => 8,
+                          :id => 4,
                           :url => "images/1.jpg",
                           :s_url => "images/1.jpg"
                       },
@@ -171,7 +171,7 @@ describe TwitterController do
                   },
                   {
                       :image => {
-                          :id => 9,
+                          :id => 5,
                           :url => "images/1.jpg",
                           :s_url => "images/1.jpg"
                       },
@@ -230,7 +230,7 @@ describe TwitterController do
                           [
                               {
                                   :image => {
-                                      :id => 6,
+                                      :id => 2,
                                       :url => "images/1.jpg",
                                       :s_url => "images/1.jpg"
                                   },
@@ -269,7 +269,7 @@ describe TwitterController do
                       :images => [
                           {
                               :image => {
-                                  :id => 7,
+                                  :id => 3,
                                   :url => "images/1.jpg",
                                   :s_url => "images/1.jpg"
                               },
@@ -278,7 +278,7 @@ describe TwitterController do
                           },
                           {
                               :image => {
-                                  :id => 8,
+                                  :id => 4,
                                   :url => "images/1.jpg",
                                   :s_url => "images/1.jpg"
                               },
@@ -287,7 +287,7 @@ describe TwitterController do
                           },
                           {
                               :image => {
-                                  :id => 9,
+                                  :id => 5,
                                   :url => "images/1.jpg",
                                   :s_url => "images/1.jpg"
                               },
@@ -340,7 +340,7 @@ describe TwitterController do
                   :images => [
                       {
                           :image => {
-                              :id => 6,
+                              :id => 2,
                               :url => "images/1.jpg",
                               :s_url => "images/1.jpg"
                           },

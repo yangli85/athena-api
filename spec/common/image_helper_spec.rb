@@ -20,6 +20,7 @@ describe Common::ImageHelper do
       require 'fileutils'
       FileUtils.rm_rf('temp_images')
     end
+
     it "should generate_thumbnails for png image" do
       image_path = subject.generate_thumbnails fake_png_path, fake_small_png_path, 0.25
       expect(File.exist?(fake_small_png_path)).to eq true
@@ -28,6 +29,18 @@ describe Common::ImageHelper do
     it "should generate_thumbnails for jpg image" do
       image_path = subject.generate_thumbnails fake_jpg_path, fake_small_jpg_path, 0.25
       expect(File.exist?(fake_small_jpg_path)).to eq true
+    end
+  end
+
+  describe "generate small image" do
+
+    it "should generate small image" do
+      folder = ["images/vita"]
+      folder.each do |folder|
+        Dir["#{folder}/*.jpg"].each do |x|
+          subject.generate_thumbnails x,(subject.generate_s_image_path x),scale=0.5
+        end
+      end
     end
   end
 end

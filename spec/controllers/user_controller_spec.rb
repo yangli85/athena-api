@@ -200,7 +200,7 @@ describe UserController do
     it "should create a new twitter" do
       subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon)
       twitter = author.twitters.first
-      expect(twitter.images.map(&:s_image).map(&:url)).to eq (["temp_images/twitter/s_icon.jpg", "temp_images/twitter/s_icon.png"])
+      expect(twitter.images.map(&:s_url)).to eq (["temp_images/twitter/s_icon.jpg", "temp_images/twitter/s_icon.png"])
       expect(twitter.images.map(&:url)).to eq (["temp_images/twitter/icon.jpg", "temp_images/twitter/icon.png"])
       expect(twitter.author).to eq author
       expect(twitter.designer).to eq designer
@@ -227,6 +227,24 @@ describe UserController do
     it "should raise common error if author balance is not enough" do
       author.account.update(balance: 1)
       expect { subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon) }.to raise_error Common::Error, '对不起,星星不够!'
+    end
+
+    it "should create message for designer" do
+      subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon)
+      expect(Pandora::Models::User.find(designer.user.id).messages.count).to eq 1
+      expect(Pandora::Models::User.find(designer.user.id).messages.first.content).to eq "user1发布了一条关于你的新动态,送给你3颗星星"
+      expect(Pandora::Models::User.find(designer.user.id).messages.first.is_new).to eq true
+    end
+
+    it "should update designer stars" do
+      old_totally_stars = designer.totally_stars
+      old_weekly_stars = designer.weekly_stars
+      old_monthly_stars = designer.monthly_stars
+      subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon)
+      new_designer = Pandora::Models::Designer.find(designer.id)
+      expect(new_designer.totally_stars - old_totally_stars).to eq 3
+      expect(new_designer.weekly_stars - old_weekly_stars).to eq 3
+      expect(new_designer.monthly_stars - old_monthly_stars).to eq 3
     end
   end
 
@@ -304,12 +322,26 @@ describe UserController do
   describe "favorite images" do
     let(:image) { create(:image) }
     let(:user) { create(:user, {phone_number: fake_phone}) }
+    let(:designer) { create(:designer, {user: user}) }
+    let(:image) { create(:image) }
+    let(:twitter) { create(:twitter, {author: user, designer: designer}) }
+
+    before do
+      create(:twitter_image, {twitter: twitter, image: image})
+    end
 
     describe "#add_favorite_image" do
       it "should add favorite image" do
-        subject.add_favorite_image user.id, image.id
+        subject.add_favorite_image user.id, image.id, twitter.id
         expect(user.favorite_images.count).to eq 1
       end
+
+      it "should update twitter image likes" do
+        old_likes = twitter.likes
+        subject.add_favorite_image user.id, image.id, twitter.id
+        expect(Pandora::Models::Twitter.find(twitter.id).likes - old_likes).to eq 1
+      end
+
     end
 
     describe "#del_favorite_image" do
@@ -365,6 +397,12 @@ describe UserController do
       it "should add favorite designer" do
         subject.add_favorite_designer user.id, designer.id
         expect(user.favorite_designers.count).to eq 1
+      end
+
+      it "should update designer likes" do
+        old_likes = designer.likes
+        subject.add_favorite_designer user.id, designer.id
+        expect(Pandora::Models::Designer.find(designer.id).likes - old_likes).to eq 1
       end
     end
 
@@ -424,8 +462,7 @@ describe UserController do
     let(:user) { create(:user) }
     let(:author) { create(:user, phone_number: fake_phone) }
     let(:designer) { create(:designer, user: user) }
-    let(:s_image) { create(:image) }
-    let(:image) { create(:image, s_image: s_image) }
+    let(:image) { create(:image) }
     let(:fake_result) {
       {
           :status => "SUCCESS",
@@ -454,7 +491,7 @@ describe UserController do
                           {
                               :image =>
                                   {
-                                      :id => 2,
+                                      :id => 1,
                                       :url => "images/1.jpg",
                                       :s_url => "images/1.jpg"
                                   },
@@ -471,6 +508,7 @@ describe UserController do
     before do
       allow_any_instance_of(Pandora::Models::Twitter).to receive(:relative_time).and_return("1小时前")
       twitter = create(:twitter, author: author, designer: designer)
+      create(:image, original_image: image)
       create(:twitter_image, {twitter: twitter, image: image})
     end
 
@@ -610,6 +648,13 @@ describe UserController do
         expect(logs.first[:balance]).to eq 10
         expect(logs.first[:desc]).to eq '收到user1赠送给你的10颗星星'
       end
+
+      it "should create message for to_user" do
+        subject.donate_stars from_user.id, to_user.id, 10
+        expect(Pandora::Models::User.find(to_user.id).messages.count).to eq 1
+        expect(Pandora::Models::User.find(to_user.id).messages.first.content).to eq "收到user1赠送给你的10颗星星"
+        expect(Pandora::Models::User.find(to_user.id).messages.first.is_new).to eq true
+      end
     end
   end
   describe "message" do
@@ -681,7 +726,7 @@ describe UserController do
       subject.modify_avatar user.id, fake_temp_image_path
       expect(Pandora::Models::User.find(user.id).avatar.attributes).to eq (
                                                                               {
-                                                                                  :id => 2,
+                                                                                  :id => 1,
                                                                                   :url => "temp_images/avatar/icon.jpg",
                                                                                   :s_url => "temp_images/avatar/s_icon.jpg"
                                                                               }

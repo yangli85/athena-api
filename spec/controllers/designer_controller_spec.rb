@@ -30,11 +30,21 @@ describe DesignerController do
     designer6 = create(:designer, {user: user6, shop: shop4, totally_stars: 10})
     designer7 = create(:designer, {user: user7, shop: shop5, totally_stars: 11})
 
-    s_image= create(:image)
-    image1 = create(:image, s_image: s_image)
-    image2 = create(:image, s_image: s_image)
-    image3 = create(:image, s_image: s_image)
-    image4 = create(:image, s_image: s_image)
+    image1 = create(:image)
+    image2 = create(:image)
+    image3 = create(:image)
+    image4 = create(:image)
+    image5 = create(:image)
+    image6 = create(:image)
+    image7 = create(:image)
+
+    s_image1 = create(:image, original_image: image1)
+    s_image2 = create(:image, original_image: image2)
+    s_image3 = create(:image, original_image: image3)
+    s_image4 = create(:image, original_image: image4)
+    s_image5 = create(:image, original_image: image5)
+    s_image6 = create(:image, original_image: image6)
+    s_image7 = create(:image, original_image: image7)
 
     twitter1 = create(:twitter, {id: 10, author: user1, designer: designer1})
     twitter2 = create(:twitter, {id: 11, author: user2, designer: designer1})
@@ -47,9 +57,9 @@ describe DesignerController do
 
     vita1 = create(:vita, designer: designer1)
     vita2 = create(:vita, designer: designer1)
-    vita1_image1 = create(:vita_image, {vita: vita1, image: image1})
-    vita1_image2 = create(:vita_image, {vita: vita1, image: image2})
-    vita2_image1 = create(:vita_image, {vita: vita2, image: image3})
+    vita1_image1 = create(:vita_image, {vita: vita1, image: image5})
+    vita1_image2 = create(:vita_image, {vita: vita1, image: image6})
+    vita2_image1 = create(:vita_image, {vita: vita2, image: image7})
   end
   describe "#get_vicinal_designers" do
     context 'vicinal' do
@@ -222,9 +232,9 @@ describe DesignerController do
               [
                   {
                       :image => {
-                          :id => 2,
+                          :id => 1,
                           :url => "images/1.jpg",
-                          :s_url => nil
+                          :s_url => "images/1.jpg"
                       },
                       :likes => 10,
                       :designer =>
@@ -239,9 +249,9 @@ describe DesignerController do
                   },
                   {
                       :image => {
-                          :id => 3,
+                          :id => 2,
                           :url => "images/1.jpg",
-                          :s_url => nil
+                          :s_url => "images/1.jpg"
                       },
                       :likes => 10,
                       :designer =>
@@ -286,14 +296,14 @@ describe DesignerController do
                   :desc => "this is a test vita",
                   :images => [
                       {
-                          :id => 2,
+                          :id => 5,
                           :url => "images/1.jpg",
-                          :s_url => nil
+                          :s_url => "images/1.jpg"
                       },
                       {
-                          :id => 3,
+                          :id => 6,
                           :url => "images/1.jpg",
-                          :s_url => nil
+                          :s_url => "images/1.jpg"
                       }
                   ],
                   :created_at => "8小时前"
@@ -303,9 +313,9 @@ describe DesignerController do
                   :desc => "this is a test vita",
                   :images => [
                       {
-                          :id => 4,
+                          :id => 7,
                           :url => "images/1.jpg",
-                          :s_url => nil
+                          :s_url => "images/1.jpg"
                       }
                   ],
                   :created_at => "8小时前"
@@ -320,7 +330,6 @@ describe DesignerController do
     end
 
     it "should return desiger's vita in correct json format" do
-
       expect(subject.get_designer_vitae 1, 2, 1).to eq fake_result
     end
   end
@@ -429,8 +438,7 @@ describe DesignerController do
     let(:user) { create(:user) }
     let(:author) { create(:user, phone_number: '13812345678') }
     let(:designer) { create(:designer, user: user) }
-    let(:s_image) { create(:image) }
-    let(:image) { create(:image, s_image: s_image) }
+    let(:image) { create(:image) }
     let(:fake_result) {
       {
           :status => "SUCCESS",
@@ -459,9 +467,9 @@ describe DesignerController do
                           {
                               :image =>
                                   {
-                                      :id => 7,
+                                      :id => 15,
                                       :url => "images/1.jpg",
-                                      :s_url => "images/1.jpg"
+                                      :s_url=>"images/1.jpg"
                                   },
                               :likes => 20,
                               :rank => 1
@@ -474,6 +482,7 @@ describe DesignerController do
     }
 
     before do
+      create(:image, original_image: image)
       allow_any_instance_of(Pandora::Models::Twitter).to receive(:relative_time).and_return("1小时前")
       twitter = create(:twitter, author: author, designer: designer)
       create(:twitter_image, {twitter: twitter, image: image})
@@ -634,7 +643,7 @@ describe DesignerController do
     it "should create a new vita" do
       subject.create_vita fake_desc, fake_temp_image_paths, designer.id
       vita = Pandora::Models::Designer.find(designer.id).vitae.first
-      expect(vita.images.map(&:s_image).map(&:url)).to eq (["temp_images/vita/s_icon.jpg", "temp_images/vita/s_icon.png"])
+      expect(vita.images.map(&:s_url)).to eq (["temp_images/vita/s_icon.jpg", "temp_images/vita/s_icon.png"])
       expect(vita.images.map(&:url)).to eq (["temp_images/vita/icon.jpg", "temp_images/vita/icon.png"])
       expect(vita.designer).to eq designer
       expect(vita.desc).to eq fake_desc
@@ -646,14 +655,14 @@ describe DesignerController do
     let(:designer) { create(:designer, user: user) }
 
     before do
-      s_image1 = create(:image)
-      s_image2 = create(:image)
-      s_image3 = create(:image)
-      s_image4 = create(:image)
-      image1 = create(:image, s_image: s_image1)
-      image2 = create(:image, s_image: s_image2)
-      image3 = create(:image, s_image: s_image3)
-      image4 = create(:image, s_image: s_image4)
+      image1 = create(:image)
+      image2 = create(:image)
+      image3 = create(:image)
+      image4 = create(:image)
+      s_image1 = create(:image, original_image: image1)
+      s_image2 = create(:image, original_image: image2)
+      s_image3 = create(:image, original_image: image3)
+      s_image4 = create(:image, original_image: image4)
       vita1 = create(:vita, designer: designer)
       vita2 = create(:vita, designer: designer)
       vita3 = create(:vita, designer: designer)

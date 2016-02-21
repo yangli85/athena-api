@@ -101,7 +101,7 @@ class DesignerController < BaseController
                                            vitality: designer.user.vitality,
                                            gender: designer.user.gender,
                                            new_message: new_message_count,
-                                           balance: user.account && user.acount.balance,
+                                           balance: user.account && user.account.balance,
                                            twitters: designer.twitters.count,
                                            phone_number: user.phone_number,
                                            shop: designer.shop && designer.shop.attributes,
