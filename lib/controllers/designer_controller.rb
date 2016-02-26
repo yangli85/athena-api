@@ -164,4 +164,14 @@ class DesignerController < BaseController
     @designer_service.delete_designer_vitae vita_ids
     success.merge({message: "删除成功"})
   end
+
+  def pay_for_vip designer_id
+    designer = @designer_service.get_designer designer_id
+    expired_at = DateTime.now >> 12
+    if designer.is_vip
+      expired_at = designer.expired_at.to_datetime >> 12
+    end
+    @designer_service.update_designer designer_id, "expired_at", expired_at
+    @designer_service.update_designer designer_id, "is_vip", true unless designer.is_vip
+  end
 end

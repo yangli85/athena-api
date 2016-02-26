@@ -40,7 +40,7 @@ class BaseController
   end
 
   def check_args args
-    raise Common::Error.new("参数传递错误.") if args.any? { |arg| arg.nil? || (!arg.kind_of?(Integer) && arg.strip.empty?) }
+    raise Common::Error.new("参数传递错误.") if args.any? { |arg| arg.nil? }
   end
 
 end

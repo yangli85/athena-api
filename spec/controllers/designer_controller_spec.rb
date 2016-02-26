@@ -469,7 +469,7 @@ describe DesignerController do
                                   {
                                       :id => 15,
                                       :url => "images/1.jpg",
-                                      :s_url=>"images/1.jpg"
+                                      :s_url => "images/1.jpg"
                                   },
                               :likes => 20,
                               :rank => 1
@@ -681,6 +681,45 @@ describe DesignerController do
     it "should delete muiltiple vitae" do
       subject.delete_vitae designer.vitae.map(&:id)
       expect(Pandora::Models::Designer.find(designer.id).vitae.count).to eq 0
+    end
+  end
+
+  describe "#pay_for_vip" do
+    let(:user) { create(:user, phone_number: '13800001111') }
+    let(:designer) { create(:designer, user: user) }
+
+    context "not a vip user" do
+      let(:fake_today) { DateTime.parse("201512121212") }
+      let(:fake_expired_at) { DateTime.parse("201612121212") }
+
+      before do
+        allow(DateTime).to receive(:now).and_return fake_today
+        designer.update(is_vip: false)
+      end
+
+      it "should update designer expired time" do
+        subject.pay_for_vip designer.id
+        expect(Pandora::Models::Designer.find(designer.id).expired_at).to eq fake_expired_at
+      end
+
+      it "should update designer to be vip user" do
+        subject.pay_for_vip designer.id
+        expect(Pandora::Models::Designer.find(designer.id).is_vip).to be true
+      end
+    end
+
+    context "not a vip user" do
+      let(:fake_expired_at) { DateTime.parse("201512121212") }
+      let(:fake_new_expired_at) { DateTime.parse("201612121212") }
+
+      before do
+        designer.update(expired_at: fake_expired_at)
+      end
+
+      it "should update designer expired time" do
+        subject.pay_for_vip designer.id
+        expect(Pandora::Models::Designer.find(designer.id).expired_at).to eq fake_new_expired_at
+      end
     end
   end
 end

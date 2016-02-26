@@ -34,5 +34,17 @@ module Common
       FileUtils.mkdir_p(folder) unless Dir.exists?(folder)
       folder
     end
+
+    def code_image_folder
+      folder = "#{ENV["IMGAES_FOLDER"]}/code"
+      FileUtils.mkdir_p(folder) unless Dir.exists?(folder)
+      folder
+    end
+
+    def shop_image_folder
+      folder = "#{ENV["IMGAES_FOLDER"]}/code"
+      FileUtils.mkdir_p(folder) unless Dir.exists?(folder)
+      folder
+    end
   end
 end

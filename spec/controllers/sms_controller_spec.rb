@@ -13,7 +13,7 @@ describe SmsController do
       expect(SmsController.new.send_sms_code fake_phone_number).to eq (
                                                                           {
                                                                               :status => "SUCCESS",
-                                                                              :message=>"短信发送成功"
+                                                                              :message => "短信发送成功"
                                                                           }
                                                                       )
     end
@@ -26,7 +26,7 @@ describe SmsController do
 
     it "should return error result if send sms failed" do
       allow_any_instance_of(Pandora::Services::SMSService).to receive(:send).and_raise StandardError
-      expect{SmsController.new.send_sms_code fake_phone_number}.to raise_error StandardError
+      expect { SmsController.new.send_sms_code fake_phone_number }.to raise_error StandardError
     end
   end
 end

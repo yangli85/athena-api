@@ -49,7 +49,7 @@ module API
 
       app.get '/designer_rank' do
         callback = params.delete('callback') # jsonp
-        result = DesignerController.call(:get_designer_rank, [params['designer_id'].to_i,params['order_by']])
+        result = DesignerController.call(:get_designer_rank, [params['designer_id'].to_i, params['order_by']])
         return_response callback, result
       end
 
@@ -102,6 +102,12 @@ module API
         vita_ids = params['vita_ids'].split(',').map(&:to_i)
         callback = params.delete('callback')
         result = DesignerController.call(:delete_vita, [vita_ids])
+        return_response callback, result
+      end
+
+      app.post '/pay_for_vip' do
+        callback = params.delete('callback')
+        result = DesignerController.call(:pay_for_vip, [params['designer_id']])
         return_response callback, result
       end
     end

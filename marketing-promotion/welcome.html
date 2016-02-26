@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>登录</title>
+    <link href="./css/common.css" rel="stylesheet">
+    <script type="text/javascript" src="./js/athena.js"></script>
+    <script type="text/javascript" src="./js/jquery.js"></script>
+    <script>
+        $(document).ready(function () {
+            if (login_info_expired()) {
+                $("#athena_container").attr("src", "./login.html");
+            } else{
+                $("#athena_container").attr("src", localStorage.getItem("src") || './login.html');
+            }
+            $("#athena_container").load(function () {
+                window_height = $(window).height();
+                content_window_height = this.contentWindow.document.body.offsetHeight;
+                this.style.height = Math.max(window_height, content_window_height) + "px";
+            })
+            $(window).on('resize', function () {
+                iframe = document.getElementById("athena_container");
+                window_height = $(window).height();
+                content_window_height = iframe.contentWindow.document.body.offsetHeight;
+                iframe.style.height = Math.max(window_height, content_window_height) + "px";
+            })
+        })
+        function login_info_expired(){
+            return (login_info == null || (new Date().getTime().toString() - login_info.updated_at) > 60 * 60 * 1000)
+        }
+    </script>
+</head>
+<body>
+<iframe id="athena_container" src=""></iframe>
+</body>
+</html>

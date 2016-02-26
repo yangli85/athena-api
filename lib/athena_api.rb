@@ -4,6 +4,7 @@ require 'api/designer_api'
 require 'api/user_api'
 require 'api/sms_api'
 require 'api/twitter_api'
+require 'api/commissioner_api'
 
 class AthenaAPI < API::BaseAPI
   API::SmsAPI.registered(self)
@@ -11,4 +12,5 @@ class AthenaAPI < API::BaseAPI
   API::DesignerAPI.registered(self)
   API::TwitterAPI.registered(self)
   API::UserAPI.registered(self)
+  API::CommissionerAPI.registered(self)
 end

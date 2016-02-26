@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>登录</title>
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script src="../bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <link href="../bootstrap-3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+</head>
+<body>
+<div id="athena-menu"></div>
+<div id="athena-body">
+    <div class='error-message'></div>
+    <div class="bs-example bs-example-form" data-example-id="input-group-with-button">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="query" placeholder="店铺名称或者地址">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" id="search_btn" type="button">Go!</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="athena-table">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th width="10%">No</th>
+                <th>名称</th>
+            </tr>
+            </thead>
+            <tbody id="shop_list">
+            </tbody>
+        </table>
+    </div>
+    <div class="form-group">
+        <div class='error-message'></div>
+        <div class="col-sm-offset-2 col-sm-9">
+            <button type="submit" class="btn btn-default btn-block hide" id="next_page_btn">下一页</button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        localStorage.setItem("src", "./shop/list.html");
+        $("#athena-menu").load("../menu.html");
+        var current_page = 1
+        shop_list(current_page, 10, $("#query").val());
+        $("#next_page_btn").click(function () {
+            current_page++;
+            shop_list(current_page, 10, $("#query").val());
+        })
+
+        $("#search_btn").click(function () {
+            current_page = 1;
+            $("#shop_list").html("");
+            shop_list(current_page, 10, $("#query").val());
+        })
+    });
+
+    function shop_list(current_page, page_size, query) {
+        if (query.trim())
+            url = 'http://localhost:8080/search_pagination_shops';
+        else
+            url = 'http://localhost:8080/shops';
+        $.ajax({
+            url: url,
+            data: {query: query, current_page: current_page, page_size: page_size, order_by: 'created_at'},
+            dataType: 'jsonp',
+            async: false,
+            success: function (data) {
+                if (data["status"] == "SUCCESS") {
+                    $(".error-message").html("");
+                    if (data['data'].length == page_size)
+                        $("#next_page_btn").removeClass("hide");
+                    else
+                        $("#next_page_btn").addClass("hide");
+                    render_shop_list(data['data'], (page_size * (current_page - 1) + 1));
+                } else {
+                    $(".error-message").html(data["message"]);
+                }
+            },
+            error: function () {
+                $(".error-message").html("出错了,稍后请尝试!");
+                return
+            }
+        });
+    }
+
+    function render_shop_list(data, offset) {
+        $.each(data, function (index, value) {
+            var item = $("<tr><th scope='row'>" +
+                    (offset + index) +
+                    "</th><td><a href='#' onclick='shop_info(" +
+                    value.id +
+                    ")'>" +
+                    value.name +
+                    "</td></tr>"
+            );
+            $("#shop_list").append(item);
+        });
+    }
+    function shop_info(id) {
+        alert(id);
+    }
+</script>
+</body>
+</html>

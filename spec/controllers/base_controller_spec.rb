@@ -17,11 +17,11 @@ describe BaseController do
 
     it "should return args error if any args is empty" do
       expect(BaseController.call fake_method, [nil, '        ']).to eq (
-                                                                      {
-                                                                          :status => "ERROR",
-                                                                          :message => "参数传递错误."
-                                                                      }
-                                                                  )
+                                                                           {
+                                                                               :status => "ERROR",
+                                                                               :message => "参数传递错误."
+                                                                           }
+                                                                       )
     end
   end
 

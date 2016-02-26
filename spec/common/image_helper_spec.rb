@@ -38,7 +38,7 @@ describe Common::ImageHelper do
       folder = ["images/vita"]
       folder.each do |folder|
         Dir["#{folder}/*.jpg"].each do |x|
-          subject.generate_thumbnails x,(subject.generate_s_image_path x),scale=0.5
+          subject.generate_thumbnails x, (subject.generate_s_image_path x), scale=0.5
         end
       end
     end

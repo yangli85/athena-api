@@ -16,6 +16,10 @@ module API
       logger = Common::Logging.logger
     end
 
+    before do
+      # authenticate
+    end
+
     get '/' do
       'Athena api is alive!'
     end

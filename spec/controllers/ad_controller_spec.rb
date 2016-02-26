@@ -22,19 +22,19 @@ describe AdController do
                                                              data:
                                                                  [
                                                                      {
-                                                                         :image=>{
-                                                                             :id=>1,
-                                                                             :url=>"images/1.jpg",
-                                                                             :s_url=>nil
+                                                                         :image => {
+                                                                             :id => 1,
+                                                                             :url => "images/1.jpg",
+                                                                             :s_url => nil
                                                                          },
                                                                          :event => "search_designer",
                                                                          :args => "{:designer_id=>1}"
                                                                      },
                                                                      {
-                                                                         :image=>{
-                                                                             :id=>2,
-                                                                             :url=>"images/2.jpg",
-                                                                             :s_url=>nil
+                                                                         :image => {
+                                                                             :id => 2,
+                                                                             :url => "images/2.jpg",
+                                                                             :s_url => nil
                                                                          },
                                                                          :event => "search_designer",
                                                                          :args => "{:designer_id=>2}"
