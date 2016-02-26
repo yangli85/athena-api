@@ -95,7 +95,7 @@
 
     function send_sms(phone_number) {
         $.ajax({
-            url: "http://localhost:8080/send_sms",
+            url: "http://101.200.162.121:8080/send_sms",
             data: {phone_number: phone_number},
             dataType: 'jsonp',
             success: function (data) {
@@ -114,7 +114,7 @@
     }
     function register(user_name, phone_number, password, sms_code) {
         $.ajax({
-            url: "http://localhost:8080/register",
+            url: "http://101.200.162.121:8080/register",
             data: {phone_number: phone_number, name: user_name, password: password, code: sms_code},
             dataType: 'jsonp',
             success: function (data) {

@@ -55,7 +55,7 @@
 
     function login(phone_number, password) {
         $.ajax({
-            url: "http://localhost:8080/commissioner_login",
+            url: "http://101.200.162.121:8080/commissioner_login",
             data: {phone_number: phone_number, password: password},
             dataType: 'jsonp',
             success: function (data) {

@@ -64,9 +64,9 @@
 
     function shop_list(current_page, page_size, query) {
         if (query.trim())
-            url = 'http://localhost:8080/search_pagination_shops';
+            url = 'http://101.200.162.121:8080/search_pagination_shops';
         else
-            url = 'http://localhost:8080/shops';
+            url = 'http://101.200.162.121:8080/shops';
         $.ajax({
             url: url,
             data: {query: query, current_page: current_page, page_size: page_size, order_by: 'created_at'},
