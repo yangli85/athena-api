@@ -19,6 +19,7 @@ class CommissionerController < BaseController
     raise Common::Error.new("短信验证码错误") unless correct_code? phone_number, code
     commissioner = @commissioner_service.get_commissioner phone_number
     raise Common::Error.new("大王,你已经是我们的人了,可以直接登录.") unless commissioner.nil?
+    FileUtils.cp("images/code/1.png", 'temp_images/')
     code_image_path = "temp_images/1.png"
     @commissioner_service.register phone_number, name, password, code_image_path, code_image_folder
     success.merge({message: "恭喜你,注册成功,下一个地推之王非你莫属!"})
@@ -37,8 +38,9 @@ class CommissionerController < BaseController
 
   def details c_id
     commissioner = @commissioner_service.get_commissioner_by_id c_id
-    users = @commissioner_service.get_promotion_users c_id
-    designers = @commissioner_service.get_promotion_designers c_id
+    max_count = @commissioner_service.get_promotion_logs_count c_id
+    users = @commissioner_service.get_promotion_users c_id,max_count,1
+    designers = @commissioner_service.get_promotion_designers c_id,max_count,1
     data = commissioner.attributes.merge({
                                              designer_count: designers.count,
                                              user_count: users.count,
@@ -67,18 +69,18 @@ class CommissionerController < BaseController
     success
   end
 
-  def promotion_users c_id
-    users = @commissioner_service.get_promotion_users c_id
+  def promotion_users c_id, page_size, current_page
+    users = @commissioner_service.get_promotion_users c_id, page_size, current_page
     data = users.map do |user|
-      user.attributes.merge({phone_number: user.phone_number})
+      user.attributes.merge({phone_number: user.phone_number, created_at: user.created_at})
     end
     success.merge({data: data})
   end
 
-  def promotion_designers c_id
-    designers = @commissioner_service.get_promotion_designers c_id
+  def promotion_designers c_id, page_size, current_page
+    designers = @commissioner_service.get_promotion_designers c_id, page_size, current_page
     data = designers.map do |designer|
-      designer.attributes.merge({phone_number: designer.user.phone_number})
+      designer.attributes.merge({phone_number: designer.user.phone_number, created_at: designer.created_at})
     end
     success.merge({data: data})
   end

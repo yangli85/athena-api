@@ -110,6 +110,12 @@ module API
         result = DesignerController.call(:pay_for_vip, [params['designer_id']])
         return_response callback, result
       end
+
+      app.get '/shop_details' do
+        callback = params.delete('callback')
+        result = DesignerController.call(:shop_details, [params['id']])
+        return_response callback, result
+      end
     end
   end
 end

@@ -42,7 +42,7 @@ module Common
     end
 
     def shop_image_folder
-      folder = "#{ENV["IMGAES_FOLDER"]}/code"
+      folder = "#{ENV["IMGAES_FOLDER"]}/shop"
       FileUtils.mkdir_p(folder) unless Dir.exists?(folder)
       folder
     end

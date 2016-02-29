@@ -20,7 +20,7 @@ module API
         return_response callback, result
       end
 
-      app.get '/delete_shop' do
+      app.post '/delete_shop' do
         callback = params.delete('callback')
         result = CommissionerController.call(:delete_shop, [params['c_id'].to_i, params['shop_id'].to_i])
         return_response callback, result
@@ -34,13 +34,13 @@ module API
 
       app.get '/users' do
         callback = params.delete('callback')
-        result = CommissionerController.call(:promotion_users, [params['c_id'].to_i])
+        result = CommissionerController.call(:promotion_users, [params['c_id'].to_i, params['page_size'].to_i, params['current_page'].to_i])
         return_response callback, result
       end
 
       app.get '/designers' do
         callback = params.delete('callback')
-        result = CommissionerController.call(:promotion_designers, [params['c_id'].to_i])
+        result = CommissionerController.call(:promotion_designers, [params['c_id'].to_i, params['page_size'].to_i, params['current_page'].to_i])
         return_response callback, result
       end
 
@@ -62,20 +62,20 @@ module API
         return_response callback, result
       end
 
-      app.get '/add_promotion_log' do
+      app.post '/add_promotion_log' do
         callback = params.delete('callback')
         result = CommissionerController.call(:add_promotion_log, [params['c_id'].to_i, params['user_phone_number'], params['mobile_type']])
         return_response callback, result
       end
 
-      app.get '/del_promotion_log' do
+      app.post '/del_promotion_log' do
         callback = params.delete('callback')
         result = CommissionerController.call(:del_promotion_log, [params['log_id'].to_i])
         return_response callback, result
       end
 
 
-      app.get '/add_shop_promotion_log' do
+      app.post '/add_shop_promotion_log' do
         callback = params.delete('callback')
         result = CommissionerController.call(:add_shop_promotion_log, [params['c_id'].to_i, params['shop_id'].to_i, params['content']])
         return_response callback, result

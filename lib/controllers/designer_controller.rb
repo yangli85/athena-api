@@ -174,4 +174,15 @@ class DesignerController < BaseController
     @designer_service.update_designer designer_id, "expired_at", expired_at
     @designer_service.update_designer designer_id, "is_vip", true unless designer.is_vip
   end
+
+  def shop_details id
+    shop = @shop_service.get_shop id
+    data = shop.attributes.merge({
+                                     images: shop.images.map(&:attributes),
+                                     desc: shop.desc,
+                                     scale: shop.scale,
+                                     category: shop.category
+                                 })
+    success.merge({data: data})
+  end
 end
