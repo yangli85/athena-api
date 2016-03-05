@@ -3,6 +3,11 @@ require 'controllers/commissioner_controller'
 
 describe CommissionerController do
   let(:fake_phone) { "13812345678" }
+  let(:created_at) { DateTime.parse("20151212121212") }
+
+  before do
+    allow(Time).to receive(:now).and_return(created_at)
+  end
 
   describe "#register" do
     before do
@@ -12,21 +17,20 @@ describe CommissionerController do
     context "common error" do
       it "should raise common error if commissioner already exist" do
         create(:commissioner, phone_number: fake_phone)
-        expect { subject.register fake_phone, "new", "123456" }.to raise_error Common::Error, "大王,你已经是我们的人了,可以直接登录."
+        expect { subject.register fake_phone, "new", "123456", '8888' }.to raise_error Common::Error, "大王,你已经是我们的人了,可以直接登录."
       end
     end
 
     context "normal" do
-
       before do
-        allow_any_instance_of(Pandora::Services::SMSService).to receive(:get_latest_code).and_return("1234")
+        allow_any_instance_of(Pandora::Services::SMSService).to receive_message_chain(:get_latest_code, :code).and_return("1234")
       end
 
       it "should create new commissioner successfully" do
         subject.register fake_phone, "new", "123456", "1234"
         new_commissioner = Pandora::Models::Commissioner.find_by_phone_number(fake_phone)
         expect(new_commissioner.phone_number).to eq fake_phone
-        expect(new_commissioner.code_image.url).to eq '/code/1.jpg'
+        expect(new_commissioner.code_image.url).to eq '/code/1.png'
         expect(new_commissioner.name).to eq "new"
         expect(new_commissioner.password).to eq '123456'
       end
@@ -44,12 +48,13 @@ describe CommissionerController do
 
   describe "#login" do
     it "should login success" do
-      commissioner = create(:commissioner, phone_number: fake_phone)
+      commissioner = create(:commissioner, {phone_number: fake_phone, name: "曹操"})
       expect(subject.login commissioner.phone_number, commissioner.password).to eq (
                                                                                        {
                                                                                            :status => "SUCCESS",
-                                                                                           :message => "欢迎大将军回归!",
-                                                                                           :c_id => 1
+                                                                                           :message => "欢迎大将军曹操回归!",
+                                                                                           :c_id => 1,
+                                                                                           :c_name => "曹操"
                                                                                        }
                                                                                    )
     end
@@ -74,28 +79,17 @@ describe CommissionerController do
           :message => "操作成功",
           :data =>
               [
-                  {:id => 1,
-                   :phone_number => nil,
-                   :mobile_type => "unknow",
-                   :commissioner =>
-                       {
-                           :id => 1,
-                           :name => nil,
-                           :phone_number => "13812345678",
-                           :code_image => nil
-                       }
+                  {
+                      :id => 1,
+                      :phone_number => nil,
+                      :mobile_type => "unknow",
+                      :created_at => created_at
                   },
                   {
                       :id => 2,
                       :phone_number => "13812345678",
                       :mobile_type => "unknow",
-                      :commissioner =>
-                          {
-                              :id => 1,
-                              :name => nil,
-                              :phone_number => "13812345678",
-                              :code_image => nil
-                          }
+                      :created_at => created_at
                   }
               ]
       }
@@ -121,13 +115,7 @@ describe CommissionerController do
                                                                                                                 :id => 1,
                                                                                                                 :phone_number => "13812345678",
                                                                                                                 :mobile_type => "iphone",
-                                                                                                                :commissioner =>
-                                                                                                                    {
-                                                                                                                        :id => 1,
-                                                                                                                        :name => nil,
-                                                                                                                        :phone_number => "18611979882",
-                                                                                                                        :code_image => nil
-                                                                                                                    }
+                                                                                                                :created_at => created_at
                                                                                                             }
                                                                                                         )
     end
@@ -156,13 +144,15 @@ describe CommissionerController do
                       :id => 1,
                       :name => "user1",
                       :avatar => nil,
-                      :phone_number => "13800000001"
+                      :phone_number => "13800000001",
+                      :created_at => created_at
                   },
                   {
                       :id => 2,
                       :name => "user1",
                       :avatar => nil,
-                      :phone_number => "13800000002"
+                      :phone_number => "13800000002",
+                      :created_at => created_at
                   }
               ]
       }
@@ -178,11 +168,11 @@ describe CommissionerController do
     end
 
     it "should return all promotion users for commissioner" do
-      expect(subject.promotion_users(commissioner.id)[:data].count).to eq 2
+      expect(subject.promotion_users(commissioner.id, 2, 1)[:data].count).to eq 2
     end
 
     it "should return all promotion users in correct json format" do
-      expect(subject.promotion_users(commissioner.id)).to eq fake_result
+      expect(subject.promotion_users(commissioner.id, 2, 1)).to eq fake_result
     end
   end
 
@@ -201,7 +191,8 @@ describe CommissionerController do
                       :user_id => 1,
                       :name => "user1",
                       :avatar => nil,
-                      :phone_number => "13800000001"
+                      :phone_number => "13800000001",
+                      :created_at => created_at
                   }
               ]
       }
@@ -218,11 +209,11 @@ describe CommissionerController do
     end
 
     it "should return all promotion designers for commissioner" do
-      expect(subject.promotion_designers(commissioner.id)[:data].count).to eq 1
+      expect(subject.promotion_designers(commissioner.id, 2, 1)[:data].count).to eq 1
     end
 
     it "should return all promotion designers in correct json format" do
-      expect(subject.promotion_designers(commissioner.id)).to eq fake_result
+      expect(subject.promotion_designers(commissioner.id, 2, 1)).to eq fake_result
     end
   end
 
@@ -237,14 +228,6 @@ describe CommissionerController do
               [
                   {
                       :id => 1,
-                      :shop =>
-                          {
-                              :id => 1,
-                              :name => "shop/1",
-                              :address => "zhuque street No.2",
-                              :latitude => "120.244",
-                              :longtitude => "288.244"
-                          },
                       :commissioner =>
                           {
                               :id => 1,
@@ -252,18 +235,11 @@ describe CommissionerController do
                               :phone_number => "18611979882",
                               :code_image => nil
                           },
-                      :content => "this is a test shop promotion log"
+                      :content => "this is a test shop promotion log",
+                      :created_at => created_at
                   },
                   {
                       :id => 2,
-                      :shop =>
-                          {
-                              :id => 1,
-                              :name => "shop/1",
-                              :address => "zhuque street No.2",
-                              :latitude => "120.244",
-                              :longtitude => "288.244"
-                          },
                       :commissioner =>
                           {
                               :id => 1,
@@ -271,7 +247,8 @@ describe CommissionerController do
                               :phone_number => "18611979882",
                               :code_image => nil
                           },
-                      :content => "this is a test shop promotion log"
+                      :content => "this is a test shop promotion log",
+                      :created_at => created_at
                   }
               ]
       }
@@ -415,13 +392,13 @@ describe CommissionerController do
     end
 
     it "should return matched shops" do
-      expect(subject.search_shops("shop")[:data].count).to eq 4
-      expect(subject.search_shops("li")[:data].count).to eq 1
-      expect(subject.search_shops("i")[:data].count).to eq 3
+      expect(subject.search_shops("shop", 5, 1, "created_at")[:data].count).to eq 4
+      expect(subject.search_shops("li", 5, 1, "created_at")[:data].count).to eq 1
+      expect(subject.search_shops("i", 5, 1, "created_at")[:data].count).to eq 3
     end
 
     it "should return matched shops info in correct json format" do
-      expect(subject.search_shops "li").to eq fake_result
+      expect(subject.search_shops "li", 5, 1, "created_at").to eq fake_result
     end
   end
 
@@ -476,14 +453,6 @@ describe CommissionerController do
           :data =>
               [
                   {:id => 1,
-                   :shop =>
-                       {
-                           :id => 1,
-                           :name => "shop/1",
-                           :address => "zhuque street No.2",
-                           :latitude => "120.244",
-                           :longtitude => "288.244"
-                       },
                    :commissioner =>
                        {
                            :id => 1,
@@ -491,7 +460,8 @@ describe CommissionerController do
                            :phone_number => "18611979882",
                            :code_image => nil
                        },
-                   :content => "this is a test shop promotion log"
+                   :content => "this is a test shop promotion log",
+                   :created_at => created_at
                   }
               ]
       }

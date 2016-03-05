@@ -31,16 +31,4 @@ describe Common::ImageHelper do
       expect(File.exist?(fake_small_jpg_path)).to eq true
     end
   end
-
-  describe "generate small image" do
-
-    it "should generate small image" do
-      folder = ["images/vita"]
-      folder.each do |folder|
-        Dir["#{folder}/*.jpg"].each do |x|
-          subject.generate_thumbnails x, (subject.generate_s_image_path x), scale=0.5
-        end
-      end
-    end
-  end
 end

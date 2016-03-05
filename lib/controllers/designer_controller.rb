@@ -143,7 +143,7 @@ class DesignerController < BaseController
   end
 
   def search_shops name
-    shops = @shop_service.search_shops name
+    shops = @shop_service.search_shops_by_name name
     success.merge({data: shops.map(&:attributes)})
   end
 

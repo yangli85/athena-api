@@ -19,7 +19,8 @@ class CommissionerController < BaseController
     raise Common::Error.new("短信验证码错误") unless correct_code? phone_number, code
     commissioner = @commissioner_service.get_commissioner phone_number
     raise Common::Error.new("大王,你已经是我们的人了,可以直接登录.") unless commissioner.nil?
-    FileUtils.cp("images/code/1.png", 'temp_images/')
+    FileUtils.mkdir('temp_images') unless Dir.exist? 'temp_images'
+    FileUtils.cp("images/code/1.png", 'temp_images/') unless File.exist? "temp_images/1.png"
     code_image_path = "temp_images/1.png"
     @commissioner_service.register phone_number, name, password, code_image_path, code_image_folder
     success.merge({message: "恭喜你,注册成功,下一个地推之王非你莫属!"})

@@ -59,7 +59,7 @@ module API
         return_response callback, result
       end
 
-      app.get '/designer_delete_twitter' do
+      app.post '/designer_delete_twitter' do
         callback = params.delete('callback')
         result = DesignerController.call(:delete_twitter, [params['designer_id'].to_i, params['twitter_id'].to_i])
         return_response callback, result

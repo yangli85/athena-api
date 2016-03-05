@@ -22,7 +22,7 @@ module API
         return_response callback, result
       end
 
-      app.get '/publish_twitter' do
+      app.post '/publish_twitter' do
         callback = params.delete('callback') # jsonp
         image_paths = params['image_paths'].split(",")
         args = [params['author_id'].to_i, params['designer_id'].to_i, params['content'], image_paths, params['stars'], params['latitude'], params['longtitude']]
@@ -30,20 +30,20 @@ module API
         return_response callback, result
       end
 
-      app.get '/add_favorite_image' do
+      app.post '/add_favorite_image' do
         callback = params.delete('callback') # jsonp
         result = UserController.call(:add_favorite_image, [params['twitter_id'].to_i, params['user_id'].to_i, params['image_id'].to_i])
         return_response callback, result
       end
 
-      app.get '/del_favorite_images' do
+      app.post '/del_favorite_images' do
         ids = params["ids"].split(',').map(&:to_i)
         callback = params.delete('callback') # jsonp
         result = UserController.call(:del_favorite_images, [ids])
         return_response callback, result
       end
 
-      app.get '/del_favorite_image' do
+      app.post '/del_favorite_image' do
         callback = params.delete('callback') # jsonp
         result = UserController.call(:del_favorite_image, [params['user_id'], params['image_id']])
         return_response callback, result
@@ -55,13 +55,13 @@ module API
         return_response callback, result
       end
 
-      app.get '/add_favorite_designer' do
+      app.post '/add_favorite_designer' do
         callback = params.delete('callback') # jsonp
         result = UserController.call(:add_favorite_designer, [params['user_id'].to_i, params['designer_id'].to_i])
         return_response callback, result
       end
 
-      app.get '/del_favorite_designers' do
+      app.post '/del_favorite_designers' do
         ids = params["ids"].split(',').map(&:to_i)
         callback = params.delete('callback') # jsonp
         result = UserController.call(:del_favorite_designers, [ids])
@@ -80,7 +80,7 @@ module API
         return_response callback, result
       end
 
-      app.get '/user_delete_twitter' do
+      app.post '/user_delete_twitter' do
         callback = params.delete('callback')
         result = UserController.call(:delete_twitter, [params['user_id'].to_i, params['twitter_id'].to_i])
         return_response callback, result
@@ -98,13 +98,13 @@ module API
         return_response callback, result
       end
 
-      app.get '/recharge' do
+      app.post '/recharge' do
         callback = params.delete('callback')
         result = UserController.call(:recharge, [params['user_id'].to_i, params['balance'].to_i, params['channel']])
         return_response callback, result
       end
 
-      app.get '/donate_stars' do
+      app.post '/donate_stars' do
         callback = params.delete('callback')
         result = UserController.call(:donate_stars, [params['user_id'].to_i, params['to_user_id'].to_i, params['balance'].to_i])
         return_response callback, result
@@ -116,25 +116,25 @@ module API
         return_response callback, result
       end
 
-      app.get '/del_message' do
+      app.post '/del_message' do
         callback = params.delete('callback')
         result = UserController.call(:delete_message, [params['message_id'].to_i])
         return_response callback, result
       end
 
-      app.get '/modify_avatar' do
+      app.post '/modify_avatar' do
         callback = params.delete('callback')
         result = UserController.call(:modify_avatar, [params['user_id'].to_i, params['image_path']])
         return_response callback, result
       end
 
-      app.get '/modify_name' do
+      app.post '/modify_name' do
         callback = params.delete('callback')
         result = UserController.call(:modify_name, [params['user_id'].to_i, params['new_name']])
         return_response callback, result
       end
 
-      app.get '/modify_gender' do
+      app.post '/modify_gender' do
         callback = params.delete('callback')
         result = UserController.call(:modify_gender, [params['user_id'].to_i, params['new_gender']])
         return_response callback, result
