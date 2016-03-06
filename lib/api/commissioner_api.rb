@@ -84,7 +84,7 @@ module API
       app.post '/register_shop' do
         callback = params.delete('callback')
         image_paths = params['image_paths'].split(",")
-        args = [params['name'], params['address'], params['longtitude'], params['latitude'], params['scale'], params['category'], params['desc'], params['c_id'].to_i, image_paths]
+        args = [params['name'], params['address'], params['longitude'], params['latitude'], params['scale'], params['category'], params['desc'], params['c_id'].to_i, image_paths]
         result = CommissionerController.call(:register_shop, args)
         return_response callback, result
       end

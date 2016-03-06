@@ -119,7 +119,7 @@ end
                                    name: "美发店#{n+1}",
                                    address: "朱雀大街#{n+1}号",
                                    latitude: "34.2#{n}",
-                                   longtitude: "108.9#{n}",
+                                   longitude: "108.9#{n}",
                                    scale: ["大", "中", "小"][n%3],
                                    desc: "这是一个用来测试的美发店"
                                })

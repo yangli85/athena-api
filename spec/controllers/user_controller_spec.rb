@@ -206,7 +206,7 @@ describe UserController do
       expect(twitter.designer).to eq designer
       expect(twitter.content).to eq fake_content
       expect(twitter.latitude).to eq fake_lat
-      expect(twitter.longtitude).to eq fake_lon
+      expect(twitter.longitude).to eq fake_lon
       expect(twitter.stars).to eq 3
       expect(twitter.image_count).to eq 2
     end
@@ -442,7 +442,7 @@ describe UserController do
                                     :name => "shop/1",
                                     :address => "zhuque street No.2",
                                     :latitude => "120.244",
-                                    :longtitude => "288.244"
+                                    :longitude => "288.244"
                                 }
                             }
                     }

@@ -34,13 +34,13 @@ class UserController < BaseController
     success.merge(data: {temp_image_path: temp_image_path})
   end
 
-  def publish_new_twitter author_id, designer_id, content, image_paths, stars, latitude, longtitude
+  def publish_new_twitter author_id, designer_id, content, image_paths, stars, latitude, longitude
     image_paths = rebuild_images image_paths
     user = @user_service.get_user_by_id author_id
     account = user.account
     raise Common::Error.new("对不起,星星不够!") unless account.balance >= stars
     begin
-      @twitter_service.create_twitter author_id, designer_id, content, image_paths, stars, latitude, longtitude, twitter_image_folder
+      @twitter_service.create_twitter author_id, designer_id, content, image_paths, stars, latitude, longitude, twitter_image_folder
       designer = @designer_service.get_designer designer_id
       account_log_desc = "使用了#{stars}颗星星给#{designer.user.name}点赞"
       @user_service.update_account_balance account.id, -stars, account_log_desc, author_id, designer_id, 'consume', 'beautyshow'

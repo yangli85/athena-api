@@ -8,11 +8,11 @@ describe DesignerController do
 
   before do
     allow_any_instance_of(Pandora::Models::Vita).to receive(:relative_time).and_return("8小时前")
-    shop1 = create(:shop, {latitude: '34.2620', longtitude: '108.9430', name: 'test1', address: 'address1'})
-    shop2 = create(:shop, {latitude: '34.2620', longtitude: '108.9440', name: 'test2', address: 'address2'})
-    shop3 = create(:shop, {latitude: '34.2320', longtitude: '108.9930', name: 'test3', address: 'address3'})
-    shop4 = create(:shop, {latitude: '34.2420', longtitude: '108.9430', name: 'test4', address: 'address4'})
-    shop5 = create(:shop, {latitude: '34.3620', longtitude: '108.9630', name: 'test5', address: 'address5'})
+    shop1 = create(:shop, {latitude: '34.2620', longitude: '108.9430', name: 'test1', address: 'address1'})
+    shop2 = create(:shop, {latitude: '34.2620', longitude: '108.9440', name: 'test2', address: 'address2'})
+    shop3 = create(:shop, {latitude: '34.2320', longitude: '108.9930', name: 'test3', address: 'address3'})
+    shop4 = create(:shop, {latitude: '34.2420', longitude: '108.9430', name: 'test4', address: 'address4'})
+    shop5 = create(:shop, {latitude: '34.3620', longitude: '108.9630', name: 'test5', address: 'address5'})
 
     user1 = create(:user, phone_number: '13800000001')
     user2 = create(:user, phone_number: '13800000002')
@@ -107,7 +107,7 @@ describe DesignerController do
                             :name => "test1",
                             :address => "address1",
                             :latitude => "34.2620",
-                            :longtitude => "108.9430"
+                            :longitude => "108.9430"
                         }
                 },
                 {
@@ -123,7 +123,7 @@ describe DesignerController do
                             :name => "test1",
                             :address => "address1",
                             :latitude => "34.2620",
-                            :longtitude => "108.9430"
+                            :longitude => "108.9430"
                         }
                 }
             ]
@@ -153,7 +153,7 @@ describe DesignerController do
                           :name => "test5",
                           :address => "address5",
                           :latitude => "34.3620",
-                          :longtitude => "108.9630"
+                          :longitude => "108.9630"
                       }
               },
               {
@@ -168,7 +168,7 @@ describe DesignerController do
                           :name => "test4",
                           :address => "address4",
                           :latitude => "34.2420",
-                          :longtitude => "108.9430"
+                          :longitude => "108.9430"
                       }
               }
           ]
@@ -209,7 +209,7 @@ describe DesignerController do
                           :name => "test1",
                           :address => "address1",
                           :latitude => "34.2620",
-                          :longtitude => "108.9430"
+                          :longitude => "108.9430"
                       },
                   :gender => "unknow",
                   :stars => 5,
@@ -352,7 +352,7 @@ describe DesignerController do
                               :name => "test1",
                               :address => "address1",
                               :latitude => "34.2620",
-                              :longtitude => "108.9430"
+                              :longitude => "108.9430"
                           },
                       :stars => 5
                   }
@@ -419,7 +419,7 @@ describe DesignerController do
                           :name => "test1",
                           :address => "address1",
                           :latitude => "34.2620",
-                          :longtitude => "108.9430"
+                          :longitude => "108.9430"
                       },
                   :vitae_count => 2
               }
@@ -549,7 +549,7 @@ describe DesignerController do
                                                                                           :name => fake_name,
                                                                                           :address => fake_address,
                                                                                           :latitude => fake_lat,
-                                                                                          :longtitude => fake_lon
+                                                                                          :longitude => fake_lon
                                                                                       }
                                                                                   )
       end
@@ -574,7 +574,7 @@ describe DesignerController do
                         :name => "test1",
                         :address => "address1",
                         :latitude => "34.2620",
-                        :longtitude => "108.9430"
+                        :longitude => "108.9430"
                     }
                 ]
         }

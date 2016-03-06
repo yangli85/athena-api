@@ -17,8 +17,8 @@ class DesignerController < BaseController
     @shop_service = Pandora::Services::ShopService.new
   end
 
-  def get_vicinal_designers longtitude, latitude, page_size, current_page, range, order_by
-    ordered_shops =@shop_service.get_vicinal_shops longtitude, latitude, range
+  def get_vicinal_designers longitude, latitude, page_size, current_page, range, order_by
+    ordered_shops =@shop_service.get_vicinal_shops longitude, latitude, range
     designers = []
     ordered_shops.each do |a_shop|
       shop = @shop_service.get_shop a_shop.id
@@ -131,8 +131,8 @@ class DesignerController < BaseController
     success.merge({data: data})
   end
 
-  def update_new_shop name, address, latitude, longtitude, designer_id
-    shop = @shop_service.create_shop name, address, latitude, longtitude
+  def update_new_shop name, address, latitude, longitude, designer_id
+    shop = @shop_service.create_shop name, address, latitude, longitude
     @designer_service.update_shop designer_id, shop.id
     success.merge({message: "修改店铺成功"})
   end

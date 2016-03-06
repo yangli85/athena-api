@@ -96,12 +96,12 @@ class CommissionerController < BaseController
     success.merge({image_path: image_path})
   end
 
-  def register_shop name, address, longtitude, latitude, scale, category, desc, c_id, image_paths
+  def register_shop name, address, longitude, latitude, scale, category, desc, c_id, image_paths
     image_paths = rebuild_images image_paths
-    shops = @shop_service.get_similar_shops name, address, longtitude, latitude
+    shops = @shop_service.get_similar_shops name, address, longitude, latitude
     raise Common::Error.new("臣妾觉的这家店铺已经被录入了,大王搜索一下看看能找到吗?") unless shops.empty?
     commissioner = @commissioner_service.get_commissioner_by_id c_id
-    shop = @commissioner_service.register_shop name, address, longtitude, latitude, scale, category, desc, image_paths, shop_image_folder
+    shop = @commissioner_service.register_shop name, address, longitude, latitude, scale, category, desc, image_paths, shop_image_folder
     @commissioner_service.add_shop_promotion_log c_id, shop.id, "#{commissioner.name}(#{commissioner.phone_number})录入店铺#{shop.name}的信息"
     success.merge({message: "该店铺已经录入系统,辛苦啦,加油!"})
   end

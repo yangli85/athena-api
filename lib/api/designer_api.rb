@@ -6,7 +6,7 @@ module API
 
       app.get '/vicinal_designers' do
         callback = params.delete('callback') # jsonp
-        args = [params['longtitude'], params['latitude'], params['page_size'].to_i, params['current_page'].to_i, params['range'].to_i, params['order_by']]
+        args = [params['longitude'], params['latitude'], params['page_size'].to_i, params['current_page'].to_i, params['range'].to_i, params['order_by']]
         result = result = DesignerController.call(:get_vicinal_designers, args)
         return_response callback, result
       end
@@ -73,7 +73,7 @@ module API
 
       app.post '/update_new_shop' do
         callback = params.delete('callback')
-        args = [params['name'], params['address'], params['latitude'], params['longtitude'], params['designer_id'].to_i]
+        args = [params['name'], params['address'], params['latitude'], params['longitude'], params['designer_id'].to_i]
         result = DesignerController.call(:update_new_shop, args)
         return_response callback, result
       end

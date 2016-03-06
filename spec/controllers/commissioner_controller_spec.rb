@@ -30,7 +30,7 @@ describe CommissionerController do
         subject.register fake_phone, "new", "123456", "1234"
         new_commissioner = Pandora::Models::Commissioner.find_by_phone_number(fake_phone)
         expect(new_commissioner.phone_number).to eq fake_phone
-        expect(new_commissioner.code_image.url).to eq '/code/1.png'
+        expect(new_commissioner.code_image.url).to eq 'images/code/1.png'
         expect(new_commissioner.name).to eq "new"
         expect(new_commissioner.password).to eq '123456'
       end
@@ -290,7 +290,7 @@ describe CommissionerController do
   describe "#register_shop" do
     let(:name) { "new shop" }
     let(:address) { "address1" }
-    let(:longtitude) { "103.123" }
+    let(:longitude) { "103.123" }
     let(:latitude) { "103.123" }
     let(:scale) { "middle" }
     let(:category) { "street by" }
@@ -316,24 +316,24 @@ describe CommissionerController do
 
 
     it "should create a new shop" do
-      subject.register_shop name, address, longtitude, latitude, scale, category, desc, commissioner.id, fake_temp_image_paths
+      subject.register_shop name, address, longitude, latitude, scale, category, desc, commissioner.id, fake_temp_image_paths
       expect(Pandora::Models::Shop.count).to eq 1
     end
 
 
     it "should add shop promotion log" do
-      subject.register_shop name, address, longtitude, latitude, scale, category, desc, commissioner.id, fake_temp_image_paths
+      subject.register_shop name, address, longitude, latitude, scale, category, desc, commissioner.id, fake_temp_image_paths
       expect(Pandora::Models::Commissioner.find(commissioner.id).shop_promotion_logs.count).to eq 1
       expect(Pandora::Models::Commissioner.find(commissioner.id).shop_promotion_logs.first.content).to eq "haha(18611979882)录入店铺new shop的信息"
     end
 
     context "raise common error" do
       before do
-        create(:shop, {name: name, address: address, longtitude: longtitude, latitude: latitude})
+        create(:shop, {name: name, address: address, longitude: longitude, latitude: latitude})
       end
 
       it "should raise common error if have similar shops in pandora" do
-        expect { subject.register_shop name, address, longtitude, latitude, scale, category, desc, commissioner.id, fake_temp_image_paths }.to raise_error Common::Error, "臣妾觉的这家店铺已经被录入了,大王搜索一下看看能找到吗?"
+        expect { subject.register_shop name, address, longitude, latitude, scale, category, desc, commissioner.id, fake_temp_image_paths }.to raise_error Common::Error, "臣妾觉的这家店铺已经被录入了,大王搜索一下看看能找到吗?"
       end
     end
   end
@@ -378,7 +378,7 @@ describe CommissionerController do
                       :name => "shop li",
                       :address => "zhuque street No.2",
                       :latitude => "120.244",
-                      :longtitude => "288.244"
+                      :longitude => "288.244"
                   }
               ]
       }
@@ -414,14 +414,14 @@ describe CommissionerController do
                       :name => "shop/1",
                       :address => "zhuque street No.2",
                       :latitude => "120.244",
-                      :longtitude => "288.244"
+                      :longitude => "288.244"
                   },
                   {
                       :id => 2,
                       :name => "shop/1",
                       :address => "zhuque street No.2",
                       :latitude => "120.244",
-                      :longtitude => "288.244"
+                      :longitude => "288.244"
                   }
               ]
       }
