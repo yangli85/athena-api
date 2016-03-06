@@ -25,7 +25,7 @@ module API
       app.post '/publish_twitter' do
         callback = params.delete('callback') # jsonp
         image_paths = params['image_paths'].split(",")
-        args = [params['author_id'].to_i, params['designer_id'].to_i, params['content'], image_paths, params['stars'], params['latitude'], params['longtitude']]
+        args = [params['author_id'].to_i, params['designer_id'].to_i, params['content'], image_paths, params['stars'].to_i, params['latitude'], params['longtitude']]
         result = UserController.call(:publish_new_twitter, args)
         return_response callback, result
       end
