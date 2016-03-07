@@ -571,11 +571,13 @@ describe UserController do
                                                                            {
                                                                                :id => 1,
                                                                                :desc => "this is a test log desc",
+                                                                               :balance => 10,
                                                                                :created_at => "1小时前"
                                                                            },
                                                                            {
                                                                                :id => 2,
                                                                                :desc => "this is a test log desc",
+                                                                               :balance => 10,
                                                                                :created_at => "1小时前"
                                                                            }
                                                                        ]
