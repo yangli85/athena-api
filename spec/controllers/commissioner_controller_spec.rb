@@ -24,6 +24,7 @@ describe CommissionerController do
     context "normal" do
       before do
         allow_any_instance_of(Pandora::Services::SMSService).to receive_message_chain(:get_latest_code, :code).and_return("1234")
+        allow(ENV).to receive(:[]).with("IMGAES_FOLDER").and_return("images")
       end
 
       it "should create new commissioner successfully" do
