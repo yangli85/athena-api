@@ -421,7 +421,9 @@ describe DesignerController do
                           :latitude => "34.2620",
                           :longitude => "108.9430"
                       },
-                  :vitae_count => 2
+                  :vitae_count => 2,
+                  :is_vip=>true,
+                  :expired_at=> DateTime.parse("20151212")
               }
       }
     }

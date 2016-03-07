@@ -45,7 +45,7 @@ module API
 
       app.post '/del_favorite_image' do
         callback = params.delete('callback') # jsonp
-        result = UserController.call(:del_favorite_image, [params['user_id'], params['image_id']])
+        result = UserController.call(:del_favorite_image, [params['user_id'].to_i, params['image_id'].to_i])
         return_response callback, result
       end
 

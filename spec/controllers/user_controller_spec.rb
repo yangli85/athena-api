@@ -344,7 +344,7 @@ describe UserController do
 
     end
 
-    describe "#del_favorite_image" do
+    describe "#del_favorite_images" do
       before do
         create(:favorite_image, {user: user, favorited_image: image})
       end

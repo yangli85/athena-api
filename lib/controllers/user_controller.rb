@@ -86,8 +86,9 @@ class UserController < BaseController
     success.merge({message: "删除收藏成功."})
   end
 
-  def def_favorite_image user_id, image_id
+  def del_favorite_image user_id, image_id
     @user_service.del_favorite_image user_id, image_id
+    success.merge({message: "删除收藏成功."})
   end
 
   def favorite_images user_id

@@ -105,7 +105,10 @@ class DesignerController < BaseController
                                            twitters: designer.twitters.count,
                                            phone_number: user.phone_number,
                                            shop: designer.shop && designer.shop.attributes,
-                                           vitae_count: designer.vitae.count
+                                           vitae_count: designer.vitae.count,
+                                           is_vip: designer.is_vip,
+                                           expired_at: designer.expired_at
+
                                        })
       success.merge({data: data})
     rescue => e
