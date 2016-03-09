@@ -160,6 +160,7 @@ class UserController < BaseController
   end
 
   def donate_stars user_id, to_user_id, balance
+    raise Common::Error.new("星星赠送数量填写错误.") unless balance>0
     user = @user_service.get_user_by_id user_id
     to_user = @user_service.get_user_by_id to_user_id
     account = user.account
@@ -170,6 +171,7 @@ class UserController < BaseController
     account_log_desc = "收到#{user.name}赠送给你的#{balance}颗星星"
     @user_service.update_account_balance to_account.id, balance, account_log_desc, user.id, to_user.id, 'donate', 'beautyshow'
     @user_service.create_message to_user_id, account_log_desc
+    success.merge({message: "赠送成功."})
   end
 
   def messages user_id

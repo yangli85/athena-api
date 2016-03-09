@@ -101,7 +101,7 @@ module API
       app.post '/del_vitae' do
         vita_ids = params['vita_ids'].split(',').map(&:to_i)
         callback = params.delete('callback')
-        result = DesignerController.call(:delete_vita, [vita_ids])
+        result = DesignerController.call(:delete_vitae, [vita_ids])
         return_response callback, result
       end
 
