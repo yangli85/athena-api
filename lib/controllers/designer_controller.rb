@@ -176,6 +176,7 @@ class DesignerController < BaseController
     end
     @designer_service.update_designer designer_id, "expired_at", expired_at
     @designer_service.update_designer designer_id, "is_vip", true unless designer.is_vip
+    success.merge({message: "缴费成功"})
   end
 
   def shop_details id
