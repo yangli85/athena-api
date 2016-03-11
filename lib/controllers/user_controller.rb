@@ -104,8 +104,6 @@ class UserController < BaseController
 
   def add_favorite_designer user_id, designer_id
     @user_service.add_favorite_designer user_id, designer_id
-    designer = @designer_service.get_designer designer_id
-    @designer_service.update_designer designer_id, 'likes', designer.likes+1
     success.merge({message: "加入收藏成功."})
   end
 

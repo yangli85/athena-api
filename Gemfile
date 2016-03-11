@@ -17,6 +17,7 @@ group :test do
   gem 'rack-test'
   gem 'database_cleaner'
   gem 'rspec'
+  gem 'simplecov'
   gem 'rspec_junit_formatter', '~> 0.2.3'
   gem 'dotenv'
 end

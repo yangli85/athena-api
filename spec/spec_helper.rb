@@ -1,8 +1,10 @@
 require 'rubygems'
 require 'factory_girl'
 require 'database_cleaner'
+require 'simplecov'
 
 ENV['RACK_ENV']='test'
+SimpleCov.start
 
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
