@@ -134,8 +134,8 @@ class DesignerController < BaseController
     success.merge({data: data})
   end
 
-  def update_new_shop name, address, latitude, longitude, designer_id
-    shop = @shop_service.create_shop name, address, latitude, longitude
+  def update_new_shop name, address, latitude, longitude, designer_id, province, city
+    shop = @shop_service.create_shop name, address, latitude, longitude, province, city
     @designer_service.update_shop designer_id, shop.id
     success.merge({message: "修改店铺成功"})
   end

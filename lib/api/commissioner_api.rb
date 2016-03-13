@@ -44,6 +44,12 @@ module API
         return_response callback, result
       end
 
+      app.get '/vip_designers' do
+        callback = params.delete('callback')
+        result = CommissionerController.call(:promotion_vip_designers, [params['c_id'].to_i, params['page_size'].to_i, params['current_page'].to_i])
+        return_response callback, result
+      end
+
       app.get '/shop_promotion_logs' do
         callback = params.delete('callback')
         result = CommissionerController.call(:shop_promotion_logs, [params['c_id'].to_i, params['shop_id'].to_i, params['page_size'].to_i, params['current_page'].to_i])
@@ -84,7 +90,7 @@ module API
       app.post '/register_shop' do
         callback = params.delete('callback')
         image_paths = params['image_paths'].split(",")
-        args = [params['name'], params['address'], params['longitude'], params['latitude'], params['scale'], params['category'], params['desc'], params['c_id'].to_i, image_paths]
+        args = [params['name'], params['address'], params['longitude'], params['latitude'], params['scale'], params['category'], params['desc'], params['c_id'].to_i, image_paths, params['province'], params['city']]
         result = CommissionerController.call(:register_shop, args)
         return_response callback, result
       end

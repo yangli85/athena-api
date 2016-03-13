@@ -296,6 +296,8 @@ describe CommissionerController do
     let(:scale) { "middle" }
     let(:category) { "street by" }
     let(:desc) { "magic shop" }
+    let(:province) { "shannxi" }
+    let(:city) { "xi'an" }
     let(:commissioner) { create(:commissioner, name: "haha") }
     let(:fake_images_folder) { "temp_images" }
     let(:fake_temp_images_folder) { "spec/temp_images" }
@@ -317,13 +319,13 @@ describe CommissionerController do
 
 
     it "should create a new shop" do
-      subject.register_shop name, address, longitude, latitude, scale, category, desc, commissioner.id, fake_temp_image_paths
+      subject.register_shop name, address, longitude, latitude, scale, category, desc, commissioner.id, fake_temp_image_paths, province, city
       expect(Pandora::Models::Shop.count).to eq 1
     end
 
 
     it "should add shop promotion log" do
-      subject.register_shop name, address, longitude, latitude, scale, category, desc, commissioner.id, fake_temp_image_paths
+      subject.register_shop name, address, longitude, latitude, scale, category, desc, commissioner.id, fake_temp_image_paths, province, city
       expect(Pandora::Models::Commissioner.find(commissioner.id).shop_promotion_logs.count).to eq 1
       expect(Pandora::Models::Commissioner.find(commissioner.id).shop_promotion_logs.first.content).to eq "haha(18611979882)录入店铺new shop的信息"
     end
@@ -334,7 +336,7 @@ describe CommissionerController do
       end
 
       it "should raise common error if have similar shops in pandora" do
-        expect { subject.register_shop name, address, longitude, latitude, scale, category, desc, commissioner.id, fake_temp_image_paths }.to raise_error Common::Error, "臣妾觉的这家店铺已经被录入了,大王搜索一下看看能找到吗?"
+        expect { subject.register_shop name, address, longitude, latitude, scale, category, desc, commissioner.id, fake_temp_image_paths, province, city }.to raise_error Common::Error, "臣妾觉的这家店铺已经被录入了,大王搜索一下看看能找到吗?"
       end
     end
   end

@@ -51,7 +51,8 @@ describe UserController do
                                          {
                                              :is_new => true,
                                              :user_id => 1,
-                                             :designer_id => 1
+                                             :designer_id => 1,
+                                             :is_vip=>false
                                          }
                                  }
                              )
@@ -84,7 +85,8 @@ describe UserController do
                                                                            :data => {
                                                                                :is_new => true,
                                                                                :user_id => 1,
-                                                                               :designer_id => 1
+                                                                               :designer_id => 1,
+                                                                               :is_vip=>false
                                                                            }
                                                                        }
                                                                    )
@@ -99,7 +101,8 @@ describe UserController do
                                                                            :data => {
                                                                                :is_new => false,
                                                                                :user_id => 1,
-                                                                               :designer_id => 1
+                                                                               :designer_id => 1,
+                                                                               :is_vip=>true
                                                                            }
                                                                        }
                                                                    )

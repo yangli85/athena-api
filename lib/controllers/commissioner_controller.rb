@@ -42,8 +42,10 @@ class CommissionerController < BaseController
     max_count = @commissioner_service.get_promotion_logs_count c_id
     users = @commissioner_service.get_promotion_users c_id, max_count, 1
     designers = @commissioner_service.get_promotion_designers c_id, max_count, 1
+    vip_designers = @commissioner_service.get_promotion_vip_designers c_id, max_count, 1
     data = commissioner.attributes.merge({
                                              designer_count: designers.count,
+                                             vip_designer_count: vip_designers.count,
                                              user_count: users.count,
                                              be_scanned_times: commissioner.be_scanned_times
                                          })
@@ -86,6 +88,15 @@ class CommissionerController < BaseController
     success.merge({data: data})
   end
 
+  def promotion_vip_designers c_id, page_size, current_page
+    designers = @commissioner_service.get_promotion_vip_designers c_id, page_size, current_page
+    data = designers.map do |designer|
+      designer.attributes.merge({phone_number: designer.user.phone_number, created_at: designer.created_at})
+    end
+    success.merge({data: data})
+  end
+
+
   def shop_promotion_logs c_id, shop_id, page_size, current_page
     logs = @commissioner_service.get_shop_promotion_logs c_id, shop_id, page_size, current_page
     success.merge({data: logs.map(&:attributes)})
@@ -96,12 +107,12 @@ class CommissionerController < BaseController
     success.merge({image_path: image_path})
   end
 
-  def register_shop name, address, longitude, latitude, scale, category, desc, c_id, image_paths
+  def register_shop name, address, longitude, latitude, scale, category, desc, c_id, image_paths, province, city
     image_paths = rebuild_images image_paths
     shops = @shop_service.get_similar_shops name, address, longitude, latitude
     raise Common::Error.new("臣妾觉的这家店铺已经被录入了,大王搜索一下看看能找到吗?") unless shops.empty?
     commissioner = @commissioner_service.get_commissioner_by_id c_id
-    shop = @commissioner_service.register_shop name, address, longitude, latitude, scale, category, desc, image_paths, shop_image_folder
+    shop = @commissioner_service.register_shop name, address, longitude, latitude, scale, category, desc, image_paths, shop_image_folder,province,city
     @commissioner_service.add_shop_promotion_log c_id, shop.id, "#{commissioner.name}(#{commissioner.phone_number})录入店铺#{shop.name}的信息"
     success.merge({message: "该店铺已经录入系统,辛苦啦,加油!"})
   end

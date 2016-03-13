@@ -8,5 +8,7 @@ FactoryGirl.define do
     longitude '288.244'
     scale "M"
     category "apartment"
+    province "shannxi"
+    city "xi'an"
   end
 end

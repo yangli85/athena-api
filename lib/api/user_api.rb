@@ -139,6 +139,12 @@ module API
         result = UserController.call(:modify_gender, [params['user_id'].to_i, params['new_gender']])
         return_response callback, result
       end
+
+      app.post '/add_call_log' do
+        callback = params.delete('callback')
+        result = UserController.call(:add_call_log, [params['user_id'].to_i, params['designer_id'].to_i])
+        return_response callback, result
+      end
     end
   end
 end

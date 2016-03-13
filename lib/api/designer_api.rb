@@ -73,7 +73,7 @@ module API
 
       app.post '/update_new_shop' do
         callback = params.delete('callback')
-        args = [params['name'], params['address'], params['latitude'], params['longitude'], params['designer_id'].to_i]
+        args = [params['name'], params['address'], params['latitude'], params['longitude'], params['designer_id'].to_i, params['province'], params['city']]
         result = DesignerController.call(:update_new_shop, args)
         return_response callback, result
       end

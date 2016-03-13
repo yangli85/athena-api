@@ -25,7 +25,7 @@ class UserController < BaseController
     user = @user_service.create_user phone_number if user.nil?
     designer = user.designer || @designer_service.create_designer(user.id) if type=='designer'
     data = {is_new: is_new, user_id: user.id}
-    data.merge!({designer_id: designer.id}) if type == "designer"
+    data.merge!({designer_id: designer.id, is_vip: designer.is_vip}) if type == "designer"
     success.merge({data: data})
   end
 
@@ -103,7 +103,11 @@ class UserController < BaseController
   end
 
   def add_favorite_designer user_id, designer_id
+    user = @user_service.get_user_by_id user_id
+    designer = @designer_service.get_designer designer_id
     @user_service.add_favorite_designer user_id, designer_id
+    desc = "用户#{user.name}关注了您."
+    @user_service.create_message designer.user.id, desc
     success.merge({message: "加入收藏成功."})
   end
 
@@ -205,6 +209,15 @@ class UserController < BaseController
 
   def modify_gender user_id, new_gender
     @user_service.update_user_profile user_id, 'gender', new_gender
+    success
+  end
+
+  def add_call_log user_id, designer_id
+    user = @user_service.get_user_by_id user_id
+    designer = @designer_service.get_designer designer_id
+    @user_service.add_designer_called_log user_id, designer_id
+    desc = "用户#{user.name}给拨打了您的电话."
+    @user_service.create_message designer.user.id, desc
     success
   end
 

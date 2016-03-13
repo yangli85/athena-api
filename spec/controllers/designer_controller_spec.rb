@@ -381,10 +381,6 @@ describe DesignerController do
           }
       }
     }
-    before do
-      new_user = create(:user, {phone_number: '13888888888'})
-      create(:designer, {user: new_user, totally_stars: 100, is_vip: false})
-    end
 
     it "should return designer rank in all current vip users" do
       expect(subject.get_designer_rank(7, "totally_stars")[:data][:rank]).to eq 1
@@ -422,8 +418,8 @@ describe DesignerController do
                           :longitude => "108.9430"
                       },
                   :vitae_count => 2,
-                  :is_vip=>true,
-                  :expired_at=> DateTime.parse("20151212")
+                  :is_vip => true,
+                  :expired_at => DateTime.parse("20151212")
               }
       }
     }
@@ -541,10 +537,12 @@ describe DesignerController do
     let(:fake_address) { "ZhuQue Street No1" }
     let(:fake_lat) { "108.124" }
     let(:fake_lon) { "108.124" }
+    let(:fake_province) { "shannxi" }
+    let(:fake_city) { "xi'an" }
 
     describe "#update_new_shop" do
       it "should create a new shop and update designer'shop" do
-        subject.update_new_shop fake_name, fake_address, fake_lat, fake_lon, designer.id
+        subject.update_new_shop fake_name, fake_address, fake_lat, fake_lon, designer.id, fake_province, fake_city
         expect(Pandora::Models::Designer.find(designer.id).shop.attributes).to eq (
                                                                                       {
                                                                                           :id => 6,
