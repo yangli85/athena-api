@@ -1,3 +1,4 @@
+#encoding:utf-8
 require "sinatra"
 require "sinatra/jsonp"
 require 'sinatra/reloader'
@@ -67,9 +68,6 @@ module API
     end
 
     def authenticate user
-      p "============================"
-      p session['access_token']
-      p "============================"
       redirect '/expired' if !user || !session['access_token']
     end
 
