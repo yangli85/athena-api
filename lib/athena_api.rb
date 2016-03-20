@@ -6,11 +6,12 @@ require 'api/twitter_api'
 require 'api/commissioner_api'
 
 class AthenaAPI < API::BaseAPI
-  # before do
-  #   if need_authenticate?
-  #     authenticate session["user_id"]
-  #   end
-  # end
+  before do
+    if need_authenticate?
+      authenticate
+    end
+  end
+
   API::AdAPI.registered(self)
   API::DesignerAPI.registered(self)
   API::TwitterAPI.registered(self)

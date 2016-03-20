@@ -15,7 +15,7 @@ module API
     include Common::Logging
     helpers Sinatra::Jsonp
     use Rack::Session::Cookie, :key => 'rack.session',
-        :domain => 'localhost',
+        :domain => '101.200.162.121',
         :path => '/',
         :expire_after => 2592000, # In seconds
         :secret => Digest::SHA256.hexdigest(rand.to_s)
@@ -40,13 +40,15 @@ module API
     get '/login' do
       callback = params.delete('callback') # jsonp
       result = UserController.call(:login, [params['phone_number'], params['code'], params['type']])
-      session["user_id"] = result[:data][:user_id]
-      session["access_token"] = generate_access_token params['imei_id']
-      result.merge!(
-          {
-              access_token: session[:access_token]
-          }
-      )
+      if(result[:data][:status] == "SUCCESS")
+        session["user_id"] = result[:data][:user_id]
+        session["access_token"] = generate_access_token params['imei_id']
+        result.merge!(
+            {
+                access_token: session[:access_token]
+            }
+        )
+      end
       return_response callback, result
     end
 
@@ -67,8 +69,8 @@ module API
       'Sorry there was a nasty error'
     end
 
-    def authenticate user
-      redirect '/expired' if !user || !session['access_token']
+    def authenticate
+      redirect '/expired' if !session["user_id"] || !session['access_token']
     end
 
     def generate_access_token imei_id

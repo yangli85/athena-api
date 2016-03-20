@@ -184,6 +184,7 @@ end
   Pandora::Models::FavoriteImage.create({
                                             id: n+1,
                                             user_id: n+1,
+                                            twitter_id: n+1,
                                             image_id: n+21
                                         })
 end
