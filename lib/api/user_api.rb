@@ -3,13 +3,6 @@ require 'controllers/user_controller'
 module API
   class UserAPI
     def self.registered(app)
-
-      app.get '/login' do
-        callback = params.delete('callback') # jsonp
-        result = UserController.call(:login, [params['phone_number'], params['code'], params['type']])
-        return_response callback, result
-      end
-
       app.get '/consumer_details' do
         callback = params.delete('callback') # jsonp
         result = UserController.call(:get_user_details, [params['user_id'].to_i])
@@ -33,13 +26,6 @@ module API
       app.post '/add_favorite_image' do
         callback = params.delete('callback') # jsonp
         result = UserController.call(:add_favorite_image, [params['twitter_id'].to_i, params['user_id'].to_i, params['image_id'].to_i])
-        return_response callback, result
-      end
-
-      app.post '/del_favorite_images' do
-        ids = params["ids"].split(',').map(&:to_i)
-        callback = params.delete('callback') # jsonp
-        result = UserController.call(:del_favorite_images, [ids])
         return_response callback, result
       end
 

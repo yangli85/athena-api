@@ -214,6 +214,7 @@ describe DesignerController do
                   :gender => "unknow",
                   :stars => 5,
                   :rank => 7,
+                  :is_vip=>true,
                   :phone_number => "13800000001"
               }
       }

@@ -44,7 +44,7 @@ class UserController < BaseController
       designer = @designer_service.get_designer designer_id
       account_log_desc = "使用了#{stars}颗星星给#{designer.user.name}点赞"
       @user_service.update_account_balance account.id, -stars, account_log_desc, author_id, designer_id, 'consume', 'beautyshow'
-      @user_service.create_message designer.user.id, "#{user.name}发布了一条关于你的新动态,送给你#{stars}颗星星"
+      @user_service.create_message designer.user.id, "#{user.name}发布了一条关于你的新动态,送给你#{stars}个赞"
       @designer_service.update_designer designer_id, 'totally_stars', designer.totally_stars + stars
       @designer_service.update_designer designer_id, 'weekly_stars', designer.weekly_stars + stars
       @designer_service.update_designer designer_id, 'monthly_stars', designer.monthly_stars + stars
@@ -76,14 +76,8 @@ class UserController < BaseController
   end
 
   def add_favorite_image twitter_id, user_id, image_id
-    @user_service.add_favorite_image user_id, image_id
-    @twitter_service.update_twitter_image_likes twitter_id, image_id
+    @user_service.add_favorite_image user_id, image_id, twitter_id
     success.merge({message: "加入收藏成功."})
-  end
-
-  def del_favorite_images ids
-    @user_service.del_favorite_images ids
-    success.merge({message: "删除收藏成功."})
   end
 
   def del_favorite_image user_id, image_id
@@ -96,7 +90,8 @@ class UserController < BaseController
     data = favorite_images.map do |favorite_image|
       {
           id: favorite_image.id,
-          image: favorite_image.favorited_image && favorite_image.favorited_image.attributes
+          twitter_id: favorite_image.twitter_id,
+          image: favorite_image.favorited_image.attributes
       }
     end
     success.merge({data: data})

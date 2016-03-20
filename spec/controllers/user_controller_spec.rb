@@ -52,7 +52,7 @@ describe UserController do
                                              :is_new => true,
                                              :user_id => 1,
                                              :designer_id => 1,
-                                             :is_vip=>false
+                                             :is_vip => false
                                          }
                                  }
                              )
@@ -86,7 +86,7 @@ describe UserController do
                                                                                :is_new => true,
                                                                                :user_id => 1,
                                                                                :designer_id => 1,
-                                                                               :is_vip=>false
+                                                                               :is_vip => false
                                                                            }
                                                                        }
                                                                    )
@@ -102,7 +102,7 @@ describe UserController do
                                                                                :is_new => false,
                                                                                :user_id => 1,
                                                                                :designer_id => 1,
-                                                                               :is_vip=>true
+                                                                               :is_vip => true
                                                                            }
                                                                        }
                                                                    )
@@ -235,7 +235,7 @@ describe UserController do
     it "should create message for designer" do
       subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon)
       expect(Pandora::Models::User.find(designer.user.id).messages.count).to eq 1
-      expect(Pandora::Models::User.find(designer.user.id).messages.first.content).to eq "user1发布了一条关于你的新动态,送给你3颗星星"
+      expect(Pandora::Models::User.find(designer.user.id).messages.first.content).to eq "user1发布了一条关于你的新动态,送给你3个赞"
       expect(Pandora::Models::User.find(designer.user.id).messages.first.is_new).to eq true
     end
 
@@ -328,6 +328,7 @@ describe UserController do
     let(:designer) { create(:designer, {user: user}) }
     let(:image) { create(:image) }
     let(:twitter) { create(:twitter, {author: user, designer: designer}) }
+    let(:twitter_image) { create(:twitter_image, {twitter: twitter, image: image}) }
 
     before do
       create(:twitter_image, {twitter: twitter, image: image})
@@ -347,21 +348,6 @@ describe UserController do
 
     end
 
-    describe "#del_favorite_images" do
-      before do
-        create(:favorite_image, {user: user, favorited_image: image})
-      end
-      it "should del favorite image by id" do
-        subject.del_favorite_images 1
-        expect(user.favorite_images.count).to eq 0
-      end
-
-      it "should del favorite image by ids" do
-        subject.del_favorite_images [1]
-        expect(user.favorite_images.count).to eq 0
-      end
-    end
-
     describe '#favorite_images' do
       let(:fake_result) {
         {
@@ -371,6 +357,7 @@ describe UserController do
                 [
                     {
                         :id => 1,
+                        :twitter_id=>1,
                         :image =>
                             {
                                 :id => 1,
@@ -382,7 +369,7 @@ describe UserController do
         }
       }
       before do
-        create(:favorite_image, {user: user, favorited_image: image})
+        create(:favorite_image, {user: user, favorited_image: image, twitter: twitter})
       end
       it "should return user favorite images in correct json format" do
         expect(subject.favorite_images user.id).to eq fake_result

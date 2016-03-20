@@ -120,6 +120,8 @@ end
                                    address: "朱雀大街#{n+1}号",
                                    latitude: "34.2#{n}",
                                    longitude: "108.9#{n}",
+                                   province: "陕西省",
+                                   city: "西安市",
                                    scale: ["大", "中", "小"][n%3],
                                    desc: "这是一个用来测试的美发店"
                                })

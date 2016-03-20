@@ -56,6 +56,7 @@ class DesignerController < BaseController
                                                      gender: designer.user.gender,
                                                      stars: designer.totally_stars,
                                                      rank: rank,
+                                                     is_vip: designer.is_vip,
                                                      phone_number: designer.user.phone_number
                                                  })
     success.merge(data: data)
