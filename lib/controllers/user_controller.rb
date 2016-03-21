@@ -37,11 +37,12 @@ class UserController < BaseController
   def publish_new_twitter author_id, designer_id, content, image_paths, stars, latitude, longitude
     image_paths = rebuild_images image_paths
     user = @user_service.get_user_by_id author_id
+    designer = @designer_service.get_designer designer_id
+    raise Common::Error.new("对不起,不可以给自己点赞!") if user == designer.user
     account = user.account
     raise Common::Error.new("对不起,星星不够!") unless account.balance >= stars
     begin
       @twitter_service.create_twitter author_id, designer_id, content, image_paths, stars, latitude, longitude, twitter_image_folder
-      designer = @designer_service.get_designer designer_id
       account_log_desc = "使用了#{stars}颗星星给#{designer.user.name}点赞"
       @user_service.update_account_balance account.id, -stars, account_log_desc, author_id, designer_id, 'consume', 'beautyshow'
       @user_service.create_message designer.user.id, "#{user.name}发布了一条关于你的新动态,送给你#{stars}个赞"
@@ -76,6 +77,7 @@ class UserController < BaseController
   end
 
   def add_favorite_image twitter_id, user_id, image_id
+    return success.merge({message: "加入收藏成功."}) if @user_service.favorited_image? user_id, image_id
     @user_service.add_favorite_image user_id, image_id, twitter_id
     success.merge({message: "加入收藏成功."})
   end
@@ -98,6 +100,7 @@ class UserController < BaseController
   end
 
   def add_favorite_designer user_id, designer_id
+    return success.merge({message: "加入收藏成功."}) if @user_service.favorited_designer? user_id, designer_id
     user = @user_service.get_user_by_id user_id
     designer = @designer_service.get_designer designer_id
     @user_service.add_favorite_designer user_id, designer_id
@@ -214,6 +217,14 @@ class UserController < BaseController
     desc = "用户#{user.name}给拨打了您的电话."
     @user_service.create_message designer.user.id, desc
     success
+  end
+
+  def get_access_token user_id
+    @user_service.get_access_token user_id
+  end
+
+  def create_or_update_access_token user_id, access_token
+    @user_service.create_or_update_access_token user_id, access_token
   end
 
   private

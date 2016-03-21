@@ -144,7 +144,8 @@ describe UserController do
   describe "#publish_new_twitter" do
 
     let(:author) { create(:user, phone_number: fake_phone) }
-    let(:designer) { create(:designer, user: author) }
+    let(:user) { create(:user, phone_number: "13812341234") }
+    let(:designer) { create(:designer, user: user) }
     let(:fake_author_id) { author.id }
     let(:fake_designer_id) { designer.id }
     let(:fake_content) { 'new twitter' }
@@ -346,6 +347,12 @@ describe UserController do
         expect(Pandora::Models::Twitter.find(twitter.id).likes - old_likes).to eq 1
       end
 
+      it "should not add favorited if user has favorited image" do
+        old_likes = twitter.likes
+        subject.add_favorite_image user.id, image.id, twitter.id
+        expect{subject.add_favorite_image user.id, image.id, twitter.id}.to_not raise_error
+        expect(Pandora::Models::Twitter.find(twitter.id).likes - old_likes).to eq 1
+      end
     end
 
     describe '#favorite_images' do
@@ -392,6 +399,13 @@ describe UserController do
       it "should update designer likes" do
         old_likes = designer.likes
         subject.add_favorite_designer user.id, designer.id
+        expect(Pandora::Models::Designer.find(designer.id).likes - old_likes).to eq 1
+      end
+
+      it "should not add favorited if user has favorited designer" do
+        old_likes = designer.likes
+        subject.add_favorite_designer user.id, designer.id
+        expect{subject.add_favorite_designer user.id, designer.id}.to_not raise_error
         expect(Pandora::Models::Designer.find(designer.id).likes - old_likes).to eq 1
       end
     end
