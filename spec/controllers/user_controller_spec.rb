@@ -674,12 +674,14 @@ describe UserController do
                   {
                       :id => 1,
                       :content => "this is a test message",
-                      :created_at => "1小时前"
+                      :created_at => "1小时前",
+                      :is_new=>false
                   },
                   {
                       :id => 2,
                       :content => "this is a test message",
-                      :created_at => "1小时前"
+                      :created_at => "1小时前",
+                      :is_new=>false
                   }
               ]
       }
