@@ -61,6 +61,12 @@ class AthenaAPI < API::BaseAPI
   end
 
   def need_authenticate?
-    !["/", "/login", "/no_authenticate","/no_identity_id", "/send_sms", "/favicon.ico"].include?(request.path)
+    if params['source'] == "share" && ["/search_twitter", "/add_promotion_log"].include?(request.path)
+      false
+    elsif request.path.include? "/commissioner/"
+      false
+    else
+      !["/", "/login", "/no_authenticate", "/no_identity_id", "/send_sms", "/favicon.ico"].include?(request.path)
+    end
   end
 end

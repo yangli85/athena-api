@@ -13,9 +13,12 @@ module Common
       image_path
     end
 
-    def generate_thumbnails original_image_path, small_file_path, scale=0.8
-      img = Magick::Image.read original_image_path
-      thumb = img[0].scale(scale)
+    def generate_thumbnails original_image_path, small_file_path, scale=1
+      img = Magick::Image.read(original_image_path).first
+      c, r = img.columns, img.rows
+      max = img.columns > img.rows ? img.columns : img.rows
+      scale = 200.0/max
+      thumb = img.thumbnail scale
       thumb.write(small_file_path)
     end
 
