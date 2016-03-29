@@ -4,6 +4,7 @@ require 'pandora/services/commissioner_service'
 require 'pandora/services/shop_service'
 require 'pandora/services/sms_service'
 require 'common/error'
+require 'common/image_helper'
 require 'common/controller_helper'
 
 class CommissionerController < BaseController
@@ -19,10 +20,9 @@ class CommissionerController < BaseController
     raise Common::Error.new("短信验证码错误") unless correct_code? phone_number, code
     commissioner = @commissioner_service.get_commissioner phone_number
     raise Common::Error.new("大王,你已经是我们的人了,可以直接登录.") unless commissioner.nil?
-    FileUtils.mkdir('temp_images') unless Dir.exist? 'temp_images'
-    FileUtils.cp("images/code/1.png", 'temp_images/') unless File.exist? "temp_images/1.png"
-    code_image_path = "temp_images/1.png"
-    @commissioner_service.register phone_number, name, password, code_image_path, code_image_folder
+    commissioner = @commissioner_service.register phone_number, name, password
+    code_image_path = Common::ImageHelper.new.generate_code_image commissioner.id, temp_image_folder
+    @commissioner_service.add_code_image commissioner.id, code_image_path, code_image_folder
     success.merge({message: "恭喜你,注册成功,下一个地推之王非你莫属!"})
   end
 
@@ -112,7 +112,7 @@ class CommissionerController < BaseController
     shops = @shop_service.get_similar_shops name, address, longitude, latitude
     raise Common::Error.new("臣妾觉的这家店铺已经被录入了,大王搜索一下看看能找到吗?") unless shops.empty?
     commissioner = @commissioner_service.get_commissioner_by_id c_id
-    shop = @commissioner_service.register_shop name, address, longitude, latitude, scale, category, desc, image_paths, shop_image_folder,province,city
+    shop = @commissioner_service.register_shop name, address, longitude, latitude, scale, category, desc, image_paths, shop_image_folder, province, city
     @commissioner_service.add_shop_promotion_log c_id, shop.id, "#{commissioner.name}(#{commissioner.phone_number})录入店铺#{shop.name}的信息"
     success.merge({message: "该店铺已经录入系统,辛苦啦,加油!"})
   end

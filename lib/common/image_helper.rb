@@ -1,6 +1,7 @@
 require 'rmagick'
 require 'uuid'
 require 'fileutils'
+require "open-uri"
 
 module Common
   class ImageHelper
@@ -26,6 +27,17 @@ module Common
       image_dir = File.dirname original_image_path
       image_name = File.basename original_image_path
       "#{image_dir}/s_#{image_name}"
+    end
+
+    def generate_code_image c_id, image_folder
+      image_path = "#{image_folder}/#{c_id}.png"
+      FileUtils.mkdir_p(ENV['TEMP_IMAGES_FOLDER']) unless Dir.exists?(ENV['TEMP_IMAGES_FOLDER'])
+      open("http://qr.liantu.com/api.php?text=#{ENV['DOWNLOAD_URL']}?c_id=#{c_id}") { |f|
+        File.open(image_path, "wb") do |file|
+          file.puts f.read
+        end
+      }
+      image_path
     end
   end
 end

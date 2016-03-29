@@ -38,4 +38,15 @@ describe Common::ImageHelper do
       expect(File.exist?(fake_small_jpg_path)).to eq true
     end
   end
+
+  describe "#generate_code_image" do
+    after(:all) do
+      require 'fileutils'
+      FileUtils.rm("test_code.png")
+    end
+    it "should generate image" do
+      subject.generate_code_image 1,"test_code.png"
+    end
+
+  end
 end

@@ -1,4 +1,5 @@
 require 'common/image_helper'
+
 module Common
   module ControllerHelper
     def rebuild_images image_paths
@@ -46,5 +47,12 @@ module Common
       FileUtils.mkdir_p(folder) unless Dir.exists?(folder)
       folder
     end
+
+    def temp_image_folder
+      folder = ENV["TEMP_IMGAES_FOLDER"]
+      FileUtils.mkdir_p(folder) unless Dir.exists?(folder)
+      folder
+    end
+
   end
 end
