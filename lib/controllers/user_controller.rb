@@ -49,6 +49,8 @@ class UserController < BaseController
       @designer_service.update_designer designer_id, 'totally_stars', designer.totally_stars + stars
       @designer_service.update_designer designer_id, 'weekly_stars', designer.weekly_stars + stars
       @designer_service.update_designer designer_id, 'monthly_stars', designer.monthly_stars + stars
+      @user_service.update_user_profile author_id, "vitality", user.vitality + stars
+      @user_service.update_user_profile designer.user.id, "vitality", designer.user.vitality + stars
       success.merge({message: "发布动态成功."})
     ensure
       image_paths.each do |path|
@@ -156,6 +158,7 @@ class UserController < BaseController
   def recharge user_id, balance, channel
     user = @user_service.get_user_by_id user_id
     @user_service.update_account_balance user.account.id, balance, "购买了#{balance}颗星星", user.id, user.id, 'recharge', channel
+    @user_service.update_user_profile user_id, "vitality", user.vitality + balance
     success.merge({message: "购买成功."})
   end
 

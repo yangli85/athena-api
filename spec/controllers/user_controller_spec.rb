@@ -250,6 +250,18 @@ describe UserController do
       expect(new_designer.weekly_stars - old_weekly_stars).to eq 3
       expect(new_designer.monthly_stars - old_monthly_stars).to eq 3
     end
+
+    it "should update author vitality" do
+      old_vitality = author.vitality
+      subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon)
+      expect(Pandora::Models::User.find(author.id).vitality - old_vitality).to eq  fake_stars
+    end
+
+    it "should update use vitality" do
+      old_vitality = designer.user.vitality
+      subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon)
+      expect(Pandora::Models::User.find(designer.user.id).vitality - old_vitality).to eq  fake_stars
+    end
   end
 
   describe "#get_user_details" do
@@ -599,6 +611,12 @@ describe UserController do
       it "should update user account balance" do
         subject.recharge user.id, 10, 'alipay'
         expect(Pandora::Models::User.find(user.id).account.balance).to eq 10
+      end
+
+      it "should update user vitality" do
+        old_value = user.vitality
+        subject.recharge user.id, 10, 'alipay'
+        expect(Pandora::Models::User.find(user.id).vitality - old_value).to eq 10
       end
 
       it "should add acount log" do
