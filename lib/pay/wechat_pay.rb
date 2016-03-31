@@ -24,10 +24,10 @@ module Pay
       params = {
           appid: @app_id,
           partnerid: @mch_id,
-          prepay_id: prepay_id,
+          prepayid: prepay_id,
           package: "Sign=WXPay",
           noncestr: SecureRandom.uuid.tr('-', ''),
-          timestamp: Time.now.to_i.to_s,
+          timestamp: Time.now.to_i.to_s
       }
       check_required_options(params, GENERATE_APP_PAY_REQ_REQUIRED_FIELDS)
       params.merge(
@@ -69,7 +69,7 @@ module Pay
     def verify_sign? params, key
       params = params.dup
       sign = params.delete('sign') || params.delete(:sign)
-      generate_md5_sign(params, key) == sign
+      generate_sign(params, key) == sign
     end
 
     def generate_sign params, key

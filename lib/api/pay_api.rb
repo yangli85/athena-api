@@ -22,9 +22,8 @@ module API
       end
 
       app.post '/notify/wx_notify' do
-        callback = params.delete('callback') # jsonp
         result = WechatPayController.call(:notify, [params])
-        result.to_xml
+        return_xml results
       end
     end
   end

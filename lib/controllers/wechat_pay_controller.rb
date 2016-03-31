@@ -31,7 +31,7 @@ class WechatPayController < BaseController
   def notify params
     if @wechat_pay.verify? params
       out_trade_no = params["out_trade_no"]
-      payment_log = @user_service.get_payment_log
+      payment_log = @user_service.get_payment_log out_trade_no
       @user_service.update_payment_log(payment_log, "trade_status", params['result_code'])
       {return_code: "SUCCESS", return_msg: "OK"}
     else

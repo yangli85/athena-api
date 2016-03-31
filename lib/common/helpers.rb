@@ -10,4 +10,9 @@ helpers do
     end
     response
   end
+
+  def return_xml results
+    content_type :xml
+    response = "<xml>#{results.map { |k, v| "<#{k}>#{v}</#{k}>" }.join}</xml>"
+  end
 end
