@@ -8,7 +8,7 @@ module Pay
     include Common::Logging
     include Pay::Utils
     GATEWAY_URL = 'https://mapi.alipay.com/gateway.do'
-    GENERATE_APP_PAY_REQ_REQUIRED_FIELDS = %i(service partner _input_charset notify_url out_trade_no subject payment_type seller_id total_fee body)
+    GENERATE_APP_PAY_REQ_REQUIRED_FIELDS = ['service','partner', '_input_charset','notify_url','out_trade_no','subject','payment_type','seller_id','total_fee','body']
 
     def initialize
       @public_key = ENV['ALI_RSA_PUBLIC_KEY']

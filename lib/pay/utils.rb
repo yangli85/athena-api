@@ -11,7 +11,7 @@ module Pay
 
     def check_required_options options, names
       names.each do |name|
-        raise StandardError.new("Pay Warn: missing required option: #{name}") unless options.has_key?(name) && !options[name].nil? && !options[name].to_s.strip.empty?
+        raise StandardError.new("Pay Warn: missing required option: #{name}") unless options.has_key?(name.to_sym) && !options[name.to_sym].nil? && !options[name.to_sym].to_s.strip.empty?
       end
     end
 
