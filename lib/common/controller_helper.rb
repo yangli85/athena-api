@@ -49,7 +49,7 @@ module Common
     end
 
     def temp_image_folder
-      folder = ENV["TEMP_IMGAES_FOLDER"]
+      folder = ENV["TEMP_IMAGES_FOLDER"]
       FileUtils.mkdir_p(folder) unless Dir.exists?(folder)
       folder
     end

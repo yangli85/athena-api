@@ -25,7 +25,7 @@ describe CommissionerController do
       before do
         allow_any_instance_of(Pandora::Services::SMSService).to receive_message_chain(:get_latest_code, :code).and_return("1234")
         allow(ENV).to receive(:[]).with("IMGAES_FOLDER").and_return("images")
-        allow(ENV).to receive(:[]).with("TEMP_IMGAES_FOLDER").and_return("temp_images")
+        allow(ENV).to receive(:[]).with("TEMP_IMAGES_FOLDER").and_return("temp_images")
         allow_any_instance_of(Common::ImageHelper).to receive(:generate_code_image).and_return("temp_images/1.png")
       end
 

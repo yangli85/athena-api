@@ -4,6 +4,7 @@ require 'api/designer_api'
 require 'api/user_api'
 require 'api/twitter_api'
 require 'api/commissioner_api'
+require 'api/pay_api'
 require 'digest/sha1'
 
 class AthenaAPI < API::BaseAPI
@@ -16,6 +17,7 @@ class AthenaAPI < API::BaseAPI
   API::TwitterAPI.registered(self)
   API::UserAPI.registered(self)
   API::CommissionerAPI.registered(self)
+  API::PayAPI.registered(self)
 
   get '/login' do
     callback = params.delete('callback') # jsonp
@@ -64,6 +66,8 @@ class AthenaAPI < API::BaseAPI
     if params['source'] == "share" && ["/search_twitter", "/add_promotion_log"].include?(request.path)
       false
     elsif request.path.include? "/commissioner/"
+      false
+    elsif request.path.include? "/notify/"
       false
     else
       !["/", "/login", "/no_authenticate", "/no_identity_id", "/send_sms", "/favicon.ico"].include?(request.path)

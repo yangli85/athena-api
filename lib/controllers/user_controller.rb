@@ -42,7 +42,7 @@ class UserController < BaseController
     account = user.account
     raise Common::Error.new("对不起,星星不够!") unless account.balance >= stars
     begin
-      @twitter_service.create_twitter author_id, designer_id, content, image_paths, stars, latitude, longitude, twitter_image_folder
+      twitter = @twitter_service.create_twitter author_id, designer_id, content, image_paths, stars, latitude, longitude, twitter_image_folder
       account_log_desc = "使用了#{stars}颗星星给#{designer.user.name}点赞"
       @user_service.update_account_balance account.id, -stars, account_log_desc, author_id, designer_id, 'consume', 'beautyshow'
       @user_service.create_message designer.user.id, "#{user.name}发布了一条关于你的新动态,送给你#{stars}个赞"
@@ -51,7 +51,7 @@ class UserController < BaseController
       @designer_service.update_designer designer_id, 'monthly_stars', designer.monthly_stars + stars
       @user_service.update_user_profile author_id, "vitality", user.vitality + stars
       @user_service.update_user_profile designer.user.id, "vitality", designer.user.vitality + stars
-      success.merge({message: "发布动态成功."})
+      success.merge({message: "发布动态成功.", data: {twitter_id: twitter.id}})
     ensure
       image_paths.each do |path|
         File.delete(path[:image_path]) if File.exist? path[:image_path]
@@ -155,7 +155,9 @@ class UserController < BaseController
     success.merge({data: logs.map(&:attributes)})
   end
 
-  def recharge user_id, balance, channel
+  def recharge user_id, balance, channel, out_trade_no
+    payment_log = @user_service.get_payment_log out_trade_no
+    return error("买家付款不成功.") if payment_log.trade_status != "SUCCESS"
     user = @user_service.get_user_by_id user_id
     @user_service.update_account_balance user.account.id, balance, "购买了#{balance}颗星星", user.id, user.id, 'recharge', channel
     @user_service.update_user_profile user_id, "vitality", user.vitality + balance

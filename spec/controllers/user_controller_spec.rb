@@ -175,15 +175,16 @@ describe UserController do
       expect(subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon)).to eq (
                                                                                                                                                            {
                                                                                                                                                                :status => "SUCCESS",
-                                                                                                                                                               :message => "发布动态成功."
+                                                                                                                                                               :message => "发布动态成功.",
+                                                                                                                                                               :data => {:twitter_id => 1}
                                                                                                                                                            }
                                                                                                                                                        )
     end
 
     it "should generate small image for upload images" do
-      allow_any_instance_of(Pandora::Services::TwitterService).to receive(:create_twitter)
+      allow_any_instance_of(Pandora::Services::TwitterService).to receive(:create_twitter).and_raise StandardError,"create twitter failed"
       allow(File).to receive(:delete)
-      subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon)
+      expect{subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon)}.to raise_error StandardError
       fake_temp_image_paths.each do |path|
         expect(File.exist?(Common::ImageHelper.new.generate_s_image_path path)).to eq true
       end
@@ -254,13 +255,13 @@ describe UserController do
     it "should update author vitality" do
       old_vitality = author.vitality
       subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon)
-      expect(Pandora::Models::User.find(author.id).vitality - old_vitality).to eq  fake_stars
+      expect(Pandora::Models::User.find(author.id).vitality - old_vitality).to eq fake_stars
     end
 
     it "should update use vitality" do
       old_vitality = designer.user.vitality
       subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon)
-      expect(Pandora::Models::User.find(designer.user.id).vitality - old_vitality).to eq  fake_stars
+      expect(Pandora::Models::User.find(designer.user.id).vitality - old_vitality).to eq fake_stars
     end
   end
 
@@ -362,7 +363,7 @@ describe UserController do
       it "should not add favorited if user has favorited image" do
         old_likes = twitter.likes
         subject.add_favorite_image user.id, image.id, twitter.id
-        expect{subject.add_favorite_image user.id, image.id, twitter.id}.to_not raise_error
+        expect { subject.add_favorite_image user.id, image.id, twitter.id }.to_not raise_error
         expect(Pandora::Models::Twitter.find(twitter.id).likes - old_likes).to eq 1
       end
     end
@@ -376,7 +377,7 @@ describe UserController do
                 [
                     {
                         :id => 1,
-                        :twitter_id=>1,
+                        :twitter_id => 1,
                         :image =>
                             {
                                 :id => 1,
@@ -417,7 +418,7 @@ describe UserController do
       it "should not add favorited if user has favorited designer" do
         old_likes = designer.likes
         subject.add_favorite_designer user.id, designer.id
-        expect{subject.add_favorite_designer user.id, designer.id}.to_not raise_error
+        expect { subject.add_favorite_designer user.id, designer.id }.to_not raise_error
         expect(Pandora::Models::Designer.find(designer.id).likes - old_likes).to eq 1
       end
     end
@@ -604,23 +605,26 @@ describe UserController do
     end
 
     describe "#recharge" do
+      let(:fake_out_trade_no) { "wx1215125" }
+
       before do
-        account = create(:account, {user: user, balance: 0})
+        create(:account, {user: user, balance: 0})
+        create(:payment_log, {user_id: user.id, out_trade_no: fake_out_trade_no, plat_form: "WX", trade_status: "SUCCESS"})
       end
 
       it "should update user account balance" do
-        subject.recharge user.id, 10, 'alipay'
+        subject.recharge user.id, 10, 'alipay', fake_out_trade_no
         expect(Pandora::Models::User.find(user.id).account.balance).to eq 10
       end
 
       it "should update user vitality" do
         old_value = user.vitality
-        subject.recharge user.id, 10, 'alipay'
+        subject.recharge user.id, 10, 'alipay', fake_out_trade_no
         expect(Pandora::Models::User.find(user.id).vitality - old_value).to eq 10
       end
 
       it "should add acount log" do
-        subject.recharge user.id, 10, 'alipay'
+        subject.recharge user.id, 10, 'alipay', fake_out_trade_no
         logs = Pandora::Models::Account.find(user.account.id).account_logs
         expect(logs.count).to eq 1
         expect(logs.first[:channel]).to eq 'alipay'
@@ -628,6 +632,11 @@ describe UserController do
         expect(logs.first[:from_user]).to eq user.id
         expect(logs.first[:to_user]).to eq user.id
         expect(logs.first[:balance]).to eq 10
+      end
+
+      it "should return error if trade status is not success" do
+        Pandora::Models::PaymentLog.update_all(:trade_status => "FAIL")
+        expect(subject.recharge user.id, 10, 'alipay', fake_out_trade_no).to eq ({:status => "ERROR", :message => "买家付款不成功."})
       end
     end
 
@@ -693,13 +702,13 @@ describe UserController do
                       :id => 1,
                       :content => "this is a test message",
                       :created_at => "1小时前",
-                      :is_new=>false
+                      :is_new => false
                   },
                   {
                       :id => 2,
                       :content => "this is a test message",
                       :created_at => "1小时前",
-                      :is_new=>false
+                      :is_new => false
                   }
               ]
       }

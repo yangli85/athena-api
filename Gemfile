@@ -11,6 +11,8 @@ gem 'pandora', :source => 'http://localhost:8808'
 gem 'factory_girl'
 gem 'uuid'
 gem 'rmagick'
+gem 'rest-client', '>= 1.7'
+gem 'activesupport', '>= 3.2'
 
 group :test do
   gem 'fakefs', :require => "fakefs/safe"
