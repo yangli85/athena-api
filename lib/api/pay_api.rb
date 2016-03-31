@@ -22,7 +22,7 @@ module API
       end
 
       app.post '/notify/wx_notify' do
-        result = WechatPayController.call(:notify, [params])
+        results = WechatPayController.call(:notify, [params])
         return_xml results
       end
     end

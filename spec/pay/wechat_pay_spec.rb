@@ -23,17 +23,17 @@ describe Pay::WechatPay do
                                                                      {
                                                                          :appid => "wx308c9e4ba193b71a",
                                                                          :partnerid => "1323273601",
-                                                                         :prepay_id => "wx124215211",
+                                                                         :prepayid => "wx124215211",
                                                                          :package => "Sign=WXPay",
                                                                          :noncestr => "4dff7af0ba53470a9489b91304540f6a",
                                                                          :timestamp => "1459393503",
-                                                                         :sign => "F665BE9FA762EC8BA615CF75FAA32173"
+                                                                         :sign => "541CAEA4CAED9D997BAC671004AA2B21"
                                                                      }
                                                                  )
     end
 
     it "should raise standard erorr if requires parameter is not given" do
-      expect { subject.generate_pay_req "" }.to raise_error StandardError, "Pay Warn: missing required option: prepay_id"
+      expect { subject.generate_pay_req "" }.to raise_error StandardError, "Pay Warn: missing required option: prepayid"
     end
   end
 
@@ -57,7 +57,7 @@ describe Pay::WechatPay do
             <nonce_str><![CDATA[zJvWC2XtiaAjKoZh]]></nonce_str>
             <sign><![CDATA[30370AF5D6B67A3EC181C79F7E96D354]]></sign>
             <result_code><![CDATA[SUCCESS]]></result_code>
-            <prepay_id><![CDATA[wx201603311127326c16a4b6e50406235130]]></prepay_id>
+            <prepayid><![CDATA[wx201603311127326c16a4b6e50406235130]]></prepayid>
             <trade_type><![CDATA[APP]]></trade_type>
       </xml>"
     }
@@ -84,7 +84,7 @@ describe Pay::WechatPay do
                                                                                    "nonce_str" => "zJvWC2XtiaAjKoZh",
                                                                                    "sign" => "30370AF5D6B67A3EC181C79F7E96D354",
                                                                                    "result_code" => "SUCCESS",
-                                                                                   "prepay_id" => "wx201603311127326c16a4b6e50406235130",
+                                                                                   "prepayid" => "wx201603311127326c16a4b6e50406235130",
                                                                                    "trade_type" => "APP"
                                                                                }
                                                                            )
