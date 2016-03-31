@@ -12,7 +12,7 @@ module Pay
     GATEWAY_URL = 'https://api.mch.weixin.qq.com'
     PAY_CHANNEL = "WX"
     CREATE_PREPAY_ORDER_REQUIRED_FIELDS = ['appid', 'mch_id', 'nonce_str', 'body', 'out_trade_no', 'total_fee', 'spbill_create_ip', 'notify_url', 'trade_type']
-    GENERATE_APP_PAY_REQ_REQUIRED_FIELDS =['appid', 'partnerid', 'prepay_id', 'noncestr', 'package', 'noncestr', 'timestamp']
+    GENERATE_APP_PAY_REQ_REQUIRED_FIELDS =['appid', 'partnerid', 'prepayid', 'noncestr', 'package', 'noncestr', 'timestamp']
 
     def initialize
       @app_id = ENV['WX_APP_ID']
