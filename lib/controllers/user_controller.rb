@@ -23,14 +23,14 @@ class UserController < BaseController
     user = @user_service.get_user_by_phone_number phone_number
     is_new = (type == "designer") ? (user.nil? || user.designer.nil?) : user.nil?
     user = @user_service.create_user phone_number if user.nil?
-    designer = user.designer || @designer_service.create_designer(user.id) if type=='designer'
+    designer = user.designer || @designer_service.create_designer(user.id) if type.upcase==DESIGNER
     data = {is_new: is_new, user_id: user.id}
-    data.merge!({designer_id: designer.id, is_vip: designer.is_vip}) if type == "designer"
+    data.merge!({designer_id: designer.id, is_vip: designer.is_vip}) if type.upcase==DESIGNER
     success.merge({data: data})
   end
 
   def upload_image image_base_64
-    temp_image_path = Common::ImageHelper.new.save(image_base_64, ENV['TEMP_IMAGES_FOLDER'])
+    temp_image_path = Common::ImageHelper.new.save(image_base_64, temp_image_folder)
     success.merge(data: {temp_image_path: temp_image_path})
   end
 
@@ -44,7 +44,7 @@ class UserController < BaseController
     begin
       twitter = @twitter_service.create_twitter author_id, designer_id, content, image_paths, stars, latitude, longitude, twitter_image_folder
       account_log_desc = "使用了#{stars}颗星星给#{designer.user.name}点赞"
-      @user_service.update_account_balance account.id, -stars, account_log_desc, author_id, designer_id, 'consume', 'beautyshow'
+      @user_service.update_account_balance account.id, -stars, account_log_desc, author_id, designer_id, CONSUME, BEAUTYSHOW
       @user_service.create_message designer.user.id, "#{user.name}发布了一条关于你的新动态,送给你#{stars}个赞"
       @designer_service.update_designer designer_id, 'totally_stars', designer.totally_stars + stars
       @designer_service.update_designer designer_id, 'weekly_stars', designer.weekly_stars + stars
@@ -155,11 +155,9 @@ class UserController < BaseController
     success.merge({data: logs.map(&:attributes)})
   end
 
-  def recharge user_id, balance, channel, out_trade_no
-    payment_log = @user_service.get_payment_log out_trade_no
-    return error("买家付款不成功.") if payment_log.trade_status != "SUCCESS"
+  def recharge user_id, balance, channel
     user = @user_service.get_user_by_id user_id
-    @user_service.update_account_balance user.account.id, balance, "购买了#{balance}颗星星", user.id, user.id, 'recharge', channel
+    @user_service.update_account_balance user.account.id, balance, "购买了#{balance}颗星星", user.id, user.id, RECHARGE, channel
     @user_service.update_user_profile user_id, "vitality", user.vitality + balance
     success.merge({message: "购买成功."})
   end
@@ -172,9 +170,9 @@ class UserController < BaseController
     to_account = to_user.account
     raise Common::Error.new("你账户上的星星不够.") unless account.balance >= balance
     account_log_desc = "赠送给#{to_user.name}#{balance}颗星星"
-    @user_service.update_account_balance account.id, -balance, account_log_desc, user.id, to_user.id, 'donate', 'beautyshow'
+    @user_service.update_account_balance account.id, -balance, account_log_desc, user.id, to_user.id, DONATE, BEAUTYSHOW
     account_log_desc = "收到#{user.name}赠送给你的#{balance}颗星星"
-    @user_service.update_account_balance to_account.id, balance, account_log_desc, user.id, to_user.id, 'donate', 'beautyshow'
+    @user_service.update_account_balance to_account.id, balance, account_log_desc, user.id, to_user.id, DONATE, BEAUTYSHOW
     @user_service.create_message to_user_id, account_log_desc
     success.merge({message: "赠送成功."})
   end

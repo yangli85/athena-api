@@ -1,3 +1,4 @@
+require 'controllers/pay_controller'
 require 'controllers/ali_pay_controller'
 require 'controllers/wechat_pay_controller'
 module API
@@ -13,6 +14,12 @@ module API
         callback = params.delete('callback') # jsonp
         params.merge!({"spbill_create_ip" => request.ip})
         result = WechatPayController.call(:generate_pay_req, [params])
+        return_response callback, result
+      end
+
+      app.get '/get_order_details' do
+        callback = params.delete('callback') # jsonp
+        result = PayController.call(:get_order_details, [params['out_trade_no']])
         return_response callback, result
       end
 

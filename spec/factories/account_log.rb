@@ -4,8 +4,8 @@ FactoryGirl.define do
   factory :account_log, :class => 'Pandora::Models::AccountLog' do
     account_id FactoryGirl.generate(:account_id)
     balance 10
-    event 'donate'
-    channel 'alipay'
+    event 'DONATE'
+    channel 'ALI'
     from_user FactoryGirl.generate(:user_id)
     to_user FactoryGirl.generate(:user_id)
   end

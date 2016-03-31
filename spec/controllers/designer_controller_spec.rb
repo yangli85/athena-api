@@ -688,11 +688,6 @@ describe DesignerController do
   describe "#pay_for_vip" do
     let(:user) { create(:user, phone_number: '13800001111') }
     let(:designer) { create(:designer, user: user) }
-    let(:fake_out_trade_no) { "wx1215125" }
-
-    before do
-      create(:payment_log, {user_id: designer.user.id, out_trade_no: fake_out_trade_no, plat_form: "WX", trade_status: "SUCCESS"})
-    end
 
     context "not a vip user" do
       let(:fake_today) { DateTime.parse("201512121212") }
@@ -704,12 +699,12 @@ describe DesignerController do
       end
 
       it "should update designer expired time" do
-        subject.pay_for_vip designer.id, fake_out_trade_no
+        subject.pay_for_vip designer.id
         expect(Pandora::Models::Designer.find(designer.id).expired_at).to eq fake_expired_at
       end
 
       it "should update designer to be vip user" do
-        subject.pay_for_vip designer.id, fake_out_trade_no
+        subject.pay_for_vip designer.id
         expect(Pandora::Models::Designer.find(designer.id).is_vip).to be true
       end
     end
@@ -723,15 +718,8 @@ describe DesignerController do
       end
 
       it "should update designer expired time" do
-        subject.pay_for_vip designer.id, fake_out_trade_no
+        subject.pay_for_vip designer.id
         expect(Pandora::Models::Designer.find(designer.id).expired_at).to eq fake_new_expired_at
-      end
-    end
-
-    context "trade fail" do
-      it "should return error" do
-        Pandora::Models::PaymentLog.update_all(:trade_status => "FAIL")
-        expect(subject.pay_for_vip designer.id, fake_out_trade_no).to eq ({:status => "ERROR", :message => "买家付款不成功."})
       end
     end
   end

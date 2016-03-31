@@ -3,6 +3,5 @@ FactoryGirl.define do
 
   factory :payment_log, :class => 'Pandora::Models::PaymentLog' do
     out_trade_no FactoryGirl.generate(:out_trade_no)
-    user_id FactoryGirl.generate(:user_id)
   end
 end

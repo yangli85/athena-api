@@ -1,20 +1,24 @@
 #encoding:utf-8
 require "pay/ali_pay"
-require 'controllers/base_controller'
-require 'pandora/services/user_service'
+require 'controllers/pay_controller'
 
-class AliPayController < BaseController
+class AliPayController < PayController
   PAY_CHANNEL = "ALI"
 
   def initialize
-    @user_service = Pandora::Services::UserService.new
+    super
     @ali_pay = Pay::AliPay.new
   end
 
   def generate_pay_req params
     user_id = params.delete("user_id")
+    count = params.delete("count")
+    product = params.delete("product")
+
+    order = @user_service.create_order user_id, product, count
+
     out_trade_no = @ali_pay.generate_out_trade_no PAY_CHANNEL
-    payment_log = @user_service.create_payment_log user_id, out_trade_no, PAY_CHANNEL
+    payment_log = @user_service.create_payment_log order.id, out_trade_no, PAY_CHANNEL
     data = @ali_pay.generate_pay_req params, out_trade_no
     @user_service.update_payment_log(payment_log, "subject", data['subject'])
     @user_service.update_payment_log(payment_log, "seller_id", data['partner'])
@@ -26,18 +30,25 @@ class AliPayController < BaseController
     if @ali_pay.verify? params
       out_trade_no = params["out_trade_no"]
       payment_log = @user_service.get_payment_log
+      order = payment_log.order
       @user_service.update_payment_log(payment_log, "seller_email", params['seller_email'])
       @user_service.update_payment_log(payment_log, "buyer_id", params['buyer_id'])
       @user_service.update_payment_log(payment_log, "buyer_email", params['buyer_email'])
       @user_service.update_payment_log(payment_log, "trade_no", params['trade_no'])
-      if params['trade_status'] == "TRADE_FINISHED" || params['trade_status'] == "TRADE_SUCCESS"
-        @user_service.update_payment_log(payment_log, "trade_status", "SUCCESS")
+
+      if params['trade_status'] == TRADE_FINISHED || params['trade_status'] == TRADE_SUCCESS
+        @user_service.update_payment_log(payment_log, "trade_status", SUCCESS)
+        @user_service.update_order order, "status", PAID
+        @user_service.update_order order, "result", "买家支付成功"
+        deliver_order order
       else
         @user_service.update_payment_log(payment_log, "trade_status", params['trade_status'])
+        @user_service.update_order order, UNPAY
+        @user_service.update_order order, "result", "买家支付失败"
       end
-      "success"
+      SUCCESS
     else
-      "fail"
+      FAIL
     end
   end
 end

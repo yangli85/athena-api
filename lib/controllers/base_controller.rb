@@ -6,6 +6,17 @@ class BaseController
   include Common::Logging
   SUCCESS = 'SUCCESS'
   ERROR = 'ERROR'
+  FAIL = 'FAIL'
+  BEAUTYSHOW = 'BEAUTYSHOW'
+  DESIGNER = 'DESIGNER'
+  CONSUME = "CONSUME"
+  DONATE = "DONATE"
+  RECHARGE = "RECHARGE"
+  TRADE_FINISHED = "TRADE_FINISHED"
+  TRADE_SUCCESS = "TRADE_SUCCESS"
+  UNKNOW_PRODUCT ='UNKNOW_PRODUCT'
+  UNPAY ="UNPAY"
+  PAID ="PAID"
 
   def self.call method, params
     self.new.execute method, params

@@ -169,9 +169,7 @@ class DesignerController < BaseController
     success.merge({message: "删除成功"})
   end
 
-  def pay_for_vip designer_id, out_trade_no
-    payment_log = @user_service.get_payment_log out_trade_no
-    return error("买家付款不成功.") if payment_log.trade_status != "SUCCESS"
+  def pay_for_vip designer_id
     designer = @designer_service.get_designer designer_id
     expired_at = DateTime.now >> 12
     if designer.is_vip

@@ -106,7 +106,7 @@ end
                                          account_id: 1 + (n%10),
                                          balance: 1 + (n%5),
                                          event: [:donate, :recharge, :consume, :unknow][n%4],
-                                         channel: [:alipay, :wechat, :beautyshow][n%4],
+                                         channel: [:ALI, :WECHAT, :BEAUTYSHOW][n%4],
                                          from_user: 1 + (n%10),
                                          to_user: 10 - (n%10),
                                          desc: "这是用来测试的账户日志.不是很准确!"

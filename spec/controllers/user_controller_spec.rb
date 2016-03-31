@@ -65,7 +65,7 @@ describe UserController do
       end
 
       it "should return right login result" do
-        expect(subject.login fake_phone, '1234', nil).to eq (
+        expect(subject.login fake_phone, '1234').to eq (
                                                                 {
                                                                     :status => "SUCCESS",
                                                                     :message => "操作成功",
@@ -226,7 +226,7 @@ describe UserController do
       logs = Pandora::Models::Account.find(author.account.id).account_logs
       expect(logs.count).to eq 1
       expect(logs.first.desc).to eq "使用了3颗星星给user1点赞"
-      expect(logs.first.channel).to eq "beautyshow"
+      expect(logs.first.channel).to eq "BEAUTYSHOW"
     end
 
     it "should raise common error if author balance is not enough" do
@@ -574,8 +574,8 @@ describe UserController do
       before do
         allow_any_instance_of(Pandora::Models::AccountLog).to receive(:relative_time).and_return("1小时前")
         account = create(:account, {user: user, balance: 0})
-        create(:account_log, {account: account, from_user: user.id, to_user: user.id, event: 'recharge', desc: 'this is a test log desc'})
-        create(:account_log, {account: account, from_user: user.id, to_user: user.id, event: 'recharge', desc: 'this is a test log desc'})
+        create(:account_log, {account: account, from_user: user.id, to_user: user.id, event: 'RECHARGE', desc: 'this is a test log desc'})
+        create(:account_log, {account: account, from_user: user.id, to_user: user.id, event: 'RECHARGE', desc: 'this is a test log desc'})
       end
 
       it "should return user account logs" do
@@ -605,39 +605,33 @@ describe UserController do
     end
 
     describe "#recharge" do
-      let(:fake_out_trade_no) { "wx1215125" }
 
       before do
         create(:account, {user: user, balance: 0})
-        create(:payment_log, {user_id: user.id, out_trade_no: fake_out_trade_no, plat_form: "WX", trade_status: "SUCCESS"})
       end
 
       it "should update user account balance" do
-        subject.recharge user.id, 10, 'alipay', fake_out_trade_no
+        subject.recharge user.id, 10, 'ALI'
         expect(Pandora::Models::User.find(user.id).account.balance).to eq 10
       end
 
       it "should update user vitality" do
         old_value = user.vitality
-        subject.recharge user.id, 10, 'alipay', fake_out_trade_no
+        subject.recharge user.id, 10, 'ALI'
         expect(Pandora::Models::User.find(user.id).vitality - old_value).to eq 10
       end
 
       it "should add acount log" do
-        subject.recharge user.id, 10, 'alipay', fake_out_trade_no
+        subject.recharge user.id, 10, 'ALI'
         logs = Pandora::Models::Account.find(user.account.id).account_logs
         expect(logs.count).to eq 1
-        expect(logs.first[:channel]).to eq 'alipay'
+        expect(logs.first[:channel]).to eq 'ALI'
         expect(logs.first[:desc]).to eq '购买了10颗星星'
         expect(logs.first[:from_user]).to eq user.id
         expect(logs.first[:to_user]).to eq user.id
         expect(logs.first[:balance]).to eq 10
       end
 
-      it "should return error if trade status is not success" do
-        Pandora::Models::PaymentLog.update_all(:trade_status => "FAIL")
-        expect(subject.recharge user.id, 10, 'alipay', fake_out_trade_no).to eq ({:status => "ERROR", :message => "买家付款不成功."})
-      end
     end
 
     describe "#donate_stars" do
@@ -662,8 +656,8 @@ describe UserController do
         subject.donate_stars from_user.id, to_user.id, 10
         logs = Pandora::Models::Account.find(from_user.account.id).account_logs
         expect(logs.count).to eq 1
-        expect(logs.first[:channel]).to eq 'beautyshow'
-        expect(logs.first[:event]).to eq 'donate'
+        expect(logs.first[:channel]).to eq 'BEAUTYSHOW'
+        expect(logs.first[:event]).to eq 'DONATE'
         expect(logs.first[:from_user]).to eq from_user.id
         expect(logs.first[:to_user]).to eq to_user.id
         expect(logs.first[:balance]).to eq -10
@@ -674,8 +668,8 @@ describe UserController do
         subject.donate_stars from_user.id, to_user.id, 10
         logs = Pandora::Models::Account.find(to_user.account.id).account_logs
         expect(logs.count).to eq 1
-        expect(logs.first[:channel]).to eq 'beautyshow'
-        expect(logs.first[:event]).to eq 'donate'
+        expect(logs.first[:channel]).to eq 'BEAUTYSHOW'
+        expect(logs.first[:event]).to eq 'DONATE'
         expect(logs.first[:from_user]).to eq from_user.id
         expect(logs.first[:to_user]).to eq to_user.id
         expect(logs.first[:balance]).to eq 10
