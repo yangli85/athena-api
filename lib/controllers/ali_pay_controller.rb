@@ -49,7 +49,7 @@ class AliPayController < PayController
           @user_service.update_order order, "status", PAID
           @user_service.update_order order, "result", "买家支付成功"
           deliver_order order, PAY_CHANNEL
-        else
+        elsif params['trade_status'] != WAIT_BUYER_PAY
           @user_service.update_payment_log(payment_log, "trade_status", params['trade_status'])
           @user_service.update_order order, "status", UNPAY
           @user_service.update_order order, "result", "买家支付失败"
