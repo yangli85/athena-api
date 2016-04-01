@@ -29,9 +29,9 @@ class AliPayController < PayController
   def notify params
     if @ali_pay.verify? params
       out_trade_no = params["out_trade_no"]
-      payment_log = @user_service.get_payment_log
+      payment_log = @user_service.get_payment_log out_trade_no
       order = payment_log.order
-      if order.trade_status == CREATED
+      if order.status == CREATED
         @user_service.update_payment_log(payment_log, "seller_email", params['seller_email'])
         @user_service.update_payment_log(payment_log, "buyer_id", params['buyer_id'])
         @user_service.update_payment_log(payment_log, "buyer_email", params['buyer_email'])
@@ -44,7 +44,7 @@ class AliPayController < PayController
           deliver_order order, PAY_CHANNEL
         else
           @user_service.update_payment_log(payment_log, "trade_status", params['trade_status'])
-          @user_service.update_order order, UNPAY
+          @user_service.update_order order, "status",  UNPAY
           @user_service.update_order order, "result", "买家支付失败"
         end
       end

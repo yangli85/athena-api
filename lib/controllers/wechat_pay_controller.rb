@@ -22,12 +22,11 @@ class WechatPayController < PayController
     prepay_order = @wechat_pay.create_prepay_order params, out_trade_no
 
     unless prepay_order.nil?
-      @user_service.update_payment_log(payment_log, "trade_no", prepay_order['prepay_id'])
       @user_service.update_payment_log(payment_log, "seller_id", prepay_order['mch_id'])
       data = @wechat_pay.generate_pay_req prepay_order['prepay_id']
       success.merge({data: data.merge({out_trade_no: out_trade_no})})
     else
-      error("create prepay order for wechat failed.")
+      error("create prepay order for wechat failed wiht params #{params}.")
     end
   end
 
@@ -39,6 +38,7 @@ class WechatPayController < PayController
       order = payment_log.order
       if order.status == CREATED
         @user_service.update_payment_log(payment_log, "trade_status", params['result_code'])
+        @user_service.update_payment_log(payment_log, "trade_no", params['transaction_id'])
         if result_code.upcase == SUCCESS
           @user_service.update_order order, "status", PAID
           @user_service.update_order order, "result", "买家支付成功"

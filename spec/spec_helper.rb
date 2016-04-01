@@ -27,6 +27,7 @@ require 'factories/commissioner'
 require 'factories/promotion_log'
 require 'factories/shop_promotion_log'
 require 'factories/payment_log'
+require 'factories/order'
 require 'pandora/models/base'
 require 'fakefs/spec_helpers'
 

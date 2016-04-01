@@ -19,7 +19,7 @@ class PayController < BaseController
   private
   def recharge user_id, balance, channel
     user = @user_service.get_user_by_id user_id
-    @user_service.update_account_balance user.account.id, balance, "购买了#{balance}颗星星", user.id, user.id, 'recharge', channel
+    @user_service.update_account_balance user.account.id, balance, "购买了#{balance}颗星星", user.id, user.id, RECHARGE, channel
     @user_service.update_user_profile user_id, "vitality", user.vitality + balance
   end
 
@@ -30,8 +30,8 @@ class PayController < BaseController
     if designer.is_vip
       expired_at = designer.expired_at.to_datetime >> (12*count)
     end
-    @designer_service.update_designer designer_id, "expired_at", expired_at
-    @designer_service.update_designer designer_id, "is_vip", true unless designer.is_vip
+    @designer_service.update_designer designer.id, "expired_at", expired_at
+    @designer_service.update_designer designer.id, "is_vip", true unless designer.is_vip
   end
 
   def deliver_order order, pay_channel
