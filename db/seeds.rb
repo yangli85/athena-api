@@ -105,7 +105,7 @@ end
                                          id: n+1,
                                          account_id: 1 + (n%10),
                                          balance: 1 + (n%5),
-                                         event: [:donate, :recharge, :consume, :unknow][n%4],
+                                         event: [:DONATE, :RECHARGE, :CONSUME, :UNKNOW][n%4],
                                          channel: [:ALI, :WECHAT, :BEAUTYSHOW][n%4],
                                          from_user: 1 + (n%10),
                                          to_user: 10 - (n%10),

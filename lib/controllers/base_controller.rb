@@ -17,6 +17,7 @@ class BaseController
   UNKNOW_PRODUCT ='UNKNOW_PRODUCT'
   UNPAY ="UNPAY"
   PAID ="PAID"
+  CREATED ="CREATED"
 
   def self.call method, params
     self.new.execute method, params

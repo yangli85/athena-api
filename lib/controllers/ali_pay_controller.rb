@@ -31,20 +31,22 @@ class AliPayController < PayController
       out_trade_no = params["out_trade_no"]
       payment_log = @user_service.get_payment_log
       order = payment_log.order
-      @user_service.update_payment_log(payment_log, "seller_email", params['seller_email'])
-      @user_service.update_payment_log(payment_log, "buyer_id", params['buyer_id'])
-      @user_service.update_payment_log(payment_log, "buyer_email", params['buyer_email'])
-      @user_service.update_payment_log(payment_log, "trade_no", params['trade_no'])
+      if order.trade_status!=CREATED
+        @user_service.update_payment_log(payment_log, "seller_email", params['seller_email'])
+        @user_service.update_payment_log(payment_log, "buyer_id", params['buyer_id'])
+        @user_service.update_payment_log(payment_log, "buyer_email", params['buyer_email'])
+        @user_service.update_payment_log(payment_log, "trade_no", params['trade_no'])
 
-      if params['trade_status'] == TRADE_FINISHED || params['trade_status'] == TRADE_SUCCESS
-        @user_service.update_payment_log(payment_log, "trade_status", SUCCESS)
-        @user_service.update_order order, "status", PAID
-        @user_service.update_order order, "result", "买家支付成功"
-        deliver_order order
-      else
-        @user_service.update_payment_log(payment_log, "trade_status", params['trade_status'])
-        @user_service.update_order order, UNPAY
-        @user_service.update_order order, "result", "买家支付失败"
+        if params['trade_status'] == TRADE_FINISHED || params['trade_status'] == TRADE_SUCCESS
+          @user_service.update_payment_log(payment_log, "trade_status", SUCCESS)
+          @user_service.update_order order, "status", PAID
+          @user_service.update_order order, "result", "买家支付成功"
+          deliver_order order
+        else
+          @user_service.update_payment_log(payment_log, "trade_status", params['trade_status'])
+          @user_service.update_order order, UNPAY
+          @user_service.update_order order, "result", "买家支付失败"
+        end
       end
       SUCCESS
     else
