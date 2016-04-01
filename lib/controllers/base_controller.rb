@@ -18,7 +18,6 @@ class BaseController
   UNPAY ="UNPAY"
   PAID ="PAID"
   CREATED ="CREATED"
-  WAIT_BUYER_PAY = "WAIT_BUYER_PAY"
 
   def self.call method, params
     self.new.execute method, params

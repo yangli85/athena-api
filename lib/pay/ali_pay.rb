@@ -4,6 +4,7 @@ require "pay/utils"
 require 'common/logging'
 require 'openssl'
 require 'base64'
+require 'open-uri'
 
 module Pay
   class AliPay

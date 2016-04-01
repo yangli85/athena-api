@@ -55,7 +55,7 @@ class AliPayController < PayController
           @user_service.update_order order, "result", "买家支付失败"
         end
       end
-      SUCCESS
+      SUCCESS.downcase
     else
       FAIL
     end
