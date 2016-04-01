@@ -31,7 +31,7 @@ class AliPayController < PayController
       out_trade_no = params["out_trade_no"]
       payment_log = @user_service.get_payment_log
       order = payment_log.order
-      if order.trade_status!=CREATED
+      if order.trade_status == CREATED
         @user_service.update_payment_log(payment_log, "seller_email", params['seller_email'])
         @user_service.update_payment_log(payment_log, "buyer_id", params['buyer_id'])
         @user_service.update_payment_log(payment_log, "buyer_email", params['buyer_email'])
@@ -41,7 +41,7 @@ class AliPayController < PayController
           @user_service.update_payment_log(payment_log, "trade_status", SUCCESS)
           @user_service.update_order order, "status", PAID
           @user_service.update_order order, "result", "买家支付成功"
-          deliver_order order
+          deliver_order order, PAY_CHANNEL
         else
           @user_service.update_payment_log(payment_log, "trade_status", params['trade_status'])
           @user_service.update_order order, UNPAY

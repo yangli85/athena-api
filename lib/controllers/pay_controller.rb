@@ -13,7 +13,7 @@ class PayController < BaseController
   def get_order_details out_trade_no
     payment_log = @user_service.get_payment_log out_trade_no
     order = payment_log.order
-    success.merge({message: "购买成功.", data: order.attributes})
+    success.merge({status: order.status, message: order.result, data: order.attributes})
   end
 
   private
@@ -34,13 +34,13 @@ class PayController < BaseController
     @designer_service.update_designer designer_id, "is_vip", true unless designer.is_vip
   end
 
-  def deliver_order order
+  def deliver_order order, pay_channel
     if order.product == "VIP"
       pay_for_vip order.user_id, order.count
       @user_service.update_order order, "status", SUCCESS
       @user_service.update_order order, "result", "会员续费成功"
     elsif order.product == "STAR"
-      recharge order.user_id, order.count, PAY_CHANNEL
+      recharge order.user_id, order.count, pay_channel
       @user_service.update_order order, "status", SUCCESS
       @user_service.update_order order, "result", "#{order.count}颗星星购买成功"
     else

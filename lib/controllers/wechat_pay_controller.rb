@@ -37,12 +37,12 @@ class WechatPayController < PayController
       result_code = params["result_code"]
       payment_log = @user_service.get_payment_log out_trade_no
       order = payment_log.order
-      if order.status != CREATED
+      if order.status == CREATED
         @user_service.update_payment_log(payment_log, "trade_status", params['result_code'])
         if result_code.upcase == SUCCESS
           @user_service.update_order order, "status", PAID
           @user_service.update_order order, "result", "买家支付成功"
-          deliver_order order
+          deliver_order order, PAY_CHANNEL
         else
           @user_service.update_order order, "status", UNPAY
           @user_service.update_order order, "result", "买家支付失败"
