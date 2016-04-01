@@ -18,9 +18,6 @@ describe Pay::AliPay do
   }
 
   before do
-    # allow(OpenSSL::PKey::RSA).to receive(:new).and_return(fake_rsa)
-    # allow(fake_rsa).to receive(:sign)
-    # allow(Base64).to receive(:strict_encode64).and_return(fake_rsa_sign)
     allow(subject).to receive(:logger).and_return(fake_logger)
     allow(fake_logger).to receive(:error)
     allow(ENV).to receive(:ALI_MCH_ID).and_return(fake_mch_id)
@@ -43,7 +40,7 @@ describe Pay::AliPay do
                                                                                     :payment_type => "1",
                                                                                     :seller_id => "2088221419118326",
                                                                                     :sign_type => "RSA",
-                                                                                    :sign => "H5KuloIhEDB10AJelZT3YovgY3i37J/DmgG/aqUiAMB+kWp1SdL6oA4PLoap5yTzm95+X9hOLubz4zw3UBxWqo5/myxvW0ONEHf2j0Mu7xzjGYA/E+shBOiqxgw0dyYC9CvgfArbU4tibN8V9uCDdZWdbNZEmBCiN7f4nq7Tvbk="
+                                                                                    :sign => "gVbMZcbshGVhGULeWSZgJop%2FTOsyQUsG6J%2B4fpAiMjY06gshYUyIDgKpcEgpHWHN3qbngh5aKm9CwN%2BhvNe9CK48yCIzpB%2BhhEW%2ByWWlclR0wd9RI%2BHZOGRR0EIVRcAZ2SR2iPu1CKeOdH9Y04kkdADtP5PhJWLrDTT9ggrn%2FwI%3D"
                                                                                 }
                                                                             )
     end

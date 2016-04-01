@@ -13,7 +13,6 @@ gem 'uuid'
 gem 'rmagick'
 gem 'rest-client', '>= 1.7'
 gem 'activesupport', '>= 3.2'
-gem 'alipay', '~> 0.12.0'
 
 group :test do
   gem 'fakefs', :require => "fakefs/safe"

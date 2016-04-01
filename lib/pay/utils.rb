@@ -14,10 +14,14 @@ module Pay
       end
     end
 
-    def stringify params
+    def to_wx_string params
       params.sort.map do |key, value|
         "#{key}=#{value}" if value != "" && !value.nil?
       end.compact.join('&')
+    end
+
+    def to_ali_string params
+      params.map { |key, value| %Q(#{key}="#{value}") }.join('&')
     end
 
     def change_key_to_sym hash

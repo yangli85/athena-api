@@ -4,7 +4,6 @@ require "pay/utils"
 require 'common/logging'
 require 'openssl'
 require 'base64'
-require 'alipay'
 
 module Pay
   class AliPay
@@ -17,14 +16,6 @@ module Pay
       @public_key = OpenSSL::PKey::RSA.new File.read 'config/pem/rsa_public_key.pem'
       @private_key = OpenSSL::PKey::RSA.new File.read 'config/pem/rsa_private_key.pem'
       @mch_id = ENV['ALI_MCH_ID']
-    end
-
-    def generate_pay_req_by_gem params, out_trade_no
-      params.merge!(:out_trade_no => out_trade_no)
-      Alipay.pid = @mch_id
-      Alipay.key = @private_key
-      Alipay.sign_type = "RSA"
-      Alipay::Mobile::Service.mobile_securitypay_pay_string(params)
     end
 
     def generate_pay_req params, out_trade_no
@@ -55,9 +46,9 @@ module Pay
 
     private
     def generate_sign params, key
-      query = stringify params
+      query = to_ali_string params
       rsa = OpenSSL::PKey::RSA.new(key)
-      Base64.strict_encode64(rsa.sign('sha1', query))
+      CGI.escape(Base64.strict_encode64(rsa.sign('sha1', query)))
     end
 
     def verify_notify_id? pid, notify_id
@@ -73,7 +64,7 @@ module Pay
     def verify_rsa_sign? params, key
       sign = params.delete('sign') || params.delete(:sign)
       sign_type = params.delete('sign_type') || params.delete(:sign_type)
-      query = stringify params
+      query = to_ali_string params
       rsa = OpenSSL::PKey::RSA.new(key)
       rsa.verify('sha1', Base64.strict_decode64(sign), query)
     end

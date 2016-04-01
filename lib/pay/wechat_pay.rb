@@ -73,7 +73,7 @@ module Pay
     end
 
     def generate_sign params, key
-      query = stringify params
+      query = to_wx_string params
       Digest::MD5.hexdigest("#{query}&key=#{key}").upcase
     end
 
