@@ -28,7 +28,7 @@ describe Pay::AliPay do
   describe "#generate_pay_req" do
     it "should return correct req params" do
       expect(subject.generate_pay_req fake_params, fake_out_trade_no).to eq (
-                                                                                "subject=\"stars\"&total_fee=\"100\"&notify_url=\"http://localhost:8080/pay/ali_notify\"&body=\"stars\"&service=\"mobile.securitypay.pay\"&partner=\"2088221419118326\"&_input_charset=\"utf-8\"&out_trade_no=\"ali1245215\"&payment_type=\"1\"&seller_id=\"2088221419118326\"&sign=\"U5GVe%2BfX7CiNWeCBuxd%2FqY3wq6eSVvoi%2BstsMAQTy%2BdmGJprLIzhR7abSqmTODyGgASCV7juH4hVbgjxQQ77POYQhj8l4W14kd6M%2BE5sV0uOt%2FoImp9KghnEaBibhRsLBoBSjdC43%2BuL3lVTZmKo5NUVHcFDXX0JKip4Kr%2BMGVQ%3D\"&sign_type=\"RSA\""
+                                                                                "subject=\"stars\"&total_fee=\"100\"&notify_url=\"http://localhost:8080/pay/ali_notify\"&body=\"stars\"&service=\"mobile.securitypay.pay\"&partner=\"2088221419118326\"&_input_charset=\"utf-8\"&out_trade_no=\"ali1245215\"&payment_type=\"1\"&seller_id=\"2088221419118326\"&sign=\"KaHhwwNfzzASaXBDLb7LGYza0ispBYK4DFX9Jbr4ZOve56iSugld%2Fn80zVTCN37W%2BJ33Erj3YYueMzx2f5L95SAg%2BgeKg1XLh8%2B3d%2F3TSoShEdBtmnTUj%2FznjtxGxigTo5CI4QZ3WunSKXFjIlADKiNEOA%2B3Sv8QYR%2BNAYw1AmE%3D\"&sign_type=\"RSA\""
                                                                             )
     end
     it "should raise standard erorr if requires parameter is not given" do

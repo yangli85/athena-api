@@ -48,13 +48,8 @@ module Pay
     end
 
     def verify_notify_id? pid, notify_id
-      uri = URI(GATEWAY_URL)
-      uri.query = URI.encode_www_form(
-          'service' => 'notify_verify',
-          'partner' => pid,
-          'notify_id' => notify_id
-      )
-      Net::HTTP.get(uri) == 'true'
+      url = "#{GATEWAY_URL}?service=notify_verify&partner=#{pid}&notify_id=#{notify_id}"
+      open(url).read == 'true'
     end
 
     def verify_rsa_sign? params, key
@@ -65,17 +60,5 @@ module Pay
       rsa.verify('sha1', Base64.strict_decode64(sign), query)
     end
 
-    def invoke_remote url, trade_details
-      r = RestClient::Request.execute(
-          {
-              method: :post,
-              url: url,
-              payload: trade_details,
-              headers: {content_type: 'application/xml'}
-          }
-      )
-
-      Pay::WechatPayResult.new(Hash.from_xml(r))
-    end
   end
 end

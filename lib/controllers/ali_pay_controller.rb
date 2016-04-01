@@ -44,7 +44,6 @@ class AliPayController < PayController
         @user_service.update_payment_log(payment_log, "buyer_id", params['buyer_id'])
         @user_service.update_payment_log(payment_log, "buyer_email", params['buyer_email'])
         @user_service.update_payment_log(payment_log, "trade_no", params['trade_no'])
-
         if params['trade_status'] == TRADE_FINISHED || params['trade_status'] == TRADE_SUCCESS
           @user_service.update_payment_log(payment_log, "trade_status", SUCCESS)
           @user_service.update_order order, "status", PAID
