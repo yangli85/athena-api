@@ -19,11 +19,11 @@ class AliPayController < PayController
 
     out_trade_no = @ali_pay.generate_out_trade_no PAY_CHANNEL
     payment_log = @user_service.create_payment_log order.id, out_trade_no, PAY_CHANNEL
-    data = @ali_pay.generate_pay_req_by_gem params, out_trade_no
+    pay_info = @ali_pay.generate_pay_req params, out_trade_no
     @user_service.update_payment_log(payment_log, "subject", data['subject'])
     @user_service.update_payment_log(payment_log, "seller_id", data['partner'])
     @user_service.update_payment_log(payment_log, "total_fee", data['total_fee'])
-    success.merge({data: data})
+    success.merge({data: {pay_info: pay_info}})
   end
 
   def notify params
@@ -44,7 +44,7 @@ class AliPayController < PayController
           deliver_order order, PAY_CHANNEL
         else
           @user_service.update_payment_log(payment_log, "trade_status", params['trade_status'])
-          @user_service.update_order order, "status",  UNPAY
+          @user_service.update_order order, "status", UNPAY
           @user_service.update_order order, "result", "买家支付失败"
         end
       end

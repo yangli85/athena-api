@@ -31,12 +31,9 @@ module Pay
           }
       )
       check_required_options(params, GENERATE_APP_PAY_REQ_REQUIRED_FIELDS)
-      params.merge(
-          {
-              sign_type: "RSA",
-              sign: generate_sign(params, @private_key)
-          }
-      )
+      query = to_ali_string params
+      sign = generate_sign(query, @private_key)
+      %Q(#{query}&sign="#{sign}"&sign_type="RSA")
     end
 
     def verify? params
@@ -45,8 +42,7 @@ module Pay
 
 
     private
-    def generate_sign params, key
-      query = to_ali_string params
+    def generate_sign query, key
       rsa = OpenSSL::PKey::RSA.new(key)
       CGI.escape(Base64.strict_encode64(rsa.sign('sha1', query)))
     end

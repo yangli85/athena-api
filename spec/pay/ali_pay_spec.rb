@@ -28,25 +28,13 @@ describe Pay::AliPay do
   describe "#generate_pay_req" do
     it "should return correct req params" do
       expect(subject.generate_pay_req fake_params, fake_out_trade_no).to eq (
-                                                                                {
-                                                                                    :subject => "stars",
-                                                                                    :total_fee => 100,
-                                                                                    :notify_url => "http://localhost:8080/pay/ali_notify",
-                                                                                    :body => "stars",
-                                                                                    :service => "mobile.securitypay.pay",
-                                                                                    :partner => "2088221419118326",
-                                                                                    :_input_charset => "utf-8",
-                                                                                    :out_trade_no => "ali1245215",
-                                                                                    :payment_type => "1",
-                                                                                    :seller_id => "2088221419118326",
-                                                                                    :sign_type => "RSA",
-                                                                                    :sign => "gVbMZcbshGVhGULeWSZgJop%2FTOsyQUsG6J%2B4fpAiMjY06gshYUyIDgKpcEgpHWHN3qbngh5aKm9CwN%2BhvNe9CK48yCIzpB%2BhhEW%2ByWWlclR0wd9RI%2BHZOGRR0EIVRcAZ2SR2iPu1CKeOdH9Y04kkdADtP5PhJWLrDTT9ggrn%2FwI%3D"
-                                                                                }
+                                                                                "subject=\"stars\"&total_fee=\"100\"&notify_url=\"http://localhost:8080/pay/ali_notify\"&body=\"stars\"&service=\"mobile.securitypay.pay\"&partner=\"2088221419118326\"&_input_charset=\"utf-8\"&out_trade_no=\"ali1245215\"&payment_type=\"1\"&seller_id=\"2088221419118326\"&sign=\"gVbMZcbshGVhGULeWSZgJop%2FTOsyQUsG6J%2B4fpAiMjY06gshYUyIDgKpcEgpHWHN3qbngh5aKm9CwN%2BhvNe9CK48yCIzpB%2BhhEW%2ByWWlclR0wd9RI%2BHZOGRR0EIVRcAZ2SR2iPu1CKeOdH9Y04kkdADtP5PhJWLrDTT9ggrn%2FwI%3D\"&sign_type=\"RSA\""
                                                                             )
     end
-
     it "should raise standard erorr if requires parameter is not given" do
       expect { subject.generate_pay_req fake_params, nil }.to raise_error StandardError, "Pay Warn: missing required option: out_trade_no"
     end
+
   end
+
 end
