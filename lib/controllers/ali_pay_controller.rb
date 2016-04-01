@@ -19,7 +19,7 @@ class AliPayController < PayController
 
     out_trade_no = @ali_pay.generate_out_trade_no PAY_CHANNEL
     payment_log = @user_service.create_payment_log order.id, out_trade_no, PAY_CHANNEL
-    data = @ali_pay.generate_pay_req params, out_trade_no
+    data = @ali_pay.generate_pay_req_by_gem params, out_trade_no
     @user_service.update_payment_log(payment_log, "subject", data['subject'])
     @user_service.update_payment_log(payment_log, "seller_id", data['partner'])
     @user_service.update_payment_log(payment_log, "total_fee", data['total_fee'])

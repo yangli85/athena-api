@@ -18,13 +18,11 @@ describe Pay::AliPay do
   }
 
   before do
-    allow(OpenSSL::PKey::RSA).to receive(:new).and_return(fake_rsa)
-    allow(fake_rsa).to receive(:sign)
-    allow(Base64).to receive(:strict_encode64).and_return(fake_rsa_sign)
+    # allow(OpenSSL::PKey::RSA).to receive(:new).and_return(fake_rsa)
+    # allow(fake_rsa).to receive(:sign)
+    # allow(Base64).to receive(:strict_encode64).and_return(fake_rsa_sign)
     allow(subject).to receive(:logger).and_return(fake_logger)
     allow(fake_logger).to receive(:error)
-    allow(ENV).to receive(:ALI_RSA_PUBLIC_KEY).and_return(fake_public_key)
-    allow(ENV).to receive(:ALI_RSA_PRIVATE_KEY).and_return(fake_private_key)
     allow(ENV).to receive(:ALI_MCH_ID).and_return(fake_mch_id)
     allow(SecureRandom).to receive_message_chain(:uuid, :tr).and_return("4dff7af0ba53470a9489b91304540f6a")
     allow(Time).to receive_message_chain(:now, :to_i, :to_s).and_return("1459393503")
@@ -45,7 +43,7 @@ describe Pay::AliPay do
                                                                                     :payment_type => "1",
                                                                                     :seller_id => "2088221419118326",
                                                                                     :sign_type => "RSA",
-                                                                                    :sign => "MIICeAIBADANBgkqhkiG9w0B"
+                                                                                    :sign => "H5KuloIhEDB10AJelZT3YovgY3i37J/DmgG/aqUiAMB+kWp1SdL6oA4PLoap5yTzm95+X9hOLubz4zw3UBxWqo5/myxvW0ONEHf2j0Mu7xzjGYA/E+shBOiqxgw0dyYC9CvgfArbU4tibN8V9uCDdZWdbNZEmBCiN7f4nq7Tvbk="
                                                                                 }
                                                                             )
     end
@@ -54,5 +52,4 @@ describe Pay::AliPay do
       expect { subject.generate_pay_req fake_params, nil }.to raise_error StandardError, "Pay Warn: missing required option: out_trade_no"
     end
   end
-
 end

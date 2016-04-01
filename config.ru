@@ -15,9 +15,7 @@ REQUIRED_ENVIRONMENT_VARIABLES = [
     'WX_APP_ID',
     'WX_API_KEY',
     'WX_MCH_ID',
-    'ALI_MCH_ID',
-    'ALI_RSA_PUBLIC_KEY',
-    'ALI_RSA_PRIVATE_KEY'
+    'ALI_MCH_ID'
 ].freeze
 Common::EnvironmentVariables.check(REQUIRED_ENVIRONMENT_VARIABLES)
 AthenaAPI.run! :port => 8080, :bind => '0.0.0.0'

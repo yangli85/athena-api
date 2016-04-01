@@ -4,18 +4,27 @@ require "pay/utils"
 require 'common/logging'
 require 'openssl'
 require 'base64'
+require 'alipay'
 
 module Pay
   class AliPay
     include Common::Logging
     include Pay::Utils
     GATEWAY_URL = 'https://mapi.alipay.com/gateway.do'
-    GENERATE_APP_PAY_REQ_REQUIRED_FIELDS = ['service','partner', '_input_charset','notify_url','out_trade_no','subject','payment_type','seller_id','total_fee','body']
+    GENERATE_APP_PAY_REQ_REQUIRED_FIELDS = ['service', 'partner', '_input_charset', 'notify_url', 'out_trade_no', 'subject', 'payment_type', 'seller_id', 'total_fee', 'body']
 
     def initialize
-      @public_key =  OpenSSL::PKey::RSA.new File.read 'config/pem/rsa_public_key.pem'
-      @private_key =  OpenSSL::PKey::RSA.new File.read 'config/pem/rsa_private_key.pem'
+      @public_key = OpenSSL::PKey::RSA.new File.read 'config/pem/rsa_public_key.pem'
+      @private_key = OpenSSL::PKey::RSA.new File.read 'config/pem/rsa_private_key.pem'
       @mch_id = ENV['ALI_MCH_ID']
+    end
+
+    def generate_pay_req_by_gem params, out_trade_no
+      params.merge!(:out_trade_no => out_trade_no)
+      Alipay.pid = @mch_id
+      Alipay.key = @private_key
+      Alipay.sign_type = "RSA"
+      Alipay::Mobile::Service.mobile_securitypay_pay_string(params)
     end
 
     def generate_pay_req params, out_trade_no
