@@ -60,7 +60,7 @@ module Pay
     def verify_rsa_sign? params, key
       sign = params.delete('sign') || params.delete(:sign)
       sign_type = params.delete('sign_type') || params.delete(:sign_type)
-      query = to_ali_string params
+      query = params.sort.map { |item| item.join('=') }.join('&')
       rsa = OpenSSL::PKey::RSA.new(key)
       rsa.verify('sha1', Base64.strict_decode64(sign), query)
     end

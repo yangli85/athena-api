@@ -20,10 +20,18 @@ class AliPayController < PayController
     out_trade_no = @ali_pay.generate_out_trade_no PAY_CHANNEL
     payment_log = @user_service.create_payment_log order.id, out_trade_no, PAY_CHANNEL
     pay_info = @ali_pay.generate_pay_req params, out_trade_no
-    @user_service.update_payment_log(payment_log, "subject", data['subject'])
-    @user_service.update_payment_log(payment_log, "seller_id", data['partner'])
-    @user_service.update_payment_log(payment_log, "total_fee", data['total_fee'])
-    success.merge({data: {pay_info: pay_info}})
+    @user_service.update_payment_log(payment_log, "subject", pay_info['subject'])
+    @user_service.update_payment_log(payment_log, "seller_id", pay_info['partner'])
+    @user_service.update_payment_log(payment_log, "total_fee", pay_info['total_fee'])
+    success.merge(
+        {
+            data:
+                {
+                    pay_info: pay_info,
+                    out_trade_no: out_trade_no
+                }
+        }
+    )
   end
 
   def notify params
