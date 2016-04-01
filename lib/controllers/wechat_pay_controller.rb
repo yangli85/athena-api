@@ -14,21 +14,18 @@ class WechatPayController < PayController
     user_id = params.delete("user_id")
     count = params.delete("count")
     product = params.delete("product")
-
     order = @user_service.create_order user_id, product, count
-
     out_trade_no = @wechat_pay.generate_out_trade_no PAY_CHANNEL
     payment_log = @user_service.create_payment_log order.id, out_trade_no, PAY_CHANNEL
     @user_service.update_payment_log(payment_log, "subject", params['body'])
     @user_service.update_payment_log(payment_log, "total_fee", params['total_fee'].to_i/100)
-
     prepay_order = @wechat_pay.create_prepay_order params, out_trade_no
 
     unless prepay_order.nil?
       @user_service.update_payment_log(payment_log, "trade_no", prepay_order['prepay_id'])
       @user_service.update_payment_log(payment_log, "seller_id", prepay_order['mch_id'])
       data = @wechat_pay.generate_pay_req prepay_order['prepay_id']
-      success.merge({data: data})
+      success.merge({data: data.merge({out_trade_no: out_tarde_no})})
     else
       error("create prepay order for wechat failed.")
     end
@@ -42,12 +39,12 @@ class WechatPayController < PayController
       order = payment_log.order
       if order.status != CREATED
         @user_service.update_payment_log(payment_log, "trade_status", params['result_code'])
-        if result_code.upcase! == SUCCESS
+        if result_code.upcase == SUCCESS
           @user_service.update_order order, "status", PAID
           @user_service.update_order order, "result", "买家支付成功"
           deliver_order order
         else
-          @user_service.update_order order, UNPAY
+          @user_service.update_order order, "status", UNPAY
           @user_service.update_order order, "result", "买家支付失败"
         end
       end

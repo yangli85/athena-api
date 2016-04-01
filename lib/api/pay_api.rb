@@ -29,6 +29,7 @@ module API
       end
 
       app.post '/notify/wx_notify' do
+        params = Hash.from_xml(request.body.read)["xml"]
         results = WechatPayController.call(:notify, [params])
         return_xml results
       end
