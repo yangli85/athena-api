@@ -2,6 +2,8 @@ require 'rest_client'
 require 'active_support/core_ext/hash/conversions'
 require "pay/utils"
 require 'common/logging'
+require 'openssl'
+require 'base64'
 
 module Pay
   class AliPay
@@ -11,8 +13,8 @@ module Pay
     GENERATE_APP_PAY_REQ_REQUIRED_FIELDS = ['service','partner', '_input_charset','notify_url','out_trade_no','subject','payment_type','seller_id','total_fee','body']
 
     def initialize
-      @public_key = ENV['ALI_RSA_PUBLIC_KEY']
-      @private_key = ENV['ALI_RSA_PRIVATE_KEY']
+      @public_key =  OpenSSL::PKey::RSA.new File.read 'config/pem/rsa_public_key.pem'
+      @private_key =  OpenSSL::PKey::RSA.new File.read 'config/pem/rsa_private_key.pem'
       @mch_id = ENV['ALI_MCH_ID']
     end
 
