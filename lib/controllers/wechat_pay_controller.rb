@@ -18,14 +18,14 @@ class WechatPayController < PayController
     out_trade_no = @wechat_pay.generate_out_trade_no PAY_CHANNEL
     payment_log = @user_service.create_payment_log order.id, out_trade_no, PAY_CHANNEL
     @user_service.update_payment_log(payment_log, "subject", params['body'])
-    @user_service.update_payment_log(payment_log, "total_fee", params['total_fee'].to_i/100)
+    @user_service.update_payment_log(payment_log, "total_fee", params['total_fee'].to_f/100)
     prepay_order = @wechat_pay.create_prepay_order params, out_trade_no
 
     unless prepay_order.nil?
       @user_service.update_payment_log(payment_log, "trade_no", prepay_order['prepay_id'])
       @user_service.update_payment_log(payment_log, "seller_id", prepay_order['mch_id'])
       data = @wechat_pay.generate_pay_req prepay_order['prepay_id']
-      success.merge({data: data.merge({out_trade_no: out_tarde_no})})
+      success.merge({data: data.merge({out_trade_no: out_trade_no})})
     else
       error("create prepay order for wechat failed.")
     end
