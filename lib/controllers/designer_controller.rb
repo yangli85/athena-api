@@ -135,6 +135,15 @@ class DesignerController < BaseController
     success.merge({data: data})
   end
 
+  def search_customers page_size, current_page, query
+    customers = @designer_service.search_customers query, page_size, current_page
+    data = customers.map do |customer|
+      customer.attributes.merge({phone_number: customer.phone_number})
+    end
+    success.merge({data: data})
+  end
+
+
   def update_new_shop name, address, latitude, longitude, designer_id, province, city
     shop = @shop_service.create_shop name, address, latitude, longitude, province, city
     @designer_service.update_shop designer_id, shop.id
