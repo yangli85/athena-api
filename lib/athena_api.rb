@@ -71,7 +71,7 @@ class AthenaAPI < API::BaseAPI
     elsif request.path.include? "/notify/"
       false
     else
-      !["/", "/login", "/no_authenticate", "/no_identity_id", "/send_sms", "/favicon.ico"].include?(request.path)
+      !["/", "/login", "/no_authenticate", "/no_identity_id", "/send_login_sms", "/favicon.ico"].include?(request.path)
     end
   end
 end
