@@ -18,7 +18,7 @@ module Common
       img = Magick::Image.read(original_image_path).first
       c, r = img.columns, img.rows
       max = img.columns > img.rows ? img.columns : img.rows
-      scale = 200.0/max
+      scale = 300.0/max
       thumb = img.thumbnail scale
       thumb.write(small_file_path)
     end
