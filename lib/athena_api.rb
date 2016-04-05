@@ -6,6 +6,7 @@ require 'api/twitter_api'
 require 'api/commissioner_api'
 require 'api/pay_api'
 require 'digest/sha1'
+require 'controllers/sms_controller'
 
 class AthenaAPI < API::BaseAPI
   before do
@@ -34,9 +35,9 @@ class AthenaAPI < API::BaseAPI
     return_response callback, result
   end
 
-  post '/send_sms' do
+  post '/send_login_sms' do
     callback = params.delete('callback')
-    result = SmsController.call(:send_sms_code, [params['phone_number']])
+    result = SmsController.call(:send_login_sms_code, [params['phone_number']])
     return_response callback, result
   end
 
