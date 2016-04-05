@@ -40,13 +40,13 @@ module Sms
     end
 
     private
-    def sort_options(**arg)
-      arg.sort_by { |k, v| k }.to_h
+    def sort_options options
+      options.sort_by { |k, v| k }.to_h
     end
 
-    def generate_sign(**arg)
-      _arg = arg.map { |k, v| "#{k}#{v}" }
-      Digest::MD5.hexdigest("#{@app_secret}#{_arg.join("")}#{@app_secret}").upcase
+    def generate_sign options
+      _options = options.map { |k, v| "#{k}#{v}" }
+      Digest::MD5.hexdigest("#{@app_secret}#{_options.join("")}#{@app_secret}").upcase
     end
 
     def post(uri, options)
