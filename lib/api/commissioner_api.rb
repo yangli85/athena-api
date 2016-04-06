@@ -2,7 +2,7 @@ require 'controllers/commissioner_controller'
 module API
   class CommissionerAPI
     def self.registered(app)
-      app.get '/commissioner/register' do
+      app.post '/commissioner/register' do
         callback = params.delete('callback')
         result = CommissionerController.call(:register, [params['phone_number'], params['name'], params['password'], params['code']])
         return_response callback, result

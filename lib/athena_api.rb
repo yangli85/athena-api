@@ -66,6 +66,6 @@ class AthenaAPI < API::BaseAPI
   end
 
   def is_public_api? path
-    path.include? "/commissioner/" || PUBLIC_API.include? path
+    path.include?("/commissioner/") || PUBLIC_API.include?(path)
   end
 end
