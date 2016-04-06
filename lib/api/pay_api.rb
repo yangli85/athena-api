@@ -23,12 +23,12 @@ module API
         return_response callback, result
       end
 
-      app.post '/notify/ali_notify' do
+      app.post '/ali_notify' do
         callback = params.delete('callback') # jsonp
         AliPayController.call(:notify, [params])
       end
 
-      app.post '/notify/wx_notify' do
+      app.post '/wx_notify' do
         params = Hash.from_xml(request.body.read)["xml"]
         results = WechatPayController.call(:notify, [params])
         return_xml results

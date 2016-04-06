@@ -27,11 +27,8 @@ module Sms
           sms_param: "{'code':'#{code}','product':'#{@product}'}",
           sms_template_code: "SMS_6690792"
       }
-      options = sort_options(options)
       sign = generate_sign(options)
       response = post(@post_url, options.merge(sign: sign))
-      p options
-      p response
       unless response['alibaba_aliqin_fc_sms_num_send_response'].nil?
         response['alibaba_aliqin_fc_sms_num_send_response']['result']['success']
       else
@@ -40,13 +37,9 @@ module Sms
     end
 
     private
-    def sort_options options
-      options.sort_by { |k, v| k }.to_h
-    end
-
     def generate_sign options
-      _options = options.map { |k, v| "#{k}#{v}" }
-      Digest::MD5.hexdigest("#{@app_secret}#{_options.join("")}#{@app_secret}").upcase
+      query = options.sort_by { |k, v| k }.join("")
+      Digest::MD5.hexdigest("#{@app_secret}#{query}#{@app_secret}").upcase
     end
 
     def post(uri, options)

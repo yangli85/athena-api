@@ -9,8 +9,10 @@ require 'digest/sha1'
 require 'controllers/sms_controller'
 
 class AthenaAPI < API::BaseAPI
+  PUBLIC_API = ["/", "/login", "/no_authenticate", "/no_identity_id", "/ali_notify", "/wx_notify", "/search_twitter", "/send_login_sms", "/favicon.ico"]
+
   before do
-    authenticate if need_authenticate?
+    authenticate unless is_public_api? request.path
   end
 
   API::AdAPI.registered(self)
@@ -63,15 +65,7 @@ class AthenaAPI < API::BaseAPI
     session['access_token'] = Digest::SHA256.hexdigest identity_id
   end
 
-  def need_authenticate?
-    if params['source'] == "share" && ["/search_twitter", "/add_promotion_log"].include?(request.path)
-      false
-    elsif request.path.include? "/commissioner/"
-      false
-    elsif request.path.include? "/notify/"
-      false
-    else
-      !["/", "/login", "/no_authenticate", "/no_identity_id", "/send_login_sms", "/favicon.ico"].include?(request.path)
-    end
+  def is_public_api? path
+    path.include? "/commissioner/" || PUBLIC_API.include? path
   end
 end
