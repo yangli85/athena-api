@@ -38,6 +38,8 @@ class UserController < BaseController
     image_paths = rebuild_images image_paths
     user = @user_service.get_user_by_id author_id
     designer = @designer_service.get_designer designer_id
+    latitude = designer.shop.latitude if latitude.nil? || latitude.strip.empty?
+    longitude = designer.shop.longitude if longitude.nil? || longitude.strip.empty?
     raise Common::Error.new("对不起,不可以给自己点赞!") if user == designer.user
     account = user.account
     raise Common::Error.new("对不起,星星不够!") unless account.balance >= stars
@@ -51,6 +53,7 @@ class UserController < BaseController
       @designer_service.update_designer designer_id, 'monthly_stars', designer.monthly_stars + stars
       @user_service.update_user_profile author_id, "vitality", user.vitality + stars
       @user_service.update_user_profile designer.user.id, "vitality", designer.user.vitality + stars
+      add_favorite_designer author_id, designer_id
       success.merge({message: "发布动态成功.", data: {twitter_id: twitter.id}})
     ensure
       image_paths.each do |path|

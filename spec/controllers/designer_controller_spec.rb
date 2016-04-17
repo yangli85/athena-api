@@ -723,4 +723,65 @@ describe DesignerController do
       end
     end
   end
+
+  describe "#get_commend_designers" do
+    let(:fake_result) {
+      {
+          :status => "SUCCESS",
+          :message => "操作成功",
+          :data =>
+              {
+                  :new_designer =>
+                      {
+                          :id => 7,
+                          :user_id => 7,
+                          :name => "user1",
+                          :avatar => nil,
+                          :shop =>
+                              {
+                                  :id => 5,
+                                  :name => "test5",
+                                  :address => "address5",
+                                  :latitude => "34.3620",
+                                  :longitude => "108.9630"
+                              }
+                      },
+                  :top1_designer =>
+                      {
+                          :id => 7,
+                          :user_id => 7,
+                          :name => "user1",
+                          :avatar => nil,
+                          :shop =>
+                              {
+                                  :id => 5,
+                                  :name => "test5",
+                                  :address => "address5",
+                                  :latitude => "34.3620",
+                                  :longitude => "108.9630"
+                              }
+                      },
+                  :new_twitter_designer =>
+                      {
+                          :id => 1,
+                          :user_id => 1,
+                          :name => "user1",
+                          :avatar => nil,
+                          :shop =>
+                              {
+                                  :id => 1,
+                                  :name => "test1",
+                                  :address => "address1",
+                                  :latitude => "34.2620",
+                                  :longitude => "108.9430"
+                              }
+                      }
+              }
+      }
+    }
+
+    it "should return comment designers" do
+      expect(subject.get_commend_designers).to eq (fake_result)
+    end
+  end
 end

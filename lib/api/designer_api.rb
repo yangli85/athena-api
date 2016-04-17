@@ -122,6 +122,12 @@ module API
         result = DesignerController.call(:shop_details, [params['id']])
         return_response callback, result
       end
+
+      app.get '/get_commend_designers' do
+        callback = params.delete('callback')
+        result = DesignerController.call(:get_commend_designers)
+        return_response callback, result
+      end
     end
   end
 end

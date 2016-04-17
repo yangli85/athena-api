@@ -14,6 +14,12 @@ module API
         return_response callback, result
       end
 
+      app.post '/commissioner/upload_image' do
+        callback = params.delete('callback') # jsonp
+        result = UserController.call(:upload_image, [params['image_base64']])
+        return_response callback, result
+      end
+
       app.get '/commissioner/details' do
         callback = params.delete('callback')
         result = CommissionerController.call(:details, [params['c_id'].to_i])
@@ -68,6 +74,12 @@ module API
         return_response callback, result
       end
 
+      app.post '/commissioner/update_be_scanned_times' do
+        callback = params.delete('callback')
+        result = CommissionerController.call(:update_be_scanned_times, [params['c_id'].to_i])
+        return_response callback, result
+      end
+
       app.post '/commissioner/del_promotion_log' do
         callback = params.delete('callback')
         result = CommissionerController.call(:del_promotion_log, [params['log_id'].to_i])
@@ -78,6 +90,12 @@ module API
       app.post '/commissioner/add_shop_promotion_log' do
         callback = params.delete('callback')
         result = CommissionerController.call(:add_shop_promotion_log, [params['c_id'].to_i, params['shop_id'].to_i, params['content']])
+        return_response callback, result
+      end
+
+      app.get '/commissioner/shop_details' do
+        callback = params.delete('callback')
+        result = DesignerController.call(:shop_details, [params['id']])
         return_response callback, result
       end
 

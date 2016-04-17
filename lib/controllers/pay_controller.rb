@@ -17,10 +17,10 @@ class PayController < BaseController
   end
 
   private
-  def recharge user_id, balance, channel
+  def recharge user_id, count, channel
     user = @user_service.get_user_by_id user_id
-    @user_service.update_account_balance user.account.id, balance, "购买了#{balance}颗星星", user.id, user.id, RECHARGE, channel
-    @user_service.update_user_profile user_id, "vitality", user.vitality + balance
+    @user_service.update_account_balance user.account.id, count, "购买了#{count}颗星星", user.id, user.id, RECHARGE, channel
+    @user_service.update_user_profile user_id, "vitality", user.vitality + count
   end
 
   def pay_for_vip user_id, count
@@ -37,6 +37,7 @@ class PayController < BaseController
   def deliver_order order, pay_channel
     if order.product == "VIP"
       pay_for_vip order.user_id, order.count
+      recharge order.user_id, order.total_fee, pay_channel
       @user_service.update_order order, "status", SUCCESS
       @user_service.update_order order, "result", "会员续费成功"
     elsif order.product == "STAR"

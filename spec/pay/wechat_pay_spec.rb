@@ -8,11 +8,11 @@ describe Pay::WechatPay do
   let(:fake_logger) { double "Common::Logging" }
 
   before do
-    allow(subject).to receive(:logger).and_return(fake_logger)
     allow(fake_logger).to receive(:error)
-    allow(ENV).to receive(:WX_APP_ID).and_return(fake_wx_app_id)
-    allow(ENV).to receive(:WX_API_KEY).and_return(fake_wx_api_key)
-    allow(ENV).to receive(:WX_MCH_ID).and_return(fake_wx_mch_id)
+    allow(ENV).to receive(:[]).with("WX_APP_ID").and_return(fake_wx_app_id)
+    allow(ENV).to receive(:[]).with("WX_API_KEY").and_return(fake_wx_api_key)
+    allow(ENV).to receive(:[]).with("WX_MCH_ID").and_return(fake_wx_mch_id)
+    allow(subject).to receive(:logger).and_return(fake_logger)
     allow(SecureRandom).to receive_message_chain(:uuid, :tr).and_return("4dff7af0ba53470a9489b91304540f6a")
     allow(Time).to receive_message_chain(:now, :to_i, :to_s).and_return("1459393503")
   end
@@ -21,13 +21,13 @@ describe Pay::WechatPay do
     it "should return correct req params" do
       expect(subject.generate_pay_req fake_pre_pay_id).to eq (
                                                                      {
-                                                                         :appid => "wx308c9e4ba193b71a",
-                                                                         :partnerid => "1323273601",
+                                                                         :appid => "1234",
+                                                                         :partnerid => "1111",
                                                                          :prepayid => "wx124215211",
                                                                          :package => "Sign=WXPay",
                                                                          :noncestr => "4dff7af0ba53470a9489b91304540f6a",
                                                                          :timestamp => "1459393503",
-                                                                         :sign => "541CAEA4CAED9D997BAC671004AA2B21"
+                                                                         :sign => "AC1148265D485A406CC62F4A0C296B99"
                                                                      }
                                                                  )
     end

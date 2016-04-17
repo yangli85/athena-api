@@ -2,6 +2,7 @@
 require 'pandora/services/designer_service'
 require 'pandora/services/shop_service'
 require 'pandora/services/user_service'
+require 'pandora/services/twitter_service'
 require 'controllers/base_controller'
 require 'common/error'
 require 'common/image_helper'
@@ -14,6 +15,7 @@ class DesignerController < BaseController
     @shop_service = Pandora::Services::ShopService.new
     @designer_service = Pandora::Services::DesignerService.new
     @user_service = Pandora::Services::UserService.new
+    @twitter_service = Pandora::Services::TwitterService.new
     @shop_service = Pandora::Services::ShopService.new
   end
 
@@ -197,6 +199,25 @@ class DesignerController < BaseController
                                      scale: shop.scale,
                                      category: shop.category
                                  })
+    success.merge({data: data})
+  end
+
+  def get_commend_designers
+    new_designer = @designer_service.get_new_designer
+    top1_designer = @designer_service.get_top1_designer "weekly_stars"
+    new_twitter = @twitter_service.get_latest_twitter
+    new_twitter_designer = new_twitter.designer
+    data = {
+        new_designer: new_designer.attributes.merge({
+                                                        shop: new_designer.shop && new_designer.shop.attributes,
+                                                    }),
+        top1_designer: top1_designer.attributes.merge({
+                                                          shop: top1_designer.shop && top1_designer.shop.attributes,
+                                                      }),
+        new_twitter_designer: new_twitter_designer.attributes.merge({
+                                                                        shop: new_twitter_designer.shop && new_twitter_designer.shop.attributes,
+                                                                    })
+    }
     success.merge({data: data})
   end
 end

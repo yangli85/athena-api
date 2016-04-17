@@ -66,15 +66,15 @@ describe UserController do
 
       it "should return right login result" do
         expect(subject.login fake_phone, '1234').to eq (
-                                                                {
-                                                                    :status => "SUCCESS",
-                                                                    :message => "操作成功",
-                                                                    :data => {
-                                                                        :is_new => false,
-                                                                        :user_id => 1
-                                                                    }
-                                                                }
-                                                            )
+                                                           {
+                                                               :status => "SUCCESS",
+                                                               :message => "操作成功",
+                                                               :data => {
+                                                                   :is_new => false,
+                                                                   :user_id => 1
+                                                               }
+                                                           }
+                                                       )
       end
 
       it "should create designer is_new is true if designer login fisrtly" do
@@ -145,7 +145,8 @@ describe UserController do
 
     let(:author) { create(:user, phone_number: fake_phone) }
     let(:user) { create(:user, phone_number: "13812341234") }
-    let(:designer) { create(:designer, user: user) }
+    let(:shop) { create(:shop) }
+    let(:designer) { create(:designer, {user: user, shop: shop}) }
     let(:fake_author_id) { author.id }
     let(:fake_designer_id) { designer.id }
     let(:fake_content) { 'new twitter' }
@@ -181,10 +182,17 @@ describe UserController do
                                                                                                                                                        )
     end
 
+    it "should set address with designer'shop address if publish address is nil" do
+      subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, nil, "")
+      twitter = author.twitters.first
+      expect(twitter.latitude).to eq designer.shop.latitude
+      expect(twitter.longitude).to eq designer.shop.longitude
+    end
+
     it "should generate small image for upload images" do
-      allow_any_instance_of(Pandora::Services::TwitterService).to receive(:create_twitter).and_raise StandardError,"create twitter failed"
+      allow_any_instance_of(Pandora::Services::TwitterService).to receive(:create_twitter).and_raise StandardError, "create twitter failed"
       allow(File).to receive(:delete)
-      expect{subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon)}.to raise_error StandardError
+      expect { subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon) }.to raise_error StandardError
       fake_temp_image_paths.each do |path|
         expect(File.exist?(Common::ImageHelper.new.generate_s_image_path path)).to eq true
       end
@@ -236,7 +244,7 @@ describe UserController do
 
     it "should create message for designer" do
       subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon)
-      expect(Pandora::Models::User.find(designer.user.id).messages.count).to eq 1
+      expect(Pandora::Models::User.find(designer.user.id).messages.count).to eq 2
       expect(Pandora::Models::User.find(designer.user.id).messages.first.content).to eq "user1发布了一条关于你的新动态,送给你3个赞"
       expect(Pandora::Models::User.find(designer.user.id).messages.first.is_new).to eq true
     end
@@ -262,6 +270,11 @@ describe UserController do
       old_vitality = designer.user.vitality
       subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon)
       expect(Pandora::Models::User.find(designer.user.id).vitality - old_vitality).to eq fake_stars
+    end
+
+    it "should favorated designer auto" do
+      subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon)
+      expect(Pandora::Models::User.find(fake_author_id).favorite_designers.count).to eq 1
     end
   end
 

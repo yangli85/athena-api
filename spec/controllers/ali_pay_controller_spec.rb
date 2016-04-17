@@ -5,10 +5,10 @@ describe AliPayController do
     let(:fake_ali_pay) { double("Pay::AliPay") }
     let(:out_trade_no) { "ali12141515" }
     let(:trade_no) { '1217752501201407033233368018' }
-    let(:user) { create(:user) }
+    let(:user) { create(:user, vitality: 0) }
     let(:designer) { create(:designer, user: user) }
-    let(:account) { create(:account, user: user) }
-    let(:order) { create(:order, {product: "STAR", count: 1, user_id: user.id}) }
+    let(:account) { create(:account, {user: user, balance: 0}) }
+    let(:order) { create(:order, {product: "STAR", count: 1, user_id: user.id, total_fee: 1}) }
     let(:payment_log) { create(:payment_log, {order: order, out_trade_no: out_trade_no}) }
 
     before do
@@ -38,10 +38,14 @@ describe AliPayController do
           expect(new_payment_log.trade_no).to eq trade_no
           expect(new_order.result).to eq "1颗星星购买成功"
           expect(new_order.status).to eq "SUCCESS"
+          updated_user = Pandora::Models::User.find(user.id)
+          expect(updated_user.vitality).to eq 1
+          expect(updated_user.account.balance).to eq 1
         end
 
         it "should update VIP order status to be success" do
           order.update!(product: "VIP")
+          order.update!(total_fee: 50)
           params = {
               "out_trade_no" => out_trade_no,
               "trade_status" => "TRADE_SUCCESS",
@@ -54,6 +58,9 @@ describe AliPayController do
           expect(new_payment_log.trade_no).to eq trade_no
           expect(new_order.result).to eq "会员续费成功"
           expect(new_order.status).to eq "SUCCESS"
+          updated_user = Pandora::Models::User.find(user.id)
+          expect(updated_user.vitality).to eq 50
+          expect(updated_user.account.balance).to eq 50
         end
 
         it "should update order status UNPAY if return_code is not SUCCESS" do
@@ -79,8 +86,8 @@ describe AliPayController do
               "result_code" => "SUCCESS",
               "trade_no" => trade_no
           }
-          order.update(:status=>"FAIL")
-          expect( subject.notify params).to eq ("SUCCESS")
+          order.update(:status => "FAIL")
+          expect(subject.notify params).to eq ("success")
           expect_any_instance_of(Pandora::Services::UserService).not_to receive(:update_order)
           expect_any_instance_of(Pandora::Services::UserService).not_to receive(:update_payment_log)
         end
