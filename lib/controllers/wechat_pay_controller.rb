@@ -19,7 +19,6 @@ class WechatPayController < PayController
     out_trade_no = @wechat_pay.generate_out_trade_no PAY_CHANNEL
     payment_log = @user_service.create_payment_log order.id, out_trade_no, PAY_CHANNEL
     @user_service.update_payment_log(payment_log, "subject", params['body'])
-    @user_service.update_payment_log(payment_log, "total_fee", params['total_fee'])
     prepay_order = @wechat_pay.create_prepay_order params, out_trade_no
 
     unless prepay_order.nil?

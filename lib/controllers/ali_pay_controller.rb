@@ -21,7 +21,6 @@ class AliPayController < PayController
     pay_info = @ali_pay.generate_pay_req params, out_trade_no
     @user_service.update_payment_log(payment_log, "subject", pay_info['subject'])
     @user_service.update_payment_log(payment_log, "seller_id", pay_info['partner'])
-    @user_service.update_payment_log(payment_log, "total_fee", pay_info['total_fee'])
     success.merge(
         {
             data:
