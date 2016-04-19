@@ -15,6 +15,7 @@ class WechatPayController < PayController
     count = params.delete("count")
     product = params.delete("product")
     order = @user_service.create_order user_id, product, count, params['total_fee']
+    @user_service.update_order order, "result", "订单创建成功"
     out_trade_no = @wechat_pay.generate_out_trade_no PAY_CHANNEL
     payment_log = @user_service.create_payment_log order.id, out_trade_no, PAY_CHANNEL
     @user_service.update_payment_log(payment_log, "subject", params['body'])
