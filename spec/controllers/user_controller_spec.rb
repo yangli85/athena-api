@@ -31,7 +31,7 @@ describe UserController do
     context 'new user' do
       it "should create a new user for given phone number" do
         subject.login fake_phone, '1234'
-        expect(Pandora::Models::User.find_by_phone_number(fake_phone).name).to eq fake_phone
+        expect(Pandora::Models::User.find_by_phone_number(fake_phone).phone_number).to eq fake_phone
       end
 
       it "should return is_new user" do
@@ -674,7 +674,7 @@ describe UserController do
         expect(logs.first[:from_user]).to eq from_user.id
         expect(logs.first[:to_user]).to eq to_user.id
         expect(logs.first[:balance]).to eq -10
-        expect(logs.first[:desc]).to eq '赠送给user110颗星星'
+        expect(logs.first[:desc]).to eq '赠送了10颗星星给user1'
       end
 
       it "should add log for to_user's account" do

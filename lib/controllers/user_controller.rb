@@ -169,10 +169,11 @@ class UserController < BaseController
     raise Common::Error.new("星星赠送数量填写错误.") unless balance>0
     user = @user_service.get_user_by_id user_id
     to_user = @user_service.get_user_by_id to_user_id
+    raise Common::Error.new("对不起,设计师不可以给自己赠送!") if user == to_user
     account = user.account
     to_account = to_user.account
     raise Common::Error.new("你账户上的星星不够.") unless account.balance >= balance
-    account_log_desc = "赠送给#{to_user.name}#{balance}颗星星"
+    account_log_desc = "赠送了#{balance}颗星星给#{to_user.name}"
     @user_service.update_account_balance account.id, -balance, account_log_desc, user.id, to_user.id, DONATE, BEAUTYSHOW
     account_log_desc = "收到#{user.name}赠送给你的#{balance}颗星星"
     @user_service.update_account_balance to_account.id, balance, account_log_desc, user.id, to_user.id, DONATE, BEAUTYSHOW
