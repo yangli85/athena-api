@@ -1,3 +1,4 @@
+env :PATH, ENV['PATH']
 set :output, "logs/cron_log.log"
 
 every 1.day, :at => '1:00 am' do
