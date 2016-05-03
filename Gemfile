@@ -13,6 +13,7 @@ gem 'uuid'
 gem 'rmagick'
 gem 'rest-client', '>= 1.7'
 gem 'activesupport', '>= 3.2'
+gem 'whenever', :require => false
 
 group :test do
   gem 'fakefs', :require => "fakefs/safe"
