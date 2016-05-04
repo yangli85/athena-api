@@ -206,15 +206,15 @@ class DesignerController < BaseController
     new_designer = @designer_service.get_new_designer
     top1_designer = @designer_service.get_top1_designer "weekly_stars"
     new_twitter = @twitter_service.get_latest_twitter
-    new_twitter_designer = new_twitter.designer
+    new_twitter_designer = new_twitter && new_twitter.designer
     data = {
-        new_designer: new_designer.attributes.merge({
+        new_designer: new_designer && new_designer.attributes.merge({
                                                         shop: new_designer.shop && new_designer.shop.attributes,
                                                     }),
-        top1_designer: top1_designer.attributes.merge({
+        top1_designer: top1_designer && top1_designer.attributes.merge({
                                                           shop: top1_designer.shop && top1_designer.shop.attributes,
                                                       }),
-        new_twitter_designer: new_twitter_designer.attributes.merge({
+        new_twitter_designer: new_twitter_designer && new_twitter_designer.attributes.merge({
                                                                         shop: new_twitter_designer.shop && new_twitter_designer.shop.attributes,
                                                                     })
     }
