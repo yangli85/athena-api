@@ -16,9 +16,7 @@ module Common
 
     def generate_thumbnails original_image_path, small_file_path, scale=1
       img = Magick::Image.read(original_image_path).first
-      c, r = img.columns, img.rows
-      max = img.columns > img.rows ? img.columns : img.rows
-      thumb = img.scale(300, 300)
+      thumb = img.resize_to_fill(600, 600)
       thumb.write(small_file_path)
     end
 

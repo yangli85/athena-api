@@ -7,7 +7,7 @@ describe AdController do
     let(:fake_category) { 'index' }
     before do
       image1 =create(:image, {url: 'images/1.jpg', category: 'ad'})
-      image2 =create(:image, {url: 'images/2.jpg', category: 'ad'})
+      image2 =create(:image, {url: 'images/icon.jpeg', category: 'ad'})
       image3 =create(:image, {url: 'images/3.jpg', category: 'ad'})
       create(:ad_image, {image: image1, category: 'index', event: 'search_designer', args: {designer_id: 1}})
       create(:ad_image, {image: image2, category: 'index', event: 'search_designer', args: {designer_id: 2}})
@@ -33,7 +33,7 @@ describe AdController do
                                                                      {
                                                                          :image => {
                                                                              :id => 2,
-                                                                             :url => "images/2.jpg",
+                                                                             :url => "images/icon.jpeg",
                                                                              :s_url => nil
                                                                          },
                                                                          :event => "search_designer",
