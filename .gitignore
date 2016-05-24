@@ -25,3 +25,4 @@ doc/
 logs/
 local/
 enrich-test
+.env

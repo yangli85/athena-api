@@ -57,12 +57,32 @@ class AthenaAPI < API::BaseAPI
   def authenticate
     user_id = session['user_id']
     identity_id = session['identity_id']
-    old_access_token = UserController.new.get_access_token user_id
-    redirect '/no_authenticate' if user_id.nil? || identity_id.nil? || old_access_token != generate_access_token(identity_id)
+    if authenticate_failed? user_id, identity_id
+      redirect '/no_authenticate' if user_id.nil? || identity_id.nil? || old_access_token !=new_access_token
+    end
+  end
+
+  def authenticate_failed? user_id, identity_id
+    old_access_token = get_user_access_token user_id
+    new_access_token = generate_access_token identity_id
+    status = user_id.nil? || identity_id.nil? || old_access_token != new_access_token
+    logger.error("no authenticate for user:#{user_id} with identity_id:#{identity_id},old_token:#{old_access_token},new_token:#{new_access_token}") if status
+    status
   end
 
   def generate_access_token identity_id
-    session['access_token'] = Digest::SHA256.hexdigest identity_id
+    session['access_token'] = Digest::SHA256.hexdigest identity_id unless identity_id.nil?
+  end
+
+  def get_user_access_token user_id
+    access_token =nil
+    retry_count =0
+    while access_token.nil? && retry_count < 3
+      retry_count +=1
+      access_token = UserController.new.get_access_token user_id
+    end
+    logger.error("can not get access token for use:#{user_id} in 3 times") if access_token.nil?
+    access_token
   end
 
   def is_public_api? path
