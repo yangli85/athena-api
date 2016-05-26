@@ -129,16 +129,16 @@ class DesignerController < BaseController
     success.merge({message: "动态删除成功"})
   end
 
-  def designer_latest_customers designer_id
-    customers = @designer_service.get_customers designer_id
+  def designer_customers designer_id, page_size, current_page
+    customers = @designer_service.get_customers designer_id, page_size, current_page
     data = customers.map do |customer|
       customer.attributes.merge({phone_number: customer.phone_number})
     end
     success.merge({data: data})
   end
 
-  def search_customers page_size, current_page, query
-    customers = @designer_service.search_customers query, page_size, current_page
+  def search_customers designer_id, page_size, current_page, query
+    customers = @designer_service.search_customers designer_id, query, page_size, current_page
     data = customers.map do |customer|
       customer.attributes.merge({phone_number: customer.phone_number})
     end
@@ -209,14 +209,14 @@ class DesignerController < BaseController
     new_twitter_designer = new_twitter && new_twitter.designer
     data = {
         new_designer: new_designer && new_designer.attributes.merge({
-                                                        shop: new_designer.shop && new_designer.shop.attributes,
-                                                    }),
+                                                                        shop: new_designer.shop && new_designer.shop.attributes,
+                                                                    }),
         top1_designer: top1_designer && top1_designer.attributes.merge({
-                                                          shop: top1_designer.shop && top1_designer.shop.attributes,
-                                                      }),
+                                                                           shop: top1_designer.shop && top1_designer.shop.attributes,
+                                                                       }),
         new_twitter_designer: new_twitter_designer && new_twitter_designer.attributes.merge({
-                                                                        shop: new_twitter_designer.shop && new_twitter_designer.shop.attributes,
-                                                                    })
+                                                                                                shop: new_twitter_designer.shop && new_twitter_designer.shop.attributes,
+                                                                                            })
     }
     success.merge({data: data})
   end

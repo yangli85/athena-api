@@ -522,11 +522,11 @@ describe DesignerController do
       }
 
       before do
-        create(:twitter, author: author, designer: designer)
+        create(:favorite_designer, {user: author, favorited_designer: designer})
       end
 
       it "should return designer's latest customers in correct json format" do
-        expect(subject.designer_latest_customers designer.id).to eq fake_result
+        expect(subject.designer_customers(designer.id, 3, 1)).to eq fake_result
       end
     end
   end

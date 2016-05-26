@@ -49,7 +49,7 @@ module API
 
       app.get '/search_customers' do
         callback = params.delete('callback') # jsonp
-        result = DesignerController.call(:search_customers, [params['page_size'].to_i, params['current_page'].to_i, params['query']])
+        result = DesignerController.call(:search_customers, [params['designer_id'].to_i, params['page_size'].to_i, params['current_page'].to_i, params['query']])
         return_response callback, result
       end
 
@@ -71,9 +71,9 @@ module API
         return_response callback, result
       end
 
-      app.get '/designer_latest_customers' do
+      app.get '/designer_customers' do
         callback = params.delete('callback')
-        result = DesignerController.call(:designer_latest_customers, [params['designer_id'].to_i])
+        result = DesignerController.call(:designer_customers, [params['designer_id'].to_i, params['page_size'].to_i, params['current_page'].to_i])
         return_response callback, result
       end
 
