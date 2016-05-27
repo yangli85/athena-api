@@ -14,9 +14,9 @@ module Common
       image_path
     end
 
-    def generate_thumbnails original_image_path, small_file_path, scale=1
+    def generate_thumbnails original_image_path, small_file_path, scale=0.5
       img = Magick::Image.read(original_image_path).first
-      thumb = img.resize_to_fill(600, 600)
+      thumb = img.resize_to_fill(400, 400)
       thumb.write(small_file_path)
     end
 

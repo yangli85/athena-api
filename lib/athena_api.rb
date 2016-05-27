@@ -57,9 +57,7 @@ class AthenaAPI < API::BaseAPI
   def authenticate
     user_id = session['user_id']
     identity_id = session['identity_id']
-    if authenticate_failed? user_id, identity_id
-      redirect '/no_authenticate' if user_id.nil? || identity_id.nil? || old_access_token !=new_access_token
-    end
+    redirect '/no_authenticate' if authenticate_failed? user_id, identity_id
   end
 
   def authenticate_failed? user_id, identity_id
