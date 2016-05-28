@@ -75,7 +75,7 @@ class CommissionerController < BaseController
   def promotion_users c_id, page_size, current_page
     users = @commissioner_service.get_promotion_users c_id, page_size, current_page
     data = users.map do |user|
-      user.attributes.merge({phone_number: user.phone_number, created_at: user.created_at})
+      user.attributes.merge({phone_number: user.phone_number, created_at:  user.created_at.strftime("%Y-%m-%d %H:%M:%S")})
     end
     success.merge({data: data})
   end
@@ -83,7 +83,7 @@ class CommissionerController < BaseController
   def promotion_designers c_id, page_size, current_page
     designers = @commissioner_service.get_promotion_designers c_id, page_size, current_page
     data = designers.map do |designer|
-      designer.attributes.merge({phone_number: designer.user.phone_number, created_at: designer.created_at})
+      designer.attributes.merge({phone_number: designer.user.phone_number, created_at: designer.created_at.strftime("%Y-%m-%d %H:%M:%S")})
     end
     success.merge({data: data})
   end
@@ -91,7 +91,7 @@ class CommissionerController < BaseController
   def promotion_vip_designers c_id, page_size, current_page
     designers = @commissioner_service.get_promotion_vip_designers c_id, page_size, current_page
     data = designers.map do |designer|
-      designer.attributes.merge({phone_number: designer.user.phone_number, created_at: designer.created_at})
+      designer.attributes.merge({phone_number: designer.user.phone_number, created_at: designer.created_at.strftime("%Y-%m-%d %H:%M:%S")})
     end
     success.merge({data: data})
   end

@@ -86,13 +86,13 @@ describe CommissionerController do
                       :id => 1,
                       :phone_number => nil,
                       :mobile_type => "unknow",
-                      :created_at => created_at
+                      :created_at => "2015-12-12 12:12:12"
                   },
                   {
                       :id => 2,
                       :phone_number => "13812345678",
                       :mobile_type => "unknow",
-                      :created_at => created_at
+                      :created_at => "2015-12-12 12:12:12"
                   }
               ]
       }
@@ -118,7 +118,7 @@ describe CommissionerController do
                                                                                                                 :id => 1,
                                                                                                                 :phone_number => "13812345678",
                                                                                                                 :mobile_type => "iphone",
-                                                                                                                :created_at => created_at
+                                                                                                                :created_at => "2015-12-12 12:12:12"
                                                                                                             }
                                                                                                         )
     end
@@ -148,14 +148,14 @@ describe CommissionerController do
                       :name => "user1",
                       :avatar => nil,
                       :phone_number => "13800000001",
-                      :created_at => created_at
+                      :created_at => "2015-12-12 12:12:12"
                   },
                   {
                       :id => 2,
                       :name => "user1",
                       :avatar => nil,
                       :phone_number => "13800000002",
-                      :created_at => created_at
+                      :created_at => "2015-12-12 12:12:12"
                   }
               ]
       }
@@ -195,7 +195,7 @@ describe CommissionerController do
                       :name => "user1",
                       :avatar => nil,
                       :phone_number => "13800000001",
-                      :created_at => created_at
+                      :created_at => "2015-12-12 12:12:12"
                   }
               ]
       }
@@ -208,7 +208,7 @@ describe CommissionerController do
       create(:promotion_log, {c_id: commissioner.id, phone_number: '13811111113'})
       user1 = create(:user, phone_number: fake_phone1)
       user2 = create(:user, phone_number: fake_phone2)
-      create(:designer, user: user1)
+      create(:designer, {user: user1, is_vip: false})
     end
 
     it "should return all promotion designers for commissioner" do
@@ -239,7 +239,7 @@ describe CommissionerController do
                               :code_image => nil
                           },
                       :content => "this is a test shop promotion log",
-                      :created_at => created_at
+                      :created_at => "2015-12-12 12:12:12"
                   },
                   {
                       :id => 2,
@@ -251,7 +251,7 @@ describe CommissionerController do
                               :code_image => nil
                           },
                       :content => "this is a test shop promotion log",
-                      :created_at => created_at
+                      :created_at => "2015-12-12 12:12:12"
                   }
               ]
       }
@@ -466,7 +466,7 @@ describe CommissionerController do
                            :code_image => nil
                        },
                    :content => "this is a test shop promotion log",
-                   :created_at => created_at
+                   :created_at => "2015-12-12 12:12:12"
                   }
               ]
       }
