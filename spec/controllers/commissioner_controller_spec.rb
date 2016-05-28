@@ -361,12 +361,12 @@ describe CommissionerController do
       end
     end
 
-    context "raise common error" do
-      it "should raise error if shop have designers" do
+    context "return error" do
+      it "should return error if shop have designers" do
         shop = create(:shop)
         user = create(:user)
         designer = create(:designer, {user: user, shop: shop})
-        expect { subject.delete_shop commissioner.id, shop.id }.to raise_error Common::Error, "该店铺已经有关联的设计师,不能被删除!"
+        expect(subject.delete_shop(commissioner.id, shop.id)).to eq ({:status=>"ERROR", :message=>"该店铺已经有关联的设计师,不能被删除!"})
       end
     end
   end

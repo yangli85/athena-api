@@ -119,7 +119,7 @@ class CommissionerController < BaseController
 
   def delete_shop c_id, shop_id
     shop = @shop_service.get_shop shop_id
-    raise Common::Error.new("该店铺已经有关联的设计师,不能被删除!") if shop.designers.length > 0
+    return error("该店铺已经有关联的设计师,不能被删除!") if shop.designers.length > 0
     commissioner = @commissioner_service.get_commissioner_by_id c_id
     @commissioner_service.delete_shop shop_id
     @commissioner_service.add_shop_promotion_log c_id, shop_id, "#{commissioner.name}(#{commissioner.phone_number})删除了店铺#{shop.name}"
