@@ -44,7 +44,7 @@ class CommissionerController < BaseController
     designers = @commissioner_service.get_promotion_designers c_id, max_count, 1
     vip_designers = @commissioner_service.get_promotion_vip_designers c_id, max_count, 1
     data = commissioner.attributes.merge({
-                                             designer_count: designers.count,
+                                             designer_count: designers.count + vip_designers.count,
                                              vip_designer_count: vip_designers.count,
                                              user_count: users.count,
                                              be_scanned_times: commissioner.be_scanned_times
@@ -75,7 +75,7 @@ class CommissionerController < BaseController
   def promotion_users c_id, page_size, current_page
     users = @commissioner_service.get_promotion_users c_id, page_size, current_page
     data = users.map do |user|
-      user.attributes.merge({phone_number: user.phone_number, created_at:  user.created_at.strftime("%Y-%m-%d %H:%M:%S")})
+      user.attributes.merge({phone_number: user.phone_number, created_at: user.created_at.strftime("%Y-%m-%d %H:%M:%S")})
     end
     success.merge({data: data})
   end
