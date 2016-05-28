@@ -24,7 +24,7 @@ class DesignerController < BaseController
     designers = []
     ordered_shops.each do |a_shop|
       shop = @shop_service.get_shop a_shop.id
-      shop_designers = shop.designers.order("#{order_by} desc").map do |designer|
+      shop_designers = shop.designers.vip.order("#{order_by} desc").map do |designer|
         designer.attributes.merge({
                                       distance: a_shop.distance,
                                       stars: designer.totally_stars,
@@ -164,8 +164,12 @@ class DesignerController < BaseController
 
   def create_vita desc, image_paths, designer_id
     image_paths = rebuild_images image_paths
+    designer = @designer_service.get_designer designer_id
     begin
-      @designer_service.create_vita designer_id, image_paths, desc, vita_image_folder
+      @designer_service.create_vita designer.id, image_paths, desc, vita_image_folder
+      designer.users.each do |user|
+        @user_service.create_message user.id, "#{designer.user.name}更新了自己的个人空间,快去看看!"
+      end
       success.merge({message: "添加成功"})
     ensure
       image_paths.each do |path|

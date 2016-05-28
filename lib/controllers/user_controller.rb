@@ -41,6 +41,7 @@ class UserController < BaseController
     latitude = designer.shop.latitude if latitude.nil? || latitude.strip.empty?
     longitude = designer.shop.longitude if longitude.nil? || longitude.strip.empty?
     raise Common::Error.new("对不起,不可以给自己点赞!") if user == designer.user
+    raise Common::Error.new("对不起,每天只可以发送一条动态!") if has_publish_twitter_at_today? user.id
     account = user.account
     raise Common::Error.new("对不起,星星不够!") unless account.balance >= stars
     begin
@@ -241,5 +242,10 @@ class UserController < BaseController
     end
     latest_sms_code = @sms_service.get_latest_code phone_number
     !latest_sms_code.nil? && code == latest_sms_code.code
+  end
+
+  def has_publish_twitter_at_today? user_id
+    count = @user_service.get_twitters_for_today user_id
+    count>0
   end
 end
