@@ -242,6 +242,22 @@ describe UserController do
       expect { subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon) }.to raise_error Common::Error, '对不起,星星不够!'
     end
 
+    it "should raise common error if designer is not vip" do
+      designer.update!(is_vip: false)
+      expect { subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon) }.to raise_error Common::Error, '对不起,该设计师目前是非会员!'
+    end
+
+    it "should raise common error if has publish twitter at today" do
+      subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon)
+      expect { subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon) }.to raise_error Common::Error, '对不起,每天只可以发送一条动态!'
+    end
+
+    it "should not raise common error if not publish twitter at today" do
+      create(:twitter, {author: user, designer: designer,created_at: DateTime.now})
+      allow(Date).to receive(:today).and_return(Date.parse("2014-12-12"))
+      expect{subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon)}.to_not raise_error
+    end
+
     it "should create message for designer" do
       subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon)
       expect(Pandora::Models::User.find(designer.user.id).messages.count).to eq 2
@@ -440,6 +456,7 @@ describe UserController do
       before do
         create(:favorite_designer, {user: user, favorited_designer: designer})
       end
+
       it "should del favorite designer by id" do
         subject.del_favorite_designers 1
         expect(user.favorite_designers.count).to eq 0

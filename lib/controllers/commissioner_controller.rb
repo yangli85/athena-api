@@ -3,8 +3,10 @@ require 'controllers/base_controller'
 require 'pandora/services/commissioner_service'
 require 'pandora/services/shop_service'
 require 'pandora/services/sms_service'
+require 'pandora/services/designer_service'
 require 'common/error'
 require 'common/image_helper'
+require 'common/controller_helper'
 require 'common/controller_helper'
 
 class CommissionerController < BaseController
@@ -14,6 +16,7 @@ class CommissionerController < BaseController
     @commissioner_service = Pandora::Services::CommissionerService.new
     @shop_service = Pandora::Services::ShopService.new
     @sms_service =Pandora::Services::SMSService.new
+    @designer_service =Pandora::Services::DesignerService.new
   end
 
   def register phone_number, name, password, code
@@ -63,6 +66,10 @@ class CommissionerController < BaseController
   end
 
   def add_promotion_log c_id, user_phone_number, mobile_type
+    designer = @designer_service.get_designer_by_phone_number user_phone_number
+    raise Common::Error.new("该用户目前还是非会员设计师.") if designer.nil? || !designer.is_vip
+    promotion_log = @commissioner_service.get_promotion_log user_phone_number
+    raise Common::Error.new("该用户已经被地推人员添加.") unless promotion_log.nil?
     @commissioner_service.add_promotion_log c_id, user_phone_number, mobile_type
     success
   end
@@ -117,9 +124,23 @@ class CommissionerController < BaseController
     success.merge({message: "该店铺已经录入系统,辛苦啦,加油!"})
   end
 
+  def update_shop c_id, shop_id, scale, category, desc, image_paths
+    image_paths = rebuild_images image_paths
+    commissioner = @commissioner_service.get_commissioner_by_id c_id
+    shop = @commissioner_service.update_shop shop_id, scale, category, desc, image_paths, shop_image_folder
+    update_info = {
+        scale: scale,
+        category: category,
+        desc: desc,
+        image_paths: image_paths
+    }
+    @commissioner_service.add_shop_promotion_log c_id, shop_id, "#{commissioner.name}(#{commissioner.phone_number})更新了店铺#{shop.name}的信息#{update_info}"
+    success.merge({message: "店铺信息更新成功!"})
+  end
+
   def delete_shop c_id, shop_id
     shop = @shop_service.get_shop shop_id
-    return error("该店铺已经有关联的设计师,不能被删除!") if shop.designers.length > 0
+    raise Common::Error.new("该店铺已经有关联的设计师,不能被删除!") if shop.designers.length > 0
     commissioner = @commissioner_service.get_commissioner_by_id c_id
     @commissioner_service.delete_shop shop_id
     @commissioner_service.add_shop_promotion_log c_id, shop_id, "#{commissioner.name}(#{commissioner.phone_number})删除了店铺#{shop.name}"

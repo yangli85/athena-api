@@ -12,3 +12,14 @@ end
 every '0 0 1 * *' do #
   rake "pandora_db:update_monthly_stars"
 end
+
+
+every 1.day, :at => '3:00 am' do
+  rake "pandora_db:delete_non_activated_designers"
+end
+
+
+every 1.day, :at => '2:00 am' do
+  rake "athena_files:delete_temp_images"
+end
+

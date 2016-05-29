@@ -109,6 +109,11 @@ describe CommissionerController do
   end
 
   describe "#add_promotion_log" do
+    before do
+      user = create(:user, phone_number: fake_phone)
+      designer = create(:designer, {user: user, is_vip: true})
+    end
+
     it "should add promotion log successfully" do
       commissioner = create(:commissioner)
       subject.add_promotion_log commissioner.id, fake_phone, 'iphone'
@@ -343,6 +348,53 @@ describe CommissionerController do
     end
   end
 
+  describe "#update_shop" do
+    let(:name) { "new shop" }
+    let(:address) { "address1" }
+    let(:longitude) { "103.123" }
+    let(:latitude) { "103.123" }
+    let(:scale) { "middle" }
+    let(:category) { "street by" }
+    let(:desc) { "magic shop" }
+    let(:province) { "shannxi" }
+    let(:city) { "xi'an" }
+    let(:commissioner) { create(:commissioner, name: "haha") }
+    let(:fake_images_folder) { "temp_images" }
+    let(:fake_temp_images_folder) { "spec/temp_images" }
+    let(:fake_temp_image_paths) { ["#{fake_temp_images_folder}/icon.jpg", "#{fake_temp_images_folder}/icon.png"] }
+    let(:fake_image_paths) { ["spec/fixtures/icon.jpg", "spec/fixtures/icon.png"] }
+    let(:shop) { Pandora::Models::Shop.create!(name: name, address: address, longitude: longitude, latitude: latitude, scale: scale, category: category, desc: desc, province: province, city: city) }
+
+    before do
+      FileUtils.mkdir_p(fake_temp_images_folder) unless Dir.exists?(fake_temp_images_folder)
+      fake_image_paths.each do |path|
+        FileUtils.cp(path, "#{fake_temp_images_folder}/#{File.basename(path)}")
+      end
+      allow(ENV).to receive(:[]).with('IMGAES_FOLDER').and_return fake_images_folder
+    end
+
+    after do
+      FileUtils.rm_rf(fake_temp_images_folder)
+      FileUtils.rm_rf(fake_images_folder)
+    end
+
+
+    it "should update shop info" do
+      subject.update_shop commissioner.id, shop.id, '10人', 'under building', 'update info', fake_temp_image_paths
+      shop = Pandora::Models::Shop.first
+      expect(shop.scale).to eq '10人'
+      expect(shop.category).to eq 'under building'
+      expect(shop.desc).to eq 'update info'
+      expect(shop.images.count).to eq 2
+    end
+
+    it "should add shop promotion log" do
+      subject.update_shop commissioner.id, shop.id, '10人', 'under building', 'update info', fake_temp_image_paths
+      expect(Pandora::Models::Commissioner.find(commissioner.id).shop_promotion_logs.count).to eq 1
+      expect(Pandora::Models::Commissioner.find(commissioner.id).shop_promotion_logs.first.content).to eq "haha(18611979882)更新了店铺new shop的信息{:scale=>\"10人\", :category=>\"under building\", :desc=>\"update info\", :image_paths=>[{:image_path=>\"spec/temp_images/icon.jpg\", :s_image_path=>\"spec/temp_images/s_icon.jpg\"}, {:image_path=>\"spec/temp_images/icon.png\", :s_image_path=>\"spec/temp_images/s_icon.png\"}]}"
+    end
+  end
+
   describe "#delete_shop" do
     let(:commissioner) { create(:commissioner, {name: "haha"}) }
 
@@ -366,7 +418,7 @@ describe CommissionerController do
         shop = create(:shop)
         user = create(:user)
         designer = create(:designer, {user: user, shop: shop})
-        expect(subject.delete_shop(commissioner.id, shop.id)).to eq ({:status=>"ERROR", :message=>"该店铺已经有关联的设计师,不能被删除!"})
+        expect { subject.delete_shop(commissioner.id, shop.id) }.to raise_error Common::Error, "该店铺已经有关联的设计师,不能被删除!"
       end
     end
   end

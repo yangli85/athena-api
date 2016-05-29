@@ -14,5 +14,7 @@ require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new(:spec)
 task :default => :spec
 Rake::Task["export_env_vars"].invoke
+require 'tasks/files_task'
+Athena::Tasks::FilesTask.new.install_tasks
 require 'pandora/tasks/db_task'
 Pandora::Tasks::DBTask.new.install_tasks

@@ -38,23 +38,23 @@ module API
         return_response callback, result
       end
 
-      app.get '/commissioner/users' do
-        callback = params.delete('callback')
-        result = CommissionerController.call(:promotion_users, [params['c_id'].to_i, params['page_size'].to_i, params['current_page'].to_i])
-        return_response callback, result
-      end
+      # app.get '/commissioner/users' do
+      #   callback = params.delete('callback')
+      #   result = CommissionerController.call(:promotion_users, [params['c_id'].to_i, params['page_size'].to_i, params['current_page'].to_i])
+      #   return_response callback, result
+      # end
 
-      app.get '/commissioner/designers' do
-        callback = params.delete('callback')
-        result = CommissionerController.call(:promotion_designers, [params['c_id'].to_i, params['page_size'].to_i, params['current_page'].to_i])
-        return_response callback, result
-      end
-
-      app.get '/commissioner/vip_designers' do
-        callback = params.delete('callback')
-        result = CommissionerController.call(:promotion_vip_designers, [params['c_id'].to_i, params['page_size'].to_i, params['current_page'].to_i])
-        return_response callback, result
-      end
+      # app.get '/commissioner/designers' do
+      #   callback = params.delete('callback')
+      #   result = CommissionerController.call(:promotion_designers, [params['c_id'].to_i, params['page_size'].to_i, params['current_page'].to_i])
+      #   return_response callback, result
+      # end
+      #
+      # app.get '/commissioner/vip_designers' do
+      #   callback = params.delete('callback')
+      #   result = CommissionerController.call(:promotion_vip_designers, [params['c_id'].to_i, params['page_size'].to_i, params['current_page'].to_i])
+      #   return_response callback, result
+      # end
 
       app.get '/commissioner/shop_promotion_logs' do
         callback = params.delete('callback')
@@ -104,6 +104,14 @@ module API
         image_paths = params['image_paths'].split(",")
         args = [params['name'], params['address'], params['longitude'], params['latitude'], params['scale'], params['category'], params['desc'], params['c_id'].to_i, image_paths, params['province'], params['city']]
         result = CommissionerController.call(:register_shop, args)
+        return_response callback, result
+      end
+
+      app.post '/commissioner/update_shop' do
+        callback = params.delete('callback')
+        image_paths = params['image_paths'].split(",")
+        args = [params['c_id'].to_i, params['shop_id'], params['scale'], params['category'], params['desc'], image_paths]
+        result = CommissionerController.call(:update_shop, args)
         return_response callback, result
       end
 

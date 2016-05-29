@@ -35,15 +35,18 @@ class UserController < BaseController
   end
 
   def publish_new_twitter author_id, designer_id, content, image_paths, stars, latitude, longitude
-    image_paths = rebuild_images image_paths
     user = @user_service.get_user_by_id author_id
     designer = @designer_service.get_designer designer_id
-    latitude = designer.shop.latitude if latitude.nil? || latitude.strip.empty?
-    longitude = designer.shop.longitude if longitude.nil? || longitude.strip.empty?
+    account = user.account
+    raise Common::Error.new("对不起,该设计师目前是非会员!") unless designer.is_vip
     raise Common::Error.new("对不起,不可以给自己点赞!") if user == designer.user
     raise Common::Error.new("对不起,每天只可以发送一条动态!") if has_publish_twitter_at_today? user.id
-    account = user.account
     raise Common::Error.new("对不起,星星不够!") unless account.balance >= stars
+
+    latitude = designer.shop.latitude if latitude.nil? || latitude.strip.empty?
+    longitude = designer.shop.longitude if longitude.nil? || longitude.strip.empty?
+    image_paths = rebuild_images image_paths
+
     begin
       twitter = @twitter_service.create_twitter author_id, designer_id, content, image_paths, stars, latitude, longitude, twitter_image_folder
       account_log_desc = "使用了#{stars}颗星星给#{designer.user.name}点赞"

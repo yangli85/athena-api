@@ -192,6 +192,7 @@ class DesignerController < BaseController
     end
     @designer_service.update_designer designer_id, "expired_at", expired_at
     @designer_service.update_designer designer_id, "is_vip", true unless designer.is_vip
+    @designer_service.update_designer designer_id, "activated", true unless designer.activated
     success.merge({message: "缴费成功"})
   end
 
