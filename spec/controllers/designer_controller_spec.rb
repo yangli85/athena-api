@@ -707,6 +707,11 @@ describe DesignerController do
         subject.pay_for_vip designer.id
         expect(Pandora::Models::Designer.find(designer.id).is_vip).to be true
       end
+
+      it "should update designer to be activated" do
+        subject.pay_for_vip designer.id
+        expect(Pandora::Models::Designer.find(designer.id).activated).to be true
+      end
     end
 
     context "not a vip user" do
