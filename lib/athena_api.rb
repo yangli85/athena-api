@@ -10,6 +10,7 @@ require 'controllers/sms_controller'
 
 class AthenaAPI < API::BaseAPI
   PUBLIC_API = ["/", "/login", "/no_authenticate", "/no_identity_id", "/ali_notify", "/wx_notify", "/search_twitter", "/send_login_sms", "/favicon.ico"]
+  ActiveRecord::Base.default_timezone = :local
 
   before do
     authenticate unless is_public_api? request.path

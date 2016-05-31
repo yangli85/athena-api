@@ -33,7 +33,9 @@ describe TwitterController do
                   :image => {
                       :id => 5,
                       :url => "images/1.jpg",
-                      :s_url => "images/1.jpg"
+                      :s_url => "images/1.jpg",
+                      :width=>500,
+                      :height=>1000
                   },
                   :likes => 6,
                   :designer => {
@@ -43,7 +45,9 @@ describe TwitterController do
                       :avatar => {
                           :id => 1,
                           :url => "images/1.jpg",
-                          :s_url => nil
+                          :s_url => nil,
+                          :width=>500,
+                          :height=>1000
                       }
                   },
                   :twitter_id => 2,
@@ -53,7 +57,9 @@ describe TwitterController do
                   :image => {
                       :id => 4,
                       :url => "images/1.jpg",
-                      :s_url => "images/1.jpg"
+                      :s_url => "images/1.jpg",
+                      :width=>500,
+                      :height=>1000
                   },
                   :likes => 5,
                   :designer =>
@@ -64,7 +70,9 @@ describe TwitterController do
                           :avatar => {
                               :id => 1,
                               :url => "images/1.jpg",
-                              :s_url => nil
+                              :s_url => nil,
+                              :width=>500,
+                              :height=>1000
                           }
                       },
                   :twitter_id => 2,
@@ -74,7 +82,9 @@ describe TwitterController do
                   :image => {
                       :id => 3,
                       :url => "images/1.jpg",
-                      :s_url => "images/1.jpg"
+                      :s_url => "images/1.jpg",
+                      :width=>500,
+                      :height=>1000
                   },
                   :likes => 4,
                   :designer => {
@@ -84,7 +94,9 @@ describe TwitterController do
                       :avatar => {
                           :id => 1,
                           :url => "images/1.jpg",
-                          :s_url => nil
+                          :s_url => nil,
+                          :width=>500,
+                          :height=>1000
                       }
                   },
                   :twitter_id => 2,
@@ -94,7 +106,9 @@ describe TwitterController do
                   :image => {
                       :id => 2,
                       :url => "images/1.jpg",
-                      :s_url => "images/1.jpg"
+                      :s_url => "images/1.jpg",
+                      :width=>500,
+                      :height=>1000
                   },
                   :likes => 3,
                   :designer => {
@@ -104,7 +118,9 @@ describe TwitterController do
                       :avatar => {
                           :id => 1,
                           :url => "images/1.jpg",
-                          :s_url => nil
+                          :s_url => nil,
+                          :width=>500,
+                          :height=>1000
                       }
                   },
                   :twitter_id => 1,
@@ -133,7 +149,9 @@ describe TwitterController do
                       :avatar => {
                           :id => 1,
                           :url => "images/1.jpg",
-                          :s_url => nil
+                          :s_url => nil,
+                          :width=>500,
+                          :height=>1000
                       }
                   },
               :content => "this is a test twitter",
@@ -146,7 +164,9 @@ describe TwitterController do
                       :avatar => {
                           :id => 1,
                           :url => "images/1.jpg",
-                          :s_url => nil
+                          :s_url => nil,
+                          :width=>500,
+                          :height=>1000
                       }
                   },
               :image_count => 3,
@@ -155,7 +175,9 @@ describe TwitterController do
                       :image => {
                           :id => 3,
                           :url => "images/1.jpg",
-                          :s_url => "images/1.jpg"
+                          :s_url => "images/1.jpg",
+                          :width=>500,
+                          :height=>1000
                       },
                       :likes => 4,
                       :rank => 1
@@ -164,7 +186,9 @@ describe TwitterController do
                       :image => {
                           :id => 4,
                           :url => "images/1.jpg",
-                          :s_url => "images/1.jpg"
+                          :s_url => "images/1.jpg",
+                          :width=>500,
+                          :height=>1000
                       },
                       :likes => 5,
                       :rank => 2
@@ -173,7 +197,9 @@ describe TwitterController do
                       :image => {
                           :id => 5,
                           :url => "images/1.jpg",
-                          :s_url => "images/1.jpg"
+                          :s_url => "images/1.jpg",
+                          :width=>500,
+                          :height=>1000
                       },
                       :likes => 6,
                       :rank => 3
@@ -209,7 +235,9 @@ describe TwitterController do
                               :avatar => {
                                   :id => 1,
                                   :url => "images/1.jpg",
-                                  :s_url => nil
+                                  :s_url => nil,
+                                  :width=>500,
+                                  :height=>1000
                               }
                           },
                       :content => "this is a test twitter",
@@ -222,7 +250,9 @@ describe TwitterController do
                               :avatar => {
                                   :id => 1,
                                   :url => "images/1.jpg",
-                                  :s_url => nil
+                                  :s_url => nil,
+                                  :width=>500,
+                                  :height=>1000
                               }
                           },
                       :image_count => 1,
@@ -232,7 +262,9 @@ describe TwitterController do
                                   :image => {
                                       :id => 2,
                                       :url => "images/1.jpg",
-                                      :s_url => "images/1.jpg"
+                                      :s_url => "images/1.jpg",
+                                      :width=>500,
+                                      :height=>1000
                                   },
                                   :likes => 3,
                                   :rank => 1
@@ -249,7 +281,9 @@ describe TwitterController do
                               :avatar => {
                                   :id => 1,
                                   :url => "images/1.jpg",
-                                  :s_url => nil
+                                  :s_url => nil,
+                                  :width=>500,
+                                  :height=>1000
                               }
                           },
                       :content => "this is a test twitter",
@@ -262,7 +296,9 @@ describe TwitterController do
                               :avatar => {
                                   :id => 1,
                                   :url => "images/1.jpg",
-                                  :s_url => nil
+                                  :s_url => nil,
+                                  :width=>500,
+                                  :height=>1000
                               }
                           },
                       :image_count => 3,
@@ -271,7 +307,9 @@ describe TwitterController do
                               :image => {
                                   :id => 3,
                                   :url => "images/1.jpg",
-                                  :s_url => "images/1.jpg"
+                                  :s_url => "images/1.jpg",
+                                  :width=>500,
+                                  :height=>1000
                               },
                               :likes => 4,
                               :rank => 1
@@ -280,7 +318,9 @@ describe TwitterController do
                               :image => {
                                   :id => 4,
                                   :url => "images/1.jpg",
-                                  :s_url => "images/1.jpg"
+                                  :s_url => "images/1.jpg",
+                                  :width=>500,
+                                  :height=>1000
                               },
                               :likes => 5,
                               :rank => 2
@@ -289,7 +329,9 @@ describe TwitterController do
                               :image => {
                                   :id => 5,
                                   :url => "images/1.jpg",
-                                  :s_url => "images/1.jpg"
+                                  :s_url => "images/1.jpg",
+                                  :width=>500,
+                                  :height=>1000
                               },
                               :likes => 6,
                               :rank => 3
@@ -320,7 +362,9 @@ describe TwitterController do
                           :avatar => {
                               :id => 1,
                               :url => "images/1.jpg",
-                              :s_url => nil
+                              :s_url => nil,
+                              :width=>500,
+                              :height=>1000
                           }
                       },
                   :content => "this is a test twitter",
@@ -333,7 +377,9 @@ describe TwitterController do
                           :avatar => {
                               :id => 1,
                               :url => "images/1.jpg",
-                              :s_url => nil
+                              :s_url => nil,
+                              :width=>500,
+                              :height=>1000
                           }
                       },
                   :image_count => 1,
@@ -342,7 +388,9 @@ describe TwitterController do
                           :image => {
                               :id => 2,
                               :url => "images/1.jpg",
-                              :s_url => "images/1.jpg"
+                              :s_url => "images/1.jpg",
+                              :width=>500,
+                              :height=>1000
                           },
                           :likes => 3,
                           :rank => 1

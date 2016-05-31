@@ -189,13 +189,11 @@ describe UserController do
       expect(twitter.longitude).to eq designer.shop.longitude
     end
 
-    it "should generate small image for upload images" do
-      allow_any_instance_of(Pandora::Services::TwitterService).to receive(:create_twitter).and_raise StandardError, "create twitter failed"
-      allow(File).to receive(:delete)
-      expect { subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon) }.to raise_error StandardError
-      fake_temp_image_paths.each do |path|
-        expect(File.exist?(Common::ImageHelper.new.generate_s_image_path path)).to eq true
-      end
+    it "shoud create images for twitter" do
+      subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, nil, "")
+      twitter = author.twitters.first
+      expect(twitter.images.first.width).to eq 512
+      expect(twitter.images.first.height).to eq 512
     end
 
     it "should move image from temp folder to twitter folder" do
@@ -253,9 +251,9 @@ describe UserController do
     end
 
     it "should not raise common error if not publish twitter at today" do
-      create(:twitter, {author: user, designer: designer,created_at: DateTime.now})
+      create(:twitter, {author: user, designer: designer, created_at: DateTime.now})
       allow(Date).to receive(:today).and_return(Date.parse("2014-12-12"))
-      expect{subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon)}.to_not raise_error
+      expect { subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon) }.to_not raise_error
     end
 
     it "should create message for designer" do
@@ -346,7 +344,9 @@ describe UserController do
                                                                    {
                                                                        :id => 1,
                                                                        :url => "images/1.jpg",
-                                                                       :s_url => nil
+                                                                       :s_url => nil,
+                                                                       :width => 500,
+                                                                       :height => 1000
                                                                    },
                                                                :vitality => 100,
                                                                :sex => "unknow",
@@ -411,7 +411,9 @@ describe UserController do
                             {
                                 :id => 1,
                                 :url => "images/1.jpg",
-                                :s_url => nil
+                                :s_url => nil,
+                                :width=>500,
+                                :height=>1000
                             }
                     }
                 ]
@@ -540,7 +542,10 @@ describe UserController do
                                   {
                                       :id => 1,
                                       :url => "images/1.jpg",
-                                      :s_url => "images/1.jpg"
+                                      :s_url => "images/1.jpg",
+                                      :width=>500,
+                                      :height=>1000
+
                                   },
                               :likes => 20,
                               :rank => 1
@@ -787,7 +792,9 @@ describe UserController do
                                                                               {
                                                                                   :id => 1,
                                                                                   :url => "temp_images/avatar/icon.jpg",
-                                                                                  :s_url => "temp_images/avatar/s_icon.jpg"
+                                                                                  :s_url => "temp_images/avatar/s_icon.jpg",
+                                                                                  :width => nil,
+                                                                                  :height => nil
                                                                               }
                                                                           )
     end

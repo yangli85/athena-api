@@ -4,5 +4,7 @@ FactoryGirl.define do
   factory :image, :class => 'Pandora::Models::Image' do
     category 'avatar'
     url "images/#{FactoryGirl.generate(:image_name)}.jpg"
+    height 1000
+    width 500
   end
 end

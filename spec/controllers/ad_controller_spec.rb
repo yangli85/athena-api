@@ -25,7 +25,9 @@ describe AdController do
                                                                          :image => {
                                                                              :id => 1,
                                                                              :url => "images/1.jpg",
-                                                                             :s_url => nil
+                                                                             :s_url => nil,
+                                                                             :height => 1000,
+                                                                             :width => 500
                                                                          },
                                                                          :event => "search_designer",
                                                                          :args => "{:designer_id=>1}"
@@ -34,7 +36,9 @@ describe AdController do
                                                                          :image => {
                                                                              :id => 2,
                                                                              :url => "images/icon.jpeg",
-                                                                             :s_url => nil
+                                                                             :s_url => nil,
+                                                                             :height => 1000,
+                                                                             :width => 500
                                                                          },
                                                                          :event => "search_designer",
                                                                          :args => "{:designer_id=>2}"

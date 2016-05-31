@@ -235,7 +235,9 @@ describe DesignerController do
                       :image => {
                           :id => 1,
                           :url => "images/1.jpg",
-                          :s_url => "images/1.jpg"
+                          :s_url => "images/1.jpg",
+                          :width=>500,
+                          :height=>1000
                       },
                       :likes => 10,
                       :designer =>
@@ -252,7 +254,9 @@ describe DesignerController do
                       :image => {
                           :id => 2,
                           :url => "images/1.jpg",
-                          :s_url => "images/1.jpg"
+                          :s_url => "images/1.jpg",
+                          :width=>500,
+                          :height=>1000
                       },
                       :likes => 10,
                       :designer =>
@@ -299,12 +303,16 @@ describe DesignerController do
                       {
                           :id => 5,
                           :url => "images/1.jpg",
-                          :s_url => "images/1.jpg"
+                          :s_url => "images/1.jpg",
+                          :width=>500,
+                          :height=>1000
                       },
                       {
                           :id => 6,
                           :url => "images/1.jpg",
-                          :s_url => "images/1.jpg"
+                          :s_url => "images/1.jpg",
+                          :width=>500,
+                          :height=>1000
                       }
                   ],
                   :created_at => "8小时前"
@@ -316,7 +324,9 @@ describe DesignerController do
                       {
                           :id => 7,
                           :url => "images/1.jpg",
-                          :s_url => "images/1.jpg"
+                          :s_url => "images/1.jpg",
+                          :width=>500,
+                          :height=>1000
                       }
                   ],
                   :created_at => "8小时前"
@@ -420,7 +430,7 @@ describe DesignerController do
                       },
                   :vitae_count => 2,
                   :is_vip => true,
-                  :expired_at => DateTime.parse("20151212")
+                  :expired_at => DateTime.parse("2015-12-12 00:00:00.000000000 +0800")
               }
       }
     }
@@ -468,7 +478,9 @@ describe DesignerController do
                                   {
                                       :id => 15,
                                       :url => "images/1.jpg",
-                                      :s_url => "images/1.jpg"
+                                      :s_url => "images/1.jpg",
+                                      :width=>500,
+                                      :height=>1000
                                   },
                               :likes => 20,
                               :rank => 1
@@ -690,8 +702,8 @@ describe DesignerController do
     let(:designer) { create(:designer, user: user) }
 
     context "not a vip user" do
-      let(:fake_today) { DateTime.parse("201512121212") }
-      let(:fake_expired_at) { DateTime.parse("201612121212") }
+      let(:fake_today) { DateTime.parse("2015-12-12 12:12:00.000000000 +0800") }
+      let(:fake_expired_at) { DateTime.parse("2016-12-12 12:12:00.000000000 +0800") }
 
       before do
         allow(DateTime).to receive(:now).and_return fake_today
@@ -715,8 +727,8 @@ describe DesignerController do
     end
 
     context "not a vip user" do
-      let(:fake_expired_at) { DateTime.parse("201512121212") }
-      let(:fake_new_expired_at) { DateTime.parse("201612121212") }
+      let(:fake_expired_at) { DateTime.parse("2015-12-12 12:12:00.000000000 +0800") }
+      let(:fake_new_expired_at) { DateTime.parse("2016-12-12 12:12:00.000000000 +0800") }
 
       before do
         designer.update(expired_at: fake_expired_at)

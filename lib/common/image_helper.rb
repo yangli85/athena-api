@@ -2,6 +2,7 @@ require 'rmagick'
 require 'uuid'
 require 'fileutils'
 require "open-uri"
+require 'fastimage'
 
 module Common
   class ImageHelper
