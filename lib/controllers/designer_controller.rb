@@ -163,9 +163,9 @@ class DesignerController < BaseController
   end
 
   def create_vita desc, image_paths, designer_id
-    image_paths = rebuild_images image_paths
-    designer = @designer_service.get_designer designer_id
     begin
+      image_paths = rebuild_images image_paths
+      designer = @designer_service.get_designer designer_id
       @designer_service.create_vita designer.id, image_paths, desc, vita_image_folder
       designer.users.each do |user|
         @user_service.create_message user.id, "#{designer.user.name}更新了自己的个人空间,快去看看!"
