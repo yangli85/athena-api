@@ -202,12 +202,6 @@ describe UserController do
       expect(Dir["#{fake_images_folder}/twitter/*"].length).to eq 4
     end
 
-    it "should delete temp file if raise error when create twitter" do
-      allow_any_instance_of(Pandora::Services::TwitterService).to receive(:create_twitter).and_raise StandardError
-      expect { subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon) }.to raise_error StandardError
-      expect(Dir["#{fake_temp_images_folder}/*"].length).to eq 0
-    end
-
     it "should create a new twitter" do
       subject.publish_new_twitter(fake_author_id, fake_designer_id, fake_content, fake_temp_image_paths, fake_stars, fake_lat, fake_lon)
       twitter = author.twitters.first

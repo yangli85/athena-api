@@ -647,12 +647,6 @@ describe DesignerController do
       expect(Dir["#{fake_images_folder}/vita/*"].length).to eq 4
     end
 
-    it "should delete temp file if raise error when create twitter" do
-      allow_any_instance_of(Pandora::Services::DesignerService).to receive(:create_vita).and_raise StandardError
-      expect { subject.create_vita fake_desc, fake_temp_image_paths, designer.id }.to raise_error StandardError
-      expect(Dir["#{fake_temp_images_folder}/*"].length).to eq 0
-    end
-
     it "should create a new vita" do
       subject.create_vita fake_desc, fake_temp_image_paths, designer.id
       vita = Pandora::Models::Designer.find(designer.id).vitae.first

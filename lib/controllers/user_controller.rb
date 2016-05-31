@@ -35,36 +35,29 @@ class UserController < BaseController
   end
 
   def publish_new_twitter author_id, designer_id, content, image_paths, stars, latitude, longitude
-    begin
-      user = @user_service.get_user_by_id author_id
-      designer = @designer_service.get_designer designer_id
-      account = user.account
-      raise Common::Error.new("对不起,该设计师目前是非会员!") unless designer.is_vip
-      raise Common::Error.new("对不起,不可以给自己点赞!") if user == designer.user
-      raise Common::Error.new("对不起,每天只可以发送一条动态!") if has_publish_twitter_at_today? user.id
-      raise Common::Error.new("对不起,星星不够!") unless account.balance >= stars
+    user = @user_service.get_user_by_id author_id
+    designer = @designer_service.get_designer designer_id
+    account = user.account
+    raise Common::Error.new("对不起,该设计师目前是非会员!") unless designer.is_vip
+    raise Common::Error.new("对不起,不可以给自己点赞!") if user == designer.user
+    raise Common::Error.new("对不起,每天只可以发送一条动态!") if has_publish_twitter_at_today? user.id
+    raise Common::Error.new("对不起,星星不够!") unless account.balance >= stars
 
-      latitude = designer.shop.latitude if latitude.nil? || latitude.strip.empty?
-      longitude = designer.shop.longitude if longitude.nil? || longitude.strip.empty?
-      image_paths = rebuild_images image_paths
+    latitude = designer.shop.latitude if latitude.nil? || latitude.strip.empty?
+    longitude = designer.shop.longitude if longitude.nil? || longitude.strip.empty?
+    image_paths = rebuild_images image_paths
 
-      twitter = @twitter_service.create_twitter author_id, designer_id, content, image_paths, stars, latitude, longitude, twitter_image_folder
-      account_log_desc = "使用了#{stars}颗星星给#{designer.user.name}点赞"
-      @user_service.update_account_balance account.id, -stars, account_log_desc, author_id, designer_id, CONSUME, BEAUTYSHOW
-      @user_service.create_message designer.user.id, "#{user.name}发布了一条关于你的新动态,送给你#{stars}个赞"
-      @designer_service.update_designer designer_id, 'totally_stars', designer.totally_stars + stars
-      @designer_service.update_designer designer_id, 'weekly_stars', designer.weekly_stars + stars
-      @designer_service.update_designer designer_id, 'monthly_stars', designer.monthly_stars + stars
-      @user_service.update_user_profile author_id, "vitality", user.vitality + stars
-      @user_service.update_user_profile designer.user.id, "vitality", designer.user.vitality + stars
-      add_favorite_designer author_id, designer_id
-      success.merge({message: "发布动态成功.", data: {twitter_id: twitter.id}})
-    ensure
-      image_paths.each do |path|
-        File.delete(path[:image_path]) if File.exist? path[:image_path]
-        File.delete(path[:s_image_path]) if File.exist? path[:s_image_path]
-      end
-    end
+    twitter = @twitter_service.create_twitter author_id, designer_id, content, image_paths, stars, latitude, longitude, twitter_image_folder
+    account_log_desc = "使用了#{stars}颗星星给#{designer.user.name}点赞"
+    @user_service.update_account_balance account.id, -stars, account_log_desc, author_id, designer_id, CONSUME, BEAUTYSHOW
+    @user_service.create_message designer.user.id, "#{user.name}发布了一条关于你的新动态,送给你#{stars}个赞"
+    @designer_service.update_designer designer_id, 'totally_stars', designer.totally_stars + stars
+    @designer_service.update_designer designer_id, 'weekly_stars', designer.weekly_stars + stars
+    @designer_service.update_designer designer_id, 'monthly_stars', designer.monthly_stars + stars
+    @user_service.update_user_profile author_id, "vitality", user.vitality + stars
+    @user_service.update_user_profile designer.user.id, "vitality", designer.user.vitality + stars
+    add_favorite_designer author_id, designer_id
+    success.merge({message: "发布动态成功.", data: {twitter_id: twitter.id}})
   end
 
   def get_user_details user_id
