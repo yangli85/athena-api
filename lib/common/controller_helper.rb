@@ -55,6 +55,6 @@ module Common
     end
 
     def is_same_shop? shop, name, latitude, longitude, address
-      shop.name == name && shop.latitude = latitude && shop.longitude == longitude && shop.address == address
+      shop.name == name && shop.latitude == latitude && shop.longitude == longitude && shop.address == address
     end
   end
