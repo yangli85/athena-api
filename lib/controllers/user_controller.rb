@@ -233,9 +233,6 @@ class UserController < BaseController
 
   private
   def correct_code? phone_number, code
-    if code == "8888"
-      return true
-    end
     latest_sms_code = @sms_service.get_latest_code phone_number
     !latest_sms_code.nil? && code == latest_sms_code.code
   end
