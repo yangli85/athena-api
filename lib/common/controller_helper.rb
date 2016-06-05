@@ -58,3 +58,4 @@ module Common
       shop.name == name && shop.latitude == latitude && shop.longitude == longitude && shop.address == address
     end
   end
+end
