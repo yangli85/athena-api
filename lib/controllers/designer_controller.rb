@@ -147,8 +147,11 @@ class DesignerController < BaseController
 
 
   def update_new_shop name, address, latitude, longitude, designer_id, province, city
-    shop = @shop_service.create_shop name, address, latitude, longitude, province, city
-    @designer_service.update_shop designer_id, shop.id
+    designer = @designer_service.get_designer designer_id
+    unless is_same_shop? shop, name, latitude, longitude, address
+      shop = @shop_service.create_shop name, address, latitude, longitude, province, city
+      @designer_service.update_shop designer_id, shop.id
+    end
     success.merge({message: "修改店铺成功"})
   end
 
