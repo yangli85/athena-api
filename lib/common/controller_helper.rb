@@ -54,8 +54,8 @@ module Common
       folder
     end
 
-    def is_same_shop? shop, name, latitude, longitude, address
-      shop.name == name && (shop.latitude - latitude).abs < 0.05 && (shop.longitude - longitude).abs < 0.05
+    def is_same_shop? shop, name, latitude, longitude
+      shop.name == name && (shop.latitude.to_f - latitude.to_f).abs < 0.05 && (shop.longitude.to_f - longitude.to_f).abs < 0.05
     end
   end
 end

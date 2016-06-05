@@ -149,7 +149,7 @@ class DesignerController < BaseController
   def update_new_shop name, address, latitude, longitude, designer_id, province, city
     designer = @designer_service.get_designer designer_id
     shop = designer.shop
-    unless is_same_shop? designer.shop, name, latitude, longitude
+    unless !shop.nil? && is_same_shop?(designer.shop, name, latitude, longitude)
       shop = @shop_service.create_shop name, address, latitude, longitude, province, city
       @designer_service.update_shop designer_id, shop.id
     end

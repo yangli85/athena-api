@@ -3,6 +3,7 @@ require 'controllers/commissioner_controller'
 
 describe CommissionerController do
   let(:fake_phone) { "13812345678" }
+  let(:fake_sms_code) { double("SmsCode") }
   let(:created_at) { DateTime.parse("20151212121212") }
 
   before do
@@ -12,6 +13,8 @@ describe CommissionerController do
   describe "#register" do
     before do
       allow(FileUtils).to receive(:mv)
+      allow_any_instance_of(Pandora::Services::SMSService).to receive(:get_latest_code).and_return(fake_sms_code)
+      allow(fake_sms_code).to receive(:code).and_return("8888")
     end
 
     context "common error" do
