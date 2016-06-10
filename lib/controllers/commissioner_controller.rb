@@ -4,6 +4,7 @@ require 'pandora/services/commissioner_service'
 require 'pandora/services/shop_service'
 require 'pandora/services/sms_service'
 require 'pandora/services/designer_service'
+require 'pandora/services/user_service'
 require 'common/error'
 require 'common/image_helper'
 require 'common/controller_helper'
@@ -17,6 +18,7 @@ class CommissionerController < BaseController
     @shop_service = Pandora::Services::ShopService.new
     @sms_service =Pandora::Services::SMSService.new
     @designer_service =Pandora::Services::DesignerService.new
+    @user_service =Pandora::Services::UserService.new
   end
 
   def register phone_number, name, password, code
@@ -62,7 +64,14 @@ class CommissionerController < BaseController
 
   def promotion_logs c_id, page_size, current_page
     logs = @commissioner_service.get_promotion_logs c_id, page_size, current_page
-    success.merge({data: logs.map(&:attributes)})
+    data = logs.map do |log|
+      user = @user_service.get_user_by_phone_number log.phone_number
+      log.attributes.merge({
+                               name: user && user.name,
+                               shop: user && user.designer && user.designer.shop && user.designer.shop.name
+                           })
+    end
+    success.merge({data: data})
   end
 
   def add_promotion_log c_id, user_phone_number, mobile_type

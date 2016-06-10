@@ -55,7 +55,7 @@ module Common
     end
 
     def is_same_shop? shop, name, latitude, longitude
-      shop.name == name && (shop.latitude.to_f - latitude.to_f).abs < 0.05 && (shop.longitude.to_f - longitude.to_f).abs < 0.05
+      shop && shop.name == name && (shop.latitude.to_f - latitude.to_f).abs < 0.05 && (shop.longitude.to_f - longitude.to_f).abs < 0.05
     end
   end
 end

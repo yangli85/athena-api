@@ -87,22 +87,31 @@ describe CommissionerController do
               [
                   {
                       :id => 1,
-                      :phone_number => nil,
+                      :phone_number => "13912345678",
                       :mobile_type => "unknow",
-                      :created_at => "2015-12-12 12:12:12"
+                      :created_at => "2015-12-12 12:12:12",
+                      :name => "test-user2",
+                      :shop => "shop/1"
                   },
                   {
                       :id => 2,
                       :phone_number => "13812345678",
                       :mobile_type => "unknow",
-                      :created_at => "2015-12-12 12:12:12"
+                      :created_at => "2015-12-12 12:12:12",
+                      :name => "test-user1",
+                      :shop => "shop/1"
                   }
               ]
       }
     }
 
     before do
-      create(:promotion_log, commissioner: commissioner)
+      user1 = create(:user, {phone_number: fake_phone, name: 'test-user1'})
+      user2 = create(:user, {phone_number: '13912345678', name: 'test-user2'})
+      shop = create(:shop)
+      create(:designer, {user: user1, shop: shop})
+      create(:designer, {user: user2, shop: shop})
+      create(:promotion_log, {commissioner: commissioner, phone_number: '13912345678'})
       create(:promotion_log, {c_id: commissioner.id, phone_number: fake_phone})
     end
 
