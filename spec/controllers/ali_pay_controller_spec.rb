@@ -45,7 +45,7 @@ describe AliPayController do
 
         it "should update VIP order status to be success" do
           order.update!(product: "VIP")
-          order.update!(total_fee: 50)
+          order.update!(total_fee: 58)
           params = {
               "out_trade_no" => out_trade_no,
               "trade_status" => "TRADE_SUCCESS",
@@ -59,8 +59,8 @@ describe AliPayController do
           expect(new_order.result).to eq "会员续费成功"
           expect(new_order.status).to eq "SUCCESS"
           updated_user = Pandora::Models::User.find(user.id)
-          expect(updated_user.vitality).to eq 50
-          expect(updated_user.account.balance).to eq 50
+          expect(updated_user.vitality).to eq 58
+          expect(updated_user.account.balance).to eq 58
         end
 
         it "should update order status UNPAY if return_code is not SUCCESS" do
