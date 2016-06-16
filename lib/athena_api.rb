@@ -31,7 +31,7 @@ class AthenaAPI < API::BaseAPI
     if (result[:status] == "SUCCESS")
       user_id = result[:data][:user_id]
       new_access_token = generate_access_token identity_id
-      UserController.new.create_or_update_access_token user_id, new_access_token
+      UserController.call(:create_or_update_access_token, [user_id, new_access_token])
       session['user_id'] = user_id
       session['identity_id'] = identity_id
     end

@@ -38,7 +38,7 @@ class PayController < BaseController
   def deliver_order order, pay_channel
     if order.product == "VIP"
       pay_for_vip order.user_id, order.count
-      recharge order.user_id, order.total_fee, pay_channel
+      recharge order.user_id, 58, pay_channel
       @user_service.update_order order, "status", SUCCESS
       @user_service.update_order order, "result", "会员续费成功"
     elsif order.product == "STAR"
