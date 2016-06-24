@@ -14,8 +14,8 @@ class AliPayController < PayController
     user_id = params.delete("user_id")
     count = params.delete("count")
     product = params.delete("product")
-    total_fee = count * STAR_PRICE if product == 'STAR'
-    total_fee = count * VIP_PRICE if product == 'VIP'
+    total_fee = count.to_i * STAR_PRICE if product == 'STAR'
+    total_fee = count.to_i * VIP_PRICE if product == 'VIP'
     params['total_fee'] = total_fee || params['total_fee']
     order = @user_service.create_order user_id, product, count, params['total_fee']
     @user_service.update_order order, "result", "订单创建成功"
