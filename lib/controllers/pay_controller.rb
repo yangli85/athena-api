@@ -5,6 +5,9 @@ require 'pandora/services/user_service'
 require 'pandora/services/designer_service'
 
 class PayController < BaseController
+  STAR_PRICE = 1
+  VIP_PRICE = 58
+
   def initialize
     @user_service = Pandora::Services::UserService.new
     @designer_service = Pandora::Services::DesignerService.new

@@ -232,32 +232,14 @@ describe DesignerController do
           :data =>
               [
                   {
-                      :image => {
-                          :id => 1,
-                          :url => "images/1.jpg",
-                          :s_url => "images/1.jpg",
-                          :width=>500,
-                          :height=>1000
-                      },
-                      :likes => 10,
-                      :designer =>
+                      :image =>
                           {
-                              :id => 1,
-                              :user_id => 1,
-                              :name => "user1",
-                              :avatar => nil
+                              :id => 2,
+                              :url => "images/1.jpg",
+                              :s_url => "images/1.jpg",
+                              :width => 500,
+                              :height => 1000
                           },
-                      :twitter_id => 10,
-                      :rank => 1
-                  },
-                  {
-                      :image => {
-                          :id => 2,
-                          :url => "images/1.jpg",
-                          :s_url => "images/1.jpg",
-                          :width=>500,
-                          :height=>1000
-                      },
                       :likes => 10,
                       :designer =>
                           {
@@ -268,6 +250,26 @@ describe DesignerController do
                           },
                       :twitter_id => 11,
                       :rank => 1
+                  },
+                  {
+                      :image =>
+                          {
+                              :id => 4,
+                              :url => "images/1.jpg",
+                              :s_url => "images/1.jpg",
+                              :width => 500,
+                              :height => 1000
+                          },
+                      :likes => 8,
+                      :designer =>
+                          {
+                              :id => 1,
+                              :user_id => 1,
+                              :name => "user1",
+                              :avatar => nil
+                          },
+                      :twitter_id => 12,
+                      :rank => 2
                   }
               ]
       }
@@ -304,15 +306,15 @@ describe DesignerController do
                           :id => 5,
                           :url => "images/1.jpg",
                           :s_url => "images/1.jpg",
-                          :width=>500,
-                          :height=>1000
+                          :width => 500,
+                          :height => 1000
                       },
                       {
                           :id => 6,
                           :url => "images/1.jpg",
                           :s_url => "images/1.jpg",
-                          :width=>500,
-                          :height=>1000
+                          :width => 500,
+                          :height => 1000
                       }
                   ],
                   :created_at => "8小时前"
@@ -325,8 +327,8 @@ describe DesignerController do
                           :id => 7,
                           :url => "images/1.jpg",
                           :s_url => "images/1.jpg",
-                          :width=>500,
-                          :height=>1000
+                          :width => 500,
+                          :height => 1000
                       }
                   ],
                   :created_at => "8小时前"
@@ -479,8 +481,8 @@ describe DesignerController do
                                       :id => 15,
                                       :url => "images/1.jpg",
                                       :s_url => "images/1.jpg",
-                                      :width=>500,
-                                      :height=>1000
+                                      :width => 500,
+                                      :height => 1000
                                   },
                               :likes => 20,
                               :rank => 1

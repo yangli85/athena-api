@@ -14,6 +14,9 @@ class WechatPayController < PayController
     user_id = params.delete("user_id")
     count = params.delete("count")
     product = params.delete("product")
+    total_fee = count * 100 * STAR_PRICE if product == 'STAR'
+    total_fee = count * 100 * VIP_PRICE if product == 'VIP'
+    params['total_fee'] = total_fee || params['total_fee']
     order = @user_service.create_order user_id, product, count, params['total_fee'].to_f/100
     @user_service.update_order order, "result", "订单创建成功"
     out_trade_no = @wechat_pay.generate_out_trade_no PAY_CHANNEL
