@@ -34,26 +34,31 @@ class WechatPayController < PayController
   end
 
   def notify params
-    if @wechat_pay.verify? params
-      out_trade_no = params["out_trade_no"]
-      result_code = params["result_code"]
-      payment_log = @user_service.get_payment_log out_trade_no
-      order = payment_log.order
-      if order.status == CREATED
-        @user_service.update_payment_log(payment_log, "trade_status", params['result_code'])
-        @user_service.update_payment_log(payment_log, "trade_no", params['transaction_id'])
-        if result_code.upcase == SUCCESS
-          @user_service.update_order order, "status", PAID
-          @user_service.update_order order, "result", "买家支付成功"
-          deliver_order order, PAY_CHANNEL
-        else
-          @user_service.update_order order, "status", UNPAY
-          @user_service.update_order order, "result", "买家支付失败"
+    begin
+      if @wechat_pay.verify? params
+        out_trade_no = params["out_trade_no"]
+        result_code = params["result_code"]
+        payment_log = @user_service.get_payment_log out_trade_no
+        order = payment_log.order
+        if order.status == CREATED
+          @user_service.update_payment_log(payment_log, "trade_status", params['result_code'])
+          @user_service.update_payment_log(payment_log, "trade_no", params['transaction_id'])
+          if result_code.upcase == SUCCESS
+            @user_service.update_order order, "status", PAID
+            @user_service.update_order order, "result", "买家支付成功"
+            deliver_order order, PAY_CHANNEL
+          else
+            @user_service.update_order order, "status", UNPAY
+            @user_service.update_order order, "result", "买家支付失败"
+          end
         end
+        {return_code: SUCCESS, return_msg: "OK"}
+      else
+        {return_code: FAIL, return_msg: "签名失效"}
       end
-      {return_code: SUCCESS, return_msg: "OK"}
-    else
-      {return_code: FAIL, return_msg: "签名失效"}
     end
+  rescue => e
+    logger.error "out_trade_no is #{out_trade_no}" + e.message
+    raise e
   end
 end

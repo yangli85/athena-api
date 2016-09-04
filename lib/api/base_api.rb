@@ -20,7 +20,7 @@ module API
         :domain => ENV['DEMAIN'],
         :path => '/',
         :expire_after => 2592000, # In seconds
-        :secret => Digest::SHA256.hexdigest(rand.to_s)
+        :secret => Digest::SHA256.hexdigest('beauty_show_2016')
 
     configure do
       enable :session
