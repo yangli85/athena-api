@@ -74,9 +74,7 @@ class AthenaAPI < API::BaseAPI
   end
 
   def get_user_access_token user_id
-    access_token =nil
-    retry_count =0
-    UserController.new.get_access_token user_id
+    access_token = UserController.new.get_access_token user_id
     logger.error("can not get access token for use:#{user_id}") if access_token.nil?
     access_token
   end
