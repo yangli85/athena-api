@@ -231,6 +231,11 @@ class UserController < BaseController
     @user_service.create_or_update_access_token user_id, access_token
   end
 
+  def twitter_share_state user_id, twitter_id, channel
+    @user_service.share_twitter_state user_id, twitter_id, channel
+    success
+  end
+
   private
   def correct_code? phone_number, code
     latest_sms_code = @sms_service.get_latest_code phone_number

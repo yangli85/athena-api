@@ -17,4 +17,9 @@ class AdController < BaseController
     end
     success.merge({data: data})
   end
+
+  def get_latest_popup_ad
+    popup_ad = @ad_service.get_latest_popup_ad
+    success.merge({data: popup_ad.attributes})
+  end
 end

@@ -131,6 +131,12 @@ module API
         result = UserController.call(:add_call_log, [params['user_id'].to_i, params['designer_id'].to_i])
         return_response callback, result
       end
+
+      app.post '/twitter_share_state' do
+        callback = params.delete('callback')
+        result = UserController.call(:twitter_share_state, [params['user_id'].to_i, params['twitter_id'].to_i, params['channel']])
+        return_response callback, result
+      end
     end
   end
 end
