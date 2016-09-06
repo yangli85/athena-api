@@ -3,7 +3,7 @@ require 'fileutils'
 
 APP_ROOT = File.expand_path '../', File.dirname(__FILE__)
 
-worker_processes 2
+worker_processes 3
 working_directory APP_ROOT
 
 timeout 30

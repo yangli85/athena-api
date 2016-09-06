@@ -29,7 +29,7 @@ class WechatPayController < PayController
       data = @wechat_pay.generate_pay_req prepay_order['prepay_id']
       success.merge({data: data.merge({out_trade_no: out_trade_no})})
     else
-      error("create prepay order for wechat failed wiht params #{params}.")
+      error("create prepay order for wechat failed with params #{params}.")
     end
   end
 

@@ -14,21 +14,21 @@ describe DesignerController do
     shop4 = create(:shop, {latitude: '34.2420', longitude: '108.9430', name: 'test4', address: 'address4'})
     shop5 = create(:shop, {latitude: '34.3620', longitude: '108.9630', name: 'test5', address: 'address5'})
 
-    user1 = create(:user, phone_number: '13800000001')
-    user2 = create(:user, phone_number: '13800000002')
-    user3 = create(:user, phone_number: '13800000003')
-    user4 = create(:user, phone_number: '13800000004')
-    user5 = create(:user, phone_number: '13800000005')
-    user6 = create(:user, phone_number: '13800000006')
-    user7 = create(:user, phone_number: '13800000007')
+    user1 = create(:user, {id: 1, phone_number: '13800000001'})
+    user2 = create(:user, {id: 2, phone_number: '13800000002'})
+    user3 = create(:user, {id: 3, phone_number: '13800000003'})
+    user4 = create(:user, {id: 4, phone_number: '13800000004'})
+    user5 = create(:user, {id: 5, phone_number: '13800000005'})
+    user6 = create(:user, {id: 6, phone_number: '13800000006'})
+    user7 = create(:user, {id: 7, phone_number: '13800000007'})
 
-    designer1 = create(:designer, {user: user1, shop: shop1, totally_stars: 5})
-    designer2 = create(:designer, {user: user2, shop: shop1, totally_stars: 6})
-    designer3 = create(:designer, {user: user3, shop: shop2, totally_stars: 7})
-    designer4 = create(:designer, {user: user4, shop: shop2, totally_stars: 8})
-    designer5 = create(:designer, {user: user5, shop: shop3, totally_stars: 9})
-    designer6 = create(:designer, {user: user6, shop: shop4, totally_stars: 10})
-    designer7 = create(:designer, {user: user7, shop: shop5, totally_stars: 11})
+    designer1 = create(:designer, {id: 1, user: user1, shop: shop1, totally_stars: 5})
+    designer2 = create(:designer, {id: 2, user: user2, shop: shop1, totally_stars: 6})
+    designer3 = create(:designer, {id: 3, user: user3, shop: shop2, totally_stars: 7})
+    designer4 = create(:designer, {id: 4, user: user4, shop: shop2, totally_stars: 8})
+    designer5 = create(:designer, {id: 5, user: user5, shop: shop3, totally_stars: 9})
+    designer6 = create(:designer, {id: 6, user: user6, shop: shop4, totally_stars: 10})
+    designer7 = create(:designer, {id: 7, user: user7, shop: shop5, totally_stars: 11})
 
     image1 = create(:image)
     image2 = create(:image)
@@ -229,49 +229,7 @@ describe DesignerController do
       {
           :status => "SUCCESS",
           :message => "操作成功",
-          :data =>
-              [
-                  {
-                      :image =>
-                          {
-                              :id => 2,
-                              :url => "images/1.jpg",
-                              :s_url => "images/1.jpg",
-                              :width => 500,
-                              :height => 1000
-                          },
-                      :likes => 10,
-                      :designer =>
-                          {
-                              :id => 1,
-                              :user_id => 1,
-                              :name => "user1",
-                              :avatar => nil
-                          },
-                      :twitter_id => 11,
-                      :rank => 1
-                  },
-                  {
-                      :image =>
-                          {
-                              :id => 4,
-                              :url => "images/1.jpg",
-                              :s_url => "images/1.jpg",
-                              :width => 500,
-                              :height => 1000
-                          },
-                      :likes => 8,
-                      :designer =>
-                          {
-                              :id => 1,
-                              :user_id => 1,
-                              :name => "user1",
-                              :avatar => nil
-                          },
-                      :twitter_id => 12,
-                      :rank => 2
-                  }
-              ]
+          :data => [{:image => {:id => 1, :url => "images/1.jpg", :s_url => "images/1.jpg", :width => 500, :height => 1000}, :likes => 10, :designer => {:id => 1, :user_id => 1, :name => "user1", :avatar => nil}, :twitter_id => 10, :rank => 1}, {:image => {:id => 2, :url => "images/1.jpg", :s_url => "images/1.jpg", :width => 500, :height => 1000}, :likes => 10, :designer => {:id => 1, :user_id => 1, :name => "user1", :avatar => nil}, :twitter_id => 11, :rank => 1}, {:image => {:id => 4, :url => "images/1.jpg", :s_url => "images/1.jpg", :width => 500, :height => 1000}, :likes => 8, :designer => {:id => 1, :user_id => 1, :name => "user1", :avatar => nil}, :twitter_id => 12, :rank => 2}]
       }
     }
     it "should return designer's works for current page" do
@@ -282,7 +240,7 @@ describe DesignerController do
     end
 
     it 'should return the works in correct json format' do
-      expect(subject.get_designer_works(1, 2, 1)).to eq (fake_result)
+      expect(subject.get_designer_works(1, 3, 1)).to eq (fake_result)
     end
 
     it 'should return the most favorite image for each twitter' do
@@ -740,56 +698,9 @@ describe DesignerController do
   describe "#get_commend_designers" do
     let(:fake_result) {
       {
+          :data => {:new_designer => {:id => 7, :user_id => 7, :name => "user1", :avatar => nil, :shop => {:id => 5, :name => "test5", :address => "address5", :latitude => "34.3620", :longitude => "108.9630"}}, :top1_designer => {:id => 1, :user_id => 1, :name => "user1", :avatar => nil, :shop => {:id => 1, :name => "test1", :address => "address1", :latitude => "34.2620", :longitude => "108.9430"}}, :new_twitter_designer => {:id => 1, :user_id => 1, :name => "user1", :avatar => nil, :shop => {:id => 1, :name => "test1", :address => "address1", :latitude => "34.2620", :longitude => "108.9430"}}},
           :status => "SUCCESS",
-          :message => "操作成功",
-          :data =>
-              {
-                  :new_designer =>
-                      {
-                          :id => 7,
-                          :user_id => 7,
-                          :name => "user1",
-                          :avatar => nil,
-                          :shop =>
-                              {
-                                  :id => 5,
-                                  :name => "test5",
-                                  :address => "address5",
-                                  :latitude => "34.3620",
-                                  :longitude => "108.9630"
-                              }
-                      },
-                  :top1_designer =>
-                      {
-                          :id => 7,
-                          :user_id => 7,
-                          :name => "user1",
-                          :avatar => nil,
-                          :shop =>
-                              {
-                                  :id => 5,
-                                  :name => "test5",
-                                  :address => "address5",
-                                  :latitude => "34.3620",
-                                  :longitude => "108.9630"
-                              }
-                      },
-                  :new_twitter_designer =>
-                      {
-                          :id => 1,
-                          :user_id => 1,
-                          :name => "user1",
-                          :avatar => nil,
-                          :shop =>
-                              {
-                                  :id => 1,
-                                  :name => "test1",
-                                  :address => "address1",
-                                  :latitude => "34.2620",
-                                  :longitude => "108.9430"
-                              }
-                      }
-              }
+          :message => "操作成功"
       }
     }
 

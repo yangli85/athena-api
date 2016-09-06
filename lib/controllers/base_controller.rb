@@ -1,6 +1,8 @@
 #encoding:utf-8
 require 'common/logging'
 require 'common/error'
+require 'pandora/models/base'
+
 
 class BaseController
   include Common::Logging
@@ -34,6 +36,8 @@ class BaseController
     rescue => e
       log_error("系统内部错误.", e)
       error '对不起,系统错误,请稍后再试.'
+    ensure
+      Pandora::Models::Base.connection_pool.release_connection
     end
   end
 

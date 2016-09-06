@@ -11,28 +11,33 @@ class AliPayController < PayController
   end
 
   def generate_pay_req params
-    user_id = params.delete("user_id")
-    count = params.delete("count")
-    product = params.delete("product")
-    total_fee = count.to_i * STAR_PRICE if product == 'STAR'
-    total_fee = count.to_i * VIP_PRICE if product == 'VIP'
-    params['total_fee'] = total_fee || params['total_fee']
-    order = @user_service.create_order user_id, product, count, params['total_fee']
-    @user_service.update_order order, "result", "订单创建成功"
-    out_trade_no = @ali_pay.generate_out_trade_no PAY_CHANNEL
-    payment_log = @user_service.create_payment_log order.id, out_trade_no, PAY_CHANNEL
-    pay_info = @ali_pay.generate_pay_req params, out_trade_no
-    @user_service.update_payment_log(payment_log, "subject", pay_info['subject'])
-    @user_service.update_payment_log(payment_log, "seller_id", pay_info['partner'])
-    success.merge(
-        {
-            data:
-                {
-                    pay_info: pay_info,
-                    out_trade_no: out_trade_no
-                }
-        }
-    )
+    begin
+      user_id = params.delete("user_id")
+      count = params.delete("count")
+      product = params.delete("product")
+      total_fee = count.to_i * STAR_PRICE if product == 'STAR'
+      total_fee = count.to_i * VIP_PRICE if product == 'VIP'
+      params['total_fee'] = total_fee || params['total_fee']
+      order = @user_service.create_order user_id, product, count, params['total_fee']
+      @user_service.update_order order, "result", "订单创建成功"
+      out_trade_no = @ali_pay.generate_out_trade_no PAY_CHANNEL
+      payment_log = @user_service.create_payment_log order.id, out_trade_no, PAY_CHANNEL
+      pay_info = @ali_pay.generate_pay_req params, out_trade_no
+      @user_service.update_payment_log(payment_log, "subject", pay_info['subject'])
+      @user_service.update_payment_log(payment_log, "seller_id", pay_info['partner'])
+      success.merge(
+          {
+              data:
+                  {
+                      pay_info: pay_info,
+                      out_trade_no: out_trade_no
+                  }
+          }
+      )
+    rescue => e
+      logger.error e.message
+      error '对不起,订单创建失败,请重试!'
+    end
   end
 
   def notify params
