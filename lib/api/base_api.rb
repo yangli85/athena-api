@@ -6,6 +6,7 @@ require 'sinatra/cross_origin'
 require 'common/logging'
 require 'common/helpers'
 require 'json'
+require "rack/session/redis"
 
 module API
   class BaseAPI < Sinatra::Application
@@ -15,12 +16,12 @@ module API
 
     include Common::Logging
     helpers Sinatra::Jsonp
-
-    use Rack::Session::Cookie, :key => 'athena.rack.session',
-        :domain => ENV['DEMAIN'],
-        :path => '/',
-        :expire_after => 2592000, # In seconds
-        :secret => Digest::SHA256.hexdigest('beauty_show_2016')
+    
+    use Rack::Session::Redis, {
+        :url          => "redis://localhost:6379",
+        :namespace    => "rack:session",
+        :expire_after => 7776000
+    }
 
     configure do
       enable :session

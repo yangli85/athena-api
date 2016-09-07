@@ -15,6 +15,8 @@ gem 'rest-client', '>= 1.7'
 gem 'activesupport', '>= 3.2'
 gem 'whenever', :require => false
 gem 'fastimage'
+gem 'redis', '>=2.0'
+gem 'rack-session-redis', '~> 0.0.3'
 
 group :test do
   gem 'fakefs', :require => "fakefs/safe"

@@ -54,10 +54,13 @@ GEM
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
+    rack-session-redis (0.0.3)
+      redis (>= 2.0.0)
     rack-test (0.6.3)
       rack (>= 1.0)
     raindrops (0.17.0)
     rake (10.5.0)
+    redis (3.3.1)
     rest-client (2.0.0)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
@@ -127,8 +130,10 @@ DEPENDENCIES
   fakefs
   fastimage
   pandora!
+  rack-session-redis (~> 0.0.3)
   rack-test
   rake
+  redis (>= 2.0)
   rest-client (>= 1.7)
   rmagick
   rspec
@@ -143,4 +148,4 @@ DEPENDENCIES
   whenever
 
 BUNDLED WITH
-   1.11.2
+   1.12.5
