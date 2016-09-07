@@ -68,7 +68,6 @@ class AliPayController < PayController
       end
     rescue => e
       logger.error "out_trade_no is #{out_trade_no}" + e.message
-      raise e
     end
   end
 end
